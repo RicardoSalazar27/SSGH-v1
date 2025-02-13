@@ -73,10 +73,24 @@
             </div>
           </div>
         </div>
+        <div class="input-group mb-3">
+        <input 
+          type="text" 
+          class="form-control"
+          id="direccion"
+          name="direccion" 
+          placeholder="Dirección">
+        <div class="input-group-append">
+          <div class="input-group-text">
+            <span class="fas fa-map-marker-alt"></span> <!-- Icono de marcador de mapa -->
+          </div>
+        </div>
+      </div>
+
 
         <div class="row">
           <div class="col-12">
-            <button type="submit" class="btn btn-primary btn-block">Crear Cuenta</button>
+            <button id="crear-cuenta" type="submit" class="btn btn-primary btn-block">Crear Cuenta</button>
           </div>
         </div>
       </form>
