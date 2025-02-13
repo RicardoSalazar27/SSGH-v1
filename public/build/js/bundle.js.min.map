@@ -1,0 +1,1 @@
+{"version":3,"sources":["registro.js"],"names":["window","location","pathname","alert"],"mappings":"AAAA,cAAAA,OAAAC,SAAAC,UACAC,MAAA","file":"bundle.js","sourcesContent":["if (window.location.pathname === '/registro') {\n    alert('estamos en registrar cuenta nueva');\n}"]}
