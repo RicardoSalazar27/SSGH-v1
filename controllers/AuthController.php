@@ -29,39 +29,42 @@ class AuthController {
         
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            $usuario->sincronizar($_POST);
-            
-            $alertas = $usuario->validar_cuenta();
+            //debuguear($_POST);
 
-            if(empty($alertas)) {
-                $existeUsuario = Usuario::where('email', $usuario->email);
+            $existeUsuario = Usuario::where('email', $_POST['email']); 
 
                 if($existeUsuario) {
-                    Usuario::setAlerta('error', 'El Usuario ya esta registrado');
-                    $alertas = Usuario::getAlertas();
-                } else {
-                    // Hashear el password
-                    $usuario->hashPassword();
+                    $respuesta = [
+                        'tipo' => 'error',
+                        'titulo' => 'Ooops...',
+                        'mensaje' => 'Cliente existente'
+                    ];
+                    echo json_encode($respuesta);
+                    return;    
+                } 
 
-                    // Eliminar password2
-                    unset($usuario->password2);
+                //Crear nuevo cliente
+                $usuario = new Usuario();
+                $usuario->sincronizar($_POST);
+                $usuario->hashPassword();
+                //debuguear($usuario);
+                $resultado = $usuario->guardar();
 
-                    // Generar el Token
-                    $usuario->crearToken();
-
-                    // Crear un nuevo usuario
-                    $resultado =  $usuario->guardar();
-
-                    // Enviar email
-                    $email = new Email($usuario->email, $usuario->nombre, $usuario->token);
-                    $email->enviarConfirmacion();
-                    
-
-                    if($resultado) {
-                        header('Location: /mensaje');
-                    }
+                if($resultado) {
+                    $respuesta = [
+                        'tipo' => 'success',
+                        'titulo' => 'Creado',
+                        'mensaje' => 'Creado Correctamente'
+                    ];
+                } else{
+                    $respuesta = [
+                        'tipo' => 'error',
+                        'titulo' => 'Error',
+                        'mensaje' => 'Hubo un problema al crear el usuario'
+                    ];
                 }
-            }
+                
+                echo json_encode($respuesta);
         }
 
         // Render a la vista

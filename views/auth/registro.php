@@ -5,7 +5,7 @@
     </div>
     <div class="card-body">
       <p class="login-box-msg"><?php echo $titulo; ?></p>
-
+      <div id="mensaje-resultado" class="alert alert-dismissible" style="display: none;"></div>
       <form action="/login" method="post">
         <div class="input-group mb-3">
           <input 
@@ -94,7 +94,6 @@
           </div>
         </div>
       </form>
-
       <p class="d-flex justify-content-between mt-1">
         <a href="/login">Inicia Sesión</a>
         <a href="/olvide">¿Olvidaste tu contraseña?</a>
