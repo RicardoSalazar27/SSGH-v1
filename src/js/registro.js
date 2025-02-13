@@ -16,13 +16,13 @@ if (window.location.pathname === '/registro') {
                 direccion: document.getElementById('direccion').value.trim()
             };
 
-            if (nuevoUsuario.email === "" || nuevoUsuario.nombre === "" || nuevoUsuario.direccion === "" || nuevoUsuario.password === "" || nuevoUsuario.password2 === "") {
-                mostrarAlerta2('Error', 'Todos los campos son necesarios', 'error');
+            if (nuevoUsuario.email === "" || nuevoUsuario.nombre === "" || nuevoUsuario.direccion === "" || nuevoUsuario.password === "" || nuevoUsuario.password2 === "" || nuevoUsuario.telefono === "") {
+                mostrarAlerta2('Todos los campos son necesarios', 'error');
                 return;
             }
             
             if (nuevoUsuario.password !== nuevoUsuario.password2) {
-                mostrarAlerta2('Error', 'Las contraseñas no coinciden', 'error');
+                mostrarAlerta2('Las contraseñas no coinciden', 'error');
                 return;
             }
             
@@ -33,12 +33,6 @@ if (window.location.pathname === '/registro') {
                 // Crear FormData para enviar los datos
                 const datos = new FormData();
                 Object.entries(nuevoUsuario).forEach(([key, value]) => datos.append(key, value));
-
-                // // Imprimir los valores de FormData
-                // datos.forEach((value, key) => {
-                //     console.log(key + ": " + value);
-                // });
-
                 const url = 'http://localhost:3000/registro';
                 const respuesta = await fetch(url, { // Corregido: Usar un objeto en lugar de un array
                     method: 'POST',
@@ -66,7 +60,7 @@ if (window.location.pathname === '/registro') {
         });
     }    
 
-    function mostrarAlerta2(titulo, mensaje, tipo) {
+    function mostrarAlerta2(mensaje, tipo) {
         const mensajeResultado = document.getElementById('mensaje-resultado');
         mensajeResultado.style.display = 'block'; // Asegúrate de que el contenedor se muestre
         mensajeResultado.textContent = mensaje; // Mostrar solo el mensaje

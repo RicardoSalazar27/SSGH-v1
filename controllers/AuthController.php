@@ -11,8 +11,7 @@ class AuthController {
         
         // Render a la vista 
         $router->render('auth/login', [
-            'titulo' => 'Iniciar Sesión',
-            'alertas' => $alertas
+            'titulo' => 'Iniciar Sesión'
         ]);
     }
 
@@ -26,54 +25,64 @@ class AuthController {
     }
 
     public static function registro(Router $router) {
-        
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-            //debuguear($_POST);
-
-            $existeUsuario = Usuario::where('email', $_POST['email']); 
-
-                if($existeUsuario) {
-                    $respuesta = [
-                        'tipo' => 'error',
-                        'titulo' => 'Ooops...',
-                        'mensaje' => 'Cliente existente'
-                    ];
-                    echo json_encode($respuesta);
-                    return;    
-                } 
-
-                //Crear nuevo cliente
-                $usuario = new Usuario();
-                $usuario->sincronizar($_POST);
-                $usuario->hashPassword();
-                //debuguear($usuario);
-                $resultado = $usuario->guardar();
-
-                if($resultado) {
-                    $respuesta = [
-                        'tipo' => 'success',
-                        'titulo' => 'Creado',
-                        'mensaje' => 'Creado Correctamente'
-                    ];
-                } else{
-                    $respuesta = [
-                        'tipo' => 'error',
-                        'titulo' => 'Error',
-                        'mensaje' => 'Hubo un problema al crear el usuario'
-                    ];
-                }
-                
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+            if (empty($_POST['email'])) {
+                http_response_code(400);
+                $respuesta = [
+                    'tipo' => 'error',
+                    'titulo' => 'Error',
+                    'mensaje' => 'El email es obligatorio'
+                ];
                 echo json_encode($respuesta);
+                exit;
+            }
+    
+            $existeUsuario = Usuario::where('email', $_POST['email']); 
+    
+            if ($existeUsuario) {
+                http_response_code(400);
+                $respuesta = [
+                    'tipo' => 'error',
+                    'titulo' => 'Ooops...',
+                    'mensaje' => 'Cliente existente'
+                ];
+                echo json_encode($respuesta);
+                exit;
+            } 
+    
+            // Crear nuevo usuario
+            $usuario = new Usuario();
+            $usuario->sincronizar($_POST);
+            $usuario->hashPassword();
+            $resultado = $usuario->guardar();
+    
+            if ($resultado) {
+                $respuesta = [
+                    'tipo' => 'success',
+                    'titulo' => 'Creado',
+                    'mensaje' => 'Usuario creado correctamente'
+                ];
+            } else {
+                http_response_code(500);
+                $respuesta = [
+                    'tipo' => 'error',
+                    'titulo' => 'Error',
+                    'mensaje' => 'Hubo un problema al crear el usuario'
+                ];
+            }
+            
+            echo json_encode($respuesta);
+            exit;
         }
-
-        // Render a la vista
+        
+        // Renderizar la vista
         $router->render('auth/registro', [
-            'titulo' => 'Crea una nueva cuenta',
-            'usuario' => $usuario, 
-            'alertas' => $alertas
+            'titulo' => 'Crea una nueva cuenta'
         ]);
     }
+    
+    
 
     public static function olvide(Router $router) {
         $alertas = [];

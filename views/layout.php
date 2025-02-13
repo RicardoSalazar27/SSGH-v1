@@ -23,6 +23,8 @@
     ?>
 <!-- jQuery -->
 <script src="/build/adminlte/plugins/jquery/jquery.min.js"></script>
+<!-- SweetAletr2 -->
+<script src="/build/adminlte/plugins/sweetalert2/sweetalert2.all.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="./build/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
