@@ -5,8 +5,8 @@
       <a href="/login" class="h1"><b>Tu</b>Nombre</a>
     </div>
     <div class="card-body">
-      <p class="login-box-msg">Inicia Sesion Para Comenzar</p>
-
+      <p class="login-box-msg"><?php echo $titulo;?></p>
+      <div id="mensaje-resultado" class="alert alert-dismissible" style="display: none;"></div>
       <form action="/login" method="post">
         <div class="input-group mb-3">
           <input 
@@ -39,7 +39,7 @@
         <div class="row">
           <!-- /.col -->
           <div class="col-12">
-            <button type="submit" class="btn btn-primary btn-block">Iniciar Sesion</button>
+            <button id="btnIniciarSesion" type="submit" class="btn btn-primary btn-block">Iniciar Sesion</button>
           </div>
           <!-- /.col -->
         </div>

@@ -8,10 +8,49 @@ use MVC\Router;
 
 class AuthController {
     public static function login(Router $router) {
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            
+            $usuario = Usuario::where('email', $_POST['email']);
+            
+            if(!$usuario){
+                $respuesta = [
+                    'tipo' => 'error',
+                    'mensaje' => 'El usuario no existente'
+                ];
+                echo json_encode($respuesta);
+                exit;
+            } elseif(!$usuario->estatus){
+                $respuesta= $respuesta = [
+                    'tipo' => 'error',
+                    'mensaje' => 'El usuario no esta confirmado'
+                ];
+                echo json_encode($respuesta);
+                exit;
+            } else{
+                //El usuario existe
+                if( password_verify($_POST['password'], $usuario->password) ) {
+                    //Iniciar sesion
+                    $respuesta = [
+                        'autorizado' => 1
+                    ];
+                    echo json_encode($respuesta);
+                    exit;
+                } else{
+                    $respuesta = [
+                        'tipo' => 'error',
+                        'mensaje' => 'La contraseña es incorrecta'
+                    ];
+                    echo json_encode($respuesta);
+                    exit;
+                }
+            }
+
+        }
         
         // Render a la vista 
         $router->render('auth/login', [
-            'titulo' => 'Iniciar Sesión'
+            'titulo' => 'Inicia Sesion Para Comenzar'
         ]);
     }
 

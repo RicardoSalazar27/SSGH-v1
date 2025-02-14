@@ -4,10 +4,11 @@ namespace Model;
 
 class Usuario extends ActiveRecord {
     protected static $tabla = 'Usuarios';
-    protected static $columnasDB = ['id', 'nombre','email', 'password','ID_rol', 'estatus','telefono','direccion'];
+    protected static $columnasDB = ['id', 'nombre','apellidos', 'email', 'password','ID_rol', 'estatus','telefono','direccion'];
 
     public $id;
     public $nombre;
+    public $apellidos;
     public $email;
     public $password;
     public $ID_rol;
@@ -19,6 +20,7 @@ class Usuario extends ActiveRecord {
     {
         $this->id = $args['id'] ?? null;
         $this->nombre = $args['nombre'] ?? '';
+        $this->apellidos = $args['apellidos'] ?? '';
         $this->email = $args['email'] ?? '';
         $this->password = $args['password'] ?? '';
         $this->ID_rol = $args['ID_rol'] ?? 2;

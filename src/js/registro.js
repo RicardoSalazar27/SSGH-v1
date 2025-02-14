@@ -9,6 +9,7 @@ if (window.location.pathname === '/registro') {
 
             const nuevoUsuario = {
                 nombre: document.getElementById('nombre').value.trim(),
+                apellidos: document.getElementById('apellidos').value.trim(),
                 email: document.getElementById('email').value.trim(),
                 password: document.getElementById('password').value.trim(),
                 password2: document.getElementById('password2').value.trim(),
