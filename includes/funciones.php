@@ -10,3 +10,11 @@ function s($html) : string {
     $s = htmlspecialchars($html);
     return $s;
 }
+
+function is_auth() : bool{
+    if(!isset($_SESSION)){
+        session_start();
+    }
+    return isset($_SESSION['nombre']) && !empty($_SESSION);
+}
+

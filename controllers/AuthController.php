@@ -30,7 +30,14 @@ class AuthController {
             } else{
                 //El usuario existe
                 if( password_verify($_POST['password'], $usuario->password) ) {
-                    //Iniciar sesion
+                     // Iniciar la sesión
+                     session_start();    
+                     $_SESSION['id'] = $usuario->id;
+                     $_SESSION['nombre'] = $usuario->nombre;
+                     $_SESSION['apellido'] = $usuario->apellido;
+                     $_SESSION['email'] = $usuario->email;
+                     $_SESSION['rol_id'] = $usuario->rol_id;
+                     
                     $respuesta = [
                         'autorizado' => 1
                     ];
