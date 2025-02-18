@@ -37,16 +37,10 @@
                                     <th>Apellidos</th>
                                     <th>Dirección</th>
                                     <th>Email</th>
-                                    <th class="no-export">password</th>
-                                    <th class="no-export">password2</th>
-                                    <th>Fecha Nacimiento</th>
+                                    <th class="no-export">Password</th>
                                     <th>Rol</th>
-                                    <th>Estatus</th>
-                                    <th>Fecha de Creación</th>
                                     <th>Ultimo Acceso</th>
-                                    <th class="text-center">confirmado</th>
-                                    <th class="no-export">Passord Nuevo</th>
-                                    <th class="no-export">Password Actual</th>
+                                    <th class="text-center">Estatus</th>
                                     <th class="no-export">Acciones</th>
                                  
                                 </tr>
