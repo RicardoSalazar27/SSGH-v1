@@ -8,11 +8,16 @@ use MVC\Router;
 
 class DashboardController {
     public static function index(Router $router) {
-        session_start();
-        debuguear($_SESSION);
+        is_auth();
+
+        $usuario = Usuario::where('email', $_SESSION['email']);
+        $informacion_hotel = '';
+        $nombre_hotel = '';
         // Render a la vista 
         $router->render('admin/dashboard/index', [
-            'titulo' => 'Panel de control'
+            'titulo' => 'Panel de control',
+            'usuario' => $usuario,
+            'nombre_hotel' => $nombre_hotel
         ]);
     }
 }

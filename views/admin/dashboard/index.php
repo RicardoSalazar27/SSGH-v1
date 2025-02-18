@@ -1,1 +1,1 @@
-<h1>esat es la pagina principal una vez librado el login</h1>
+<h1><?php $titulo?></h1>
