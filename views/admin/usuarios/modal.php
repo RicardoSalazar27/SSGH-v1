@@ -76,15 +76,6 @@
                     <option value="3">Limpieza</option>
                  </select>
             </div>
-            <div class="form-group">
-                <label for="fecha_nacimiento">Fecha de Nacimiento</label>
-                <input 
-                    type="date"
-                    class="form-control"
-                    id="fecha_nacimiento"
-                    name="fecha_nacimiento"
-                />
-            </div>
 
             <!-- Botones en el formulario -->
             <div class="modal-footer">

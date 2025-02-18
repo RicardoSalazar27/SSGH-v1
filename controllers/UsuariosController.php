@@ -22,4 +22,9 @@ class UsuariosController {
             'hotel' => $hotel
         ]);
     }
+
+    public static function listar(){
+        $usuarios = Usuario::all();
+        echo json_encode($usuarios);
+    }
 }

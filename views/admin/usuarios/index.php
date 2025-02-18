@@ -39,7 +39,6 @@
                                     <th>Email</th>
                                     <th class="no-export">Password</th>
                                     <th>Rol</th>
-                                    <th>Ultimo Acceso</th>
                                     <th class="text-center">Estatus</th>
                                     <th class="no-export">Acciones</th>
                                  

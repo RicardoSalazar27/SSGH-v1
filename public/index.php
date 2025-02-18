@@ -40,4 +40,8 @@ $router->get('/admin/index', [DashboardController:: class, 'index']);
 $router->get('/admin/usuarios', [UsuariosController::class, 'index']);
 // $router->get('/admin/clientes', [ClientesController::class, 'index']);
 
+
+// API'S
+$router->get('/api/usuarios', [UsuariosController::class, 'listar']);
+
 $router->comprobarRutas();

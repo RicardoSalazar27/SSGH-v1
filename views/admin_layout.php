@@ -10,6 +10,9 @@
     
     <!-- Font Awesome (Local) -->
     <link rel="stylesheet" href="/build/adminlte/plugins/fontawesome-free/css/all.min.css">
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <!-- AdminLTE CSS (Local) -->
     <link rel="stylesheet" href="/build/adminlte/dist/css/adminlte.min.css">
