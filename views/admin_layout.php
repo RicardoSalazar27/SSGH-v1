@@ -7,16 +7,18 @@
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="/build/resources/plugins/fontawesome-free/css/all.min.css">
-    <!-- Font Awesome (versión 6.0.0-beta3) para íconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- AdminLTE CSS principal -->
-    <link rel="stylesheet" href="/build/resources/dist/css/adminlte.min.css">
-    <!-- DataTables Bootstrap 5 CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css">
-    <!-- Boostrap 5 CSS-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome (Local) -->
+    <link rel="stylesheet" href="/build/adminlte/plugins/fontawesome-free/css/all.min.css">
+    
+    <!-- AdminLTE CSS (Local) -->
+    <link rel="stylesheet" href="/build/adminlte/dist/css/adminlte.min.css">
+    
+    <!-- DataTables Bootstrap 4 CSS (Local) -->
+    <link rel="stylesheet" href="/build/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    
+    <!-- Bootstrap 4 (Local) -->
+    <link rel="stylesheet" href="/build/adminlte/plugins/bootstrap/css/bootstrap.min.css">
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -45,23 +47,20 @@
         <?php include_once __DIR__ .'/templates/footer.php'; ?>
     </div>
 
-    <!-- Personalizados -->
-    <script src="/build/js/bundle.min.js"></script>
+    <!-- jQuery (Local) -->
+    <script src="/build/adminlte/plugins/jquery/jquery.min.js"></script>
 
-    <!-- jQuery -->
-    <script src="/build/resources/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 (Local) -->
+    <script src="/build/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Bootstrap 4 -->
-    <script src="/build/resources/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables (Local) -->
+    <script src="/build/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/build/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.js"></script>
+    <!-- AdminLTE App (Local) -->
+    <script src="/build/adminlte/dist/js/adminlte.min.js"></script>
 
-    <!-- AdminLTE App para la versión 3.1.0 -->
-    <script src="/build/resources/dist/js/adminlte.min.js"></script>
-
-    <!-- DataTables Buttons JS -->
+    <!-- DataTables Buttons (CDN, no están en AdminLTE) -->
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.flash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -70,10 +69,14 @@
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 
-    <!-- Full Calendar -->
+    <!-- Full Calendar (CDN, no está en AdminLTE) -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 
-    <!-- SweetAlert2-->
-    <script src="/build/resources/plugins/sweetalert2/sweetalert2.all.min.js"></script>
+    <!-- SweetAlert2 (Local) -->
+    <script src="/build/adminlte/plugins/sweetalert2/sweetalert2.all.min.js"></script>
+
+    <!-- Personalizados -->
+    <script src="/build/js/bundle.min.js"></script>
+
 </body>
 </html>
