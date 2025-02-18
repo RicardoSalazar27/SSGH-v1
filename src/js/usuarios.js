@@ -112,13 +112,13 @@ if (window.location.pathname === '/admin/usuarios') {
                 const usuarioId = e.target.closest('.btn-editarUsuario').getAtribute('data-id');
                 cargarDatosUsuario(usuarioId); //Llama a la funcion de cargar los datos
             }
-            if( e.target.classList.contains('btn-eliminarUsuario') ){
+            if (e.target.classList.contains('btn-eliminarUsuario')) {
                 const usuarioId = e.target.getAttribute('data-id');
                 confirmarEliminacion(usuarioId);
-            }
+            }            
         })
 
-        function confirmarEliminacion(id) {
+        async function confirmarEliminacion(id) {
             Swal.fire({
                 title: '¿Estás seguro?',
                 text: "Esta acción no se puede deshacer.",
@@ -131,18 +131,15 @@ if (window.location.pathname === '/admin/usuarios') {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
-                        const datos = new FormData();
-                        datos.append('id', id);
-
-                        const url = `http://localhost:3000/eliminar`;
+                        const url = `http://localhost:3000/api/usuarios/${id}`; // 🔥 Aquí se inyecta el ID en la URL
+        
                         const respuesta = await fetch(url, {
-                            method: 'POST',
-                            body: datos
+                            method: 'DELETE',  // 🔥 Método DELETE para eliminar
                         });
-
+        
                         const resultado = await respuesta.json();
                         mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
-
+        
                         if (resultado.tipo === 'success') {
                             await initDataTable(); // Recarga la tabla de clientes
                         }
@@ -151,6 +148,16 @@ if (window.location.pathname === '/admin/usuarios') {
                     }
                 }
             });
-        }
+        }        
     }
+
+    function mostrarAlerta(titulo, mensaje, tipo) {
+        Swal.fire({
+            icon: tipo,
+            title: titulo,
+            text: mensaje,
+        }).then(() => {
+            $('.modal').modal('hide'); // Cierra todos los modales activos
+        });
+    }    
 }
