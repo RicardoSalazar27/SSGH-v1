@@ -44,5 +44,6 @@ $router->get('/admin/usuarios', [UsuariosController::class, 'index']);
 // API'S
 $router->get('/api/usuarios', [UsuariosController::class, 'listar']);
 $router->delete('/api/usuarios/{id}', [UsuariosController::class, 'eliminar']);
+$router->get('/api/usuarios/{id}', [UsuariosController::class, 'obtener']);
 
 $router->comprobarRutas();

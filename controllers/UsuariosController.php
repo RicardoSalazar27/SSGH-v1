@@ -28,6 +28,13 @@ class UsuariosController {
         echo json_encode($usuarios);
     }
 
+    public static function obtener($id){
+        if ($_SERVER['REQUEST_METHOD'] === 'GET'){
+            $usuario = Usuario::find($id);
+            echo json_encode($usuario);
+        }
+    }
+
     public static function eliminar($id){
         if ($_SERVER['REQUEST_METHOD'] === 'DELETE'){
 

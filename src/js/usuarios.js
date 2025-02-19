@@ -87,7 +87,7 @@ if (window.location.pathname === '/admin/usuarios') {
                             class="btn btn-sm btn-primary btn-editarUsuario"
                             data-id="${user.id}" 
                             data-toggle="modal" 
-                            data-bs-target="#UsuarioModal">
+                            data-target="#usuariosModal">
                             <i class="fa-solid fa-pen"></i>
                         </button>
                         <!-- Botón de eliminar -->
@@ -106,10 +106,10 @@ if (window.location.pathname === '/admin/usuarios') {
                 // Cambiar la clase del botón para que sea de 'Actualizar' y no de 'Crear'
                 const botonSubirUsuario = document.querySelector('.btnSubirUsuario');
                 if ( botonSubirUsuario ){
-                    botonSubirUsuario.classList.replace('btnSubirUsuario','btnActualizarUusuario')
+                    botonSubirUsuario.classList.replace('btnSubirUsuario','btnActualizarUsuario');
                 }
 
-                const usuarioId = e.target.closest('.btn-editarUsuario').getAtribute('data-id');
+                const usuarioId = e.target.closest('.btn-editarUsuario').getAttribute('data-id');
                 cargarDatosUsuario(usuarioId); //Llama a la funcion de cargar los datos
             }
             if (e.target.classList.contains('btn-eliminarUsuario')) {
@@ -149,6 +149,30 @@ if (window.location.pathname === '/admin/usuarios') {
                 }
             });
         }        
+    }
+
+    async function cargarDatosUsuario(id){
+        try {
+
+            const url = `http://localhost:3000/api/usuarios/${id}`;
+            const resultado = await fetch(url);
+
+            if( resultado.ok ) {
+                const usuario = await resultado.json();
+                llenarModal(usuario);
+            }
+
+            function llenarModal(usuario) {
+                document.getElementById('nombre').value = usuario.nombre;
+                document.getElementById('apellido').value = usuario.apellido;
+                document.getElementById('direccion').value = usuario.direccion;
+                document.getElementById('email').value = usuario.email;
+                document.getElementById('rol_id').value = usuario.rol_id;
+            }   
+            
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     function mostrarAlerta(titulo, mensaje, tipo) {
