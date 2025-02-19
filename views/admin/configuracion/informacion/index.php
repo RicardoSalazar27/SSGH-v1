@@ -60,7 +60,7 @@
                         </div>
 
                         <div class="card-footer">
-                            <button id="btnActualizarInfo" type="submit" class="btn btn-primary">Guardar</button>
+                            <button id="btnActualizarInfo" data-id="<?php echo $hotel->id;?>" type="submit" class="btn btn-primary">Guardar</button>
                         </div>
                     </form>
                 </div>

@@ -30,7 +30,7 @@ class informacionController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
             // Buscar el hotel por correo
-            $hotel = Hotel::where('correo', $_POST['correo']);
+            $hotel = Hotel::find($_POST['id']);
     
             // Si `where` devuelve una colección o array, tomar el primer resultado
             if (is_array($hotel) || is_object($hotel)) {
@@ -48,10 +48,10 @@ class informacionController {
                 mkdir($carpeta_imagenes, 0755, true);
             }
     
-            // Manejo de la imagen
-            if (!empty($_FILES['img']['tmp_name'])) {  // <-- Asegúrate de usar el mismo nombre clave en JS y PHP
+            // Manejo de la imagen (solo si se sube una nueva)
+            if (!empty($_FILES['img']['tmp_name'])) {
                 $rutaDocumentoAnterior = "$carpeta_imagenes/{$hotel->img}.png";
-                
+    
                 // Eliminar la imagen anterior si existe
                 if (!empty($hotel->img) && file_exists($rutaDocumentoAnterior)) {
                     if (!unlink($rutaDocumentoAnterior)) {
@@ -73,14 +73,27 @@ class informacionController {
                 }
             }
     
-            // Sincronizar y guardar datos
-            $hotel->sincronizar($_POST);
+            // Sincronizar datos EXCLUYENDO 'img' si no se subió una nueva imagen
+            $datosActualizar = $_POST;
+            if (empty($_FILES['img']['tmp_name'])) {
+                unset($datosActualizar['img']); // Elimina la clave 'img' para no modificar el campo en la BD
+            }
+    
+            $hotel->sincronizar($datosActualizar);
+    
+            // Guardar los cambios en la base de datos
             if ($hotel->guardar()) {
-                echo json_encode(respuesta('success', 'Actualizado', 'El hotel ha sido actualizado correctamente'));
+                echo json_encode(respuesta('success', 'Actualizado', 'El hotel ha sido actualizado correctamente', [
+                    'nombre' => $hotel->nombre,
+                    'telefono' => $hotel->telefono,
+                    'correo' => $hotel->correo,
+                    'ubicacion' => $hotel->ubicacion,
+                    'img' => $hotel->img ?? null // Retorna la imagen solo si se actualizó
+                ]));
             } else {
                 echo json_encode(respuesta('error', 'Error', 'Hubo un problema al actualizar el hotel'));
             }
         }
-    }    
+    }        
     
 }

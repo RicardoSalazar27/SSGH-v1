@@ -8,6 +8,7 @@ if (window.location.pathname === '/admin/configuracion/informacion') {
             //alert('diste click en actualizar info');
 
             const hotel = {
+                id: btnActualizarInfo.dataset.id, 
                 nombre : document.getElementById('nombre').value.trim(),
                 telefono : document.getElementById('telefono').value.trim(),
                 correo : document.getElementById('correo').value.trim(),
@@ -26,8 +27,8 @@ if (window.location.pathname === '/admin/configuracion/informacion') {
                 });
 
                 const resultado = await respuesta.json();
-                mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo)
-
+                mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+                                
             } catch (error) {
                 console.log('error');
             }
