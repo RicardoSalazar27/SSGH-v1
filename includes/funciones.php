@@ -18,3 +18,11 @@ function is_auth() : bool{
     return isset($_SESSION['nombre']) && !empty($_SESSION);
 }
 
+function respuesta($tipo, $titulo, $mensaje){
+    return [
+        "tipo" => $tipo,
+        "titulo" => $titulo,
+        "mensaje" => $mensaje
+    ];
+}
+

@@ -5,6 +5,7 @@ require_once __DIR__ . '/../includes/app.php';
 use MVC\Router;
 use Controllers\AuthController;
 use Controllers\DashboardController;
+use Controllers\informacionController;
 use Controllers\UsuariosController;
 
 $router = new Router();
@@ -33,7 +34,8 @@ $router->get('/confirmar-cuenta', [AuthController::class, 'confirmar']);
 
 // Area de Administracion
 $router->get('/admin/index', [DashboardController:: class, 'index']);
-// $router->get('/admin/configuracion/informacion', [informacionController::class, 'index']);
+$router->get('/admin/configuracion/informacion', [informacionController::class, 'index']);
+$router->post('/admin/configuracion/informacion/actualizar', [informacionController::class, 'actualizar']);
 // $router->get('/admin/configuracion/habitaciones', [HabitacionesController::class, 'index']);
 // $router->get('/admin/configuracion/categorias', [CategoriasController::class, 'index']);
 // $router->get('/admin/configuracion/niveles', [NivelesController::class, 'index']);

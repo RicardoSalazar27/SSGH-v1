@@ -3,11 +3,14 @@
 namespace Controllers;
 
 use Classes\Email;
+use Model\Hotel;
 use Model\Usuario;
 use MVC\Router;
 
 class AuthController {
     public static function login(Router $router) {
+
+        $hotel = Hotel::get(1);
 
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
             
@@ -57,7 +60,8 @@ class AuthController {
         
         // Render a la vista 
         $router->render('auth/login', [
-            'titulo' => 'Inicia Sesion Para Comenzar'
+            'titulo' => 'Inicia Sesion Para Comenzar',
+            'hotel' => $hotel
         ]);
     }
 

@@ -5,13 +5,14 @@ namespace Model;
 class Hotel extends ActiveRecord{
 
     public static $tabla = 'Hotel';
-    public static $columnasDB = ['id', 'nombre', 'telefono', 'correo', 'ubicacion'];
+    public static $columnasDB = ['id', 'nombre', 'telefono', 'correo', 'ubicacion', 'img'];
 
     public $id;
     public $nombre;
     public $telefono;
     public $correo;
     public $ubicacion;
+    public $img;
 
     public function __construct($args = []) {
         $this->id = $args['id'] ?? null;
@@ -19,6 +20,7 @@ class Hotel extends ActiveRecord{
         $this->telefono = $args['telefono'] ?? '';
         $this->correo = $args['correo'] ?? '';
         $this->ubicacion = $args['ubicacion'] ?? '';
+        $this->img = $args['img'] ?? '';
     }
 
     public function validarDatos(){
@@ -37,9 +39,6 @@ class Hotel extends ActiveRecord{
         }
         if(strlen($this->telefono) < 10) {
             self::$alertas['error'][] = 'El password debe contener al menos 6 caracteres';
-        }
-        if(!$this->ubicacion) {
-            self::$alertas['error'][] = 'La Direccion del Hotel es Obligatorio';
         }
 
         return self::$alertas;
