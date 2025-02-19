@@ -25,12 +25,24 @@ if (window.location.pathname === '/admin/configuracion/informacion') {
                     body: datos
                 });
 
-                
-                
+                const resultado = await respuesta.json();
+                mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo)
+
             } catch (error) {
                 console.log('error');
             }
 
         })
     }
+
+    function mostrarAlerta(titulo, mensaje, tipo) {
+        Swal.fire({
+            icon: tipo,
+            title: titulo,
+            text: mensaje,
+        }).then(() => {
+            $('.modal').modal('hide');
+            location.reload(); // Recarga la página automáticamente
+        });
+    }        
 }
