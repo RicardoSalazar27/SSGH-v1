@@ -26,7 +26,7 @@ if (window.location.pathname === '/admin/usuarios') {
              '<"row d-flex justify-content-between"<"col d-flex justify-content-start"l><"col d-flex justify-content-center"i><"col d-flex justify-content-end"p>>',
         columnDefs: [
             { orderable: false, targets: [3, 8] },  // Desactiva ordenación en Dirección y Estatus
-            { visible: false, targets: [5] }       // Oculta la columna Password
+            { visible: false, targets: [7] }       // Oculta la columna Password
         ]
     };
 
@@ -74,11 +74,13 @@ if (window.location.pathname === '/admin/usuarios') {
             const row = `
                 <tr>
                     <td>${index + 1}</td>
+                    <td><img src="/build/img/${user.img}.png" alt="Descripción de la imagen" width="65"></td>
                     <td>${user.nombre}</td>
                     <td>${user.apellido}</td>
                     <td>${user.direccion}</td>
                     <td>${user.email}</td>
-                    <td>******</td> <!-- Ocultamos la contraseña -->
+                    <td>${user.telefono}</td>
+                    <td>******</td> <!-- Ocultamos la contraseña en opciones de la tabla -->
                     <td>${rol}</td>
                     <td class="text-center">${estatus}</td>
                     <td>
@@ -151,27 +153,111 @@ if (window.location.pathname === '/admin/usuarios') {
         }        
     }
 
-    async function cargarDatosUsuario(id){
+    async function cargarDatosUsuario(id) {
         try {
-
             const url = `http://localhost:3000/api/usuarios/${id}`;
             const resultado = await fetch(url);
-
-            if( resultado.ok ) {
+    
+            if (resultado.ok) {
                 const usuario = await resultado.json();
+                console.log(usuario);
                 llenarModal(usuario);
-            }
+    
+                let btnActualizarUsuario = document.querySelector('.btnActualizarUsuario');
+    
+                if (btnActualizarUsuario) {
+                    // Eliminar eventos previos correctamente
+                    let nuevoBtn = btnActualizarUsuario.cloneNode(true);
+                    btnActualizarUsuario.replaceWith(nuevoBtn);
+                    btnActualizarUsuario = document.querySelector('.btnActualizarUsuario');
+    
+                    btnActualizarUsuario.addEventListener('click', async function (e) {
+                        e.preventDefault();
+    
+                        // Obtener los valores actualizados
+                        const usuarioactualizado = {
+                            nombre: document.getElementById('nombre').value.trim(),
+                            apellido: document.getElementById('apellido').value.trim(),
+                            direccion: document.getElementById('direccion').value.trim(),
+                            email: document.getElementById('email').value.trim(),
+                            telefono: document.getElementById('telefono').value.trim(),
+                            password: document.getElementById('password').value.trim(),
+                            password2: document.getElementById('password2').value.trim(),
+                            rol_id: document.getElementById('rol_id').value.trim(),
+                            estatus: document.getElementById('estatus').value.trim(),
+                            img: document.getElementById('logo').files[0] || usuario.img // Si no se carga imagen, mantener la existente
+                        };
+    
+                        // **Validación de contraseñas**
+                        if (usuarioactualizado.password || usuarioactualizado.password2) {
+                            if (usuarioactualizado.password !== usuarioactualizado.password2) {
+                                mostrarAlerta("Error", "Las contraseñas no coinciden.", "error");
+                                return; // Detiene la ejecución si las contraseñas no coinciden
+                            }
+                        }
+    
+                        // **Validación de email**
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (!emailRegex.test(usuarioactualizado.email)) {
+                            mostrarAlerta("Error", "El correo electrónico no tiene un formato válido.", "error");
+                            return; // Detiene la ejecución si el email no es válido
+                        }
+    
+                        let cambios = {};
+    
+                        if (usuarioactualizado.nombre !== usuario.nombre) cambios.nombre = usuarioactualizado.nombre;
+                        if (usuarioactualizado.apellido !== usuario.apellido) cambios.apellido = usuarioactualizado.apellido;
+                        if (usuarioactualizado.direccion !== usuario.direccion) cambios.direccion = usuarioactualizado.direccion;
+                        if (usuarioactualizado.email !== usuario.email) cambios.email = usuarioactualizado.email;
+                        if (usuarioactualizado.estatus !== usuario.estatus) cambios.estatus = usuarioactualizado.estatus;
+                        if (usuarioactualizado.telefono !== usuario.telefono) cambios.telefono = usuarioactualizado.telefono;
+                        if (usuarioactualizado.password && usuarioactualizado.password2) {
+                            cambios.password = usuarioactualizado.password;
+                            delete usuarioactualizado.password2;
 
+                        }
+                        if (usuarioactualizado.rol_id !== usuario.rol_id) cambios.rol_id = usuarioactualizado.rol_id;
+                        
+                        // Si se seleccionó una imagen nueva, incluirla
+                        if (usuarioactualizado.img instanceof File) {
+                            cambios.img = usuarioactualizado.img;
+                        }
+    
+                        // Determinar si usar PUT o PATCH
+                        if (Object.keys(cambios).length === Object.keys(usuarioactualizado).length) {
+                            console.log('Se actualizaron todos los campos, se usará PUT');
+                            console.log('cambios registrados');
+                            console.log(cambios);
+                            console.log('valores obtenidos del formulario');
+                            console.log(usuarioactualizado);
+                        } else {
+                            console.log('Se actualizaron algunos campos, se usará PATCH');
+                            console.log('cambios registrados');
+                            console.log(cambios);
+                            console.log('valores obtenidos del formulario');
+                            console.log(usuarioactualizado);
+                        }
+    
+                        // Aquí iría tu función de envío de datos al servidor
+                    });
+                }
+            }
+    
             function llenarModal(usuario) {
                 document.getElementById('nombre').value = usuario.nombre;
                 document.getElementById('apellido').value = usuario.apellido;
                 document.getElementById('direccion').value = usuario.direccion;
                 document.getElementById('email').value = usuario.email;
+                document.getElementById('telefono').value = usuario.telefono;
                 document.getElementById('rol_id').value = usuario.rol_id;
-            }   
-            
+                document.getElementById('estatus').value = usuario.estatus;
+    
+                const imgElement = document.getElementById('img');
+                imgElement.src = `/build/img/${usuario.img}.png`;
+            }
+    
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 

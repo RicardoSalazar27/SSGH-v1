@@ -9,7 +9,11 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="form-group">
+            <div class="form-group text-center">
+                <img id="img" alt="imagen-empleado" class="img-fluid mb-2" style="height: 100px;">
+                <input type="file" class="form-control-file" id="logo" name="logo">
+            </div>
+            <div class="form-group">
                 <label for="nombre">Nombre</label>
                 <input 
                     type="text"
@@ -50,6 +54,16 @@
                 />
             </div>
             <div class="form-group">
+                <label for="telefono">Telefono</label>
+                <input 
+                    type="telefono"
+                    class="form-control"
+                    id="telefono"
+                    name="telefono"
+                    placeholder="Tu telefono"
+                />
+            </div>
+            <div class="form-group">
                 <label for="password">Password</label>
                 <input 
                     type="password"
@@ -72,11 +86,18 @@
             <div class="form-group">
                 <label for="rol_id">Rol</label>
                 <select class="form-control" id="rol_id" name="rol_id">
+                    <option value="1">Administrador</option>
                     <option value="2">General</option>
                     <option value="3">Limpieza</option>
                  </select>
             </div>
-
+            <div class="form-group">
+                <label for="estatus">Estatus</label>
+                <select class="form-control" id="estatus" name="estatus">
+                    <option value="0">Inactivo</option>
+                    <option value="1">Activo</option>
+                 </select>
+            </div>
             <!-- Botones en el formulario -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

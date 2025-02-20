@@ -33,15 +33,16 @@
                             <thead>
                                 <tr>
                                     <th>No.</th>
+                                    <th>Foto</th>
                                     <th>Nombre</th>
                                     <th>Apellidos</th>
                                     <th>Dirección</th>
                                     <th>Email</th>
+                                    <th>Telefono</th>
                                     <th class="no-export">Password</th>
                                     <th>Rol</th>
                                     <th class="text-center">Estatus</th>
-                                    <th class="no-export">Acciones</th>
-                                 
+                                    <th class="no-export">Acciones</th> 
                                 </tr>
                             </thead>
                             <tbody id="tableBody_users"></tbody>
