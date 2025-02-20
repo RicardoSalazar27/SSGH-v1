@@ -75,6 +75,9 @@ class AuthController {
     }
 
     public static function registro(Router $router) {
+
+        $hotel = $hotel = Hotel::get(1);
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
             if (empty($_POST['email'])) {
@@ -128,7 +131,8 @@ class AuthController {
         
         // Renderizar la vista
         $router->render('auth/registro', [
-            'titulo' => 'Crea una nueva cuenta'
+            'titulo' => 'Crea una nueva cuenta',
+            'hotel' => $hotel
         ]);
     }
     
@@ -136,6 +140,8 @@ class AuthController {
 
     public static function olvide(Router $router) {
         $alertas = [];
+
+        $hotel = Hotel::get(1);
         
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $usuario = new Usuario($_POST);
@@ -175,7 +181,7 @@ class AuthController {
         // Muestra la vista
         $router->render('auth/olvide', [
             'titulo' => 'Olvide mi Password',
-            'alertas' => $alertas
+            'hotel' => $hotel
         ]);
     }
 

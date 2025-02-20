@@ -1,14 +1,14 @@
 <div class="login-box">
   <!-- /.login-logo -->
   <div class="card card-outline card-primary">
-  <div class="card-header text-center">
-  <!-- Logo de la empresa -->
-  <img src="/build/img/<?php echo $hotel->img;?>.png" alt="Logo" class="img-fluid" style="height: 120px;">
-  <!-- Nombre de la empresa debajo del logo (en un bloque) -->
-  <div class="mt-2">
-    <a href="/login" class="h2"><?php echo $hotel->nombre;?></a>
-  </div>
-</div>
+    <div class="card-header text-center">
+      <!-- Logo de la empresa -->
+      <img src="/build/img/<?php echo $hotel->img;?>.png" alt="Logo" class="img-fluid" style="height: 120px;">
+      <!-- Nombre de la empresa debajo del logo (en un bloque) -->
+      <div class="mt-2">
+        <a href="/login" class="h2"><?php echo $hotel->nombre;?></a>
+      </div>
+    </div>
     <div class="card-body">
       <p class="login-box-msg"><?php echo $titulo;?></p>
       <div id="mensaje-resultado" class="alert alert-dismissible" style="display: none;"></div>

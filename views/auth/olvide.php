@@ -1,7 +1,12 @@
 <div class="login-box">
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <a href="/login" class="h1"><b>Tu</b>Nombre</a>
+      <!-- Logo de la empresa -->
+      <img src="/build/img/<?php echo $hotel->img;?>.png" alt="Logo" class="img-fluid" style="height: 120px;">
+      <!-- Nombre de la empresa debajo del logo (en un bloque) -->
+      <div class="mt-2">
+        <a href="/login" class="h2"><?php echo $hotel->nombre;?></a>
+      </div>
     </div>
     <div class="card-body">
       <p class="login-box-msg">¿Olvidaste tu contraseña? Aquí puedes recuperarla fácilmente.</p>
