@@ -71,6 +71,7 @@ class UsuariosController {
     }
     public static function actualizar($id){
         $usuario = Usuario::find($id);
+        //debuguear($usuario);
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             if( !$usuario ){
@@ -126,6 +127,12 @@ class UsuariosController {
     
             // Sincronizar datos EXCLUYENDO 'img' si no se subió una nueva imagen
             $datosActualizar = $_POST;
+    
+            // Si la contraseña está vacía, no la actualizamos
+            if (empty($_POST['password'])) {
+                unset($datosActualizar['password']);  // No actualizamos la contraseña si está vacía
+            }
+    
             if (empty($_FILES['img']['tmp_name'])) {
                 unset($datosActualizar['img']); // Elimina la clave 'img' para no modificar el campo en la BD
             }
@@ -151,5 +158,5 @@ class UsuariosController {
                 exit;
             }
         }
-    }    
+    }        
 }

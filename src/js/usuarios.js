@@ -238,6 +238,7 @@ if (window.location.pathname === '/admin/usuarios') {
                                 // Esperar la respuesta en formato JSON
                                 const resultado = await respuesta.json();
                                 mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+                                initDataTable();
                             } catch (error) {
                                 console.log(error);
                             }
