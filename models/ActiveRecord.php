@@ -141,9 +141,9 @@ class ActiveRecord {
         // Insertar en la base de datos
         $query = " INSERT INTO " . static::$tabla . " ( ";
         $query .= join(', ', array_keys($atributos));
-        $query .= " ) VALUES (' "; 
+        $query .= " ) VALUES ('"; // Sin espacio extra
         $query .= join("', '", array_values($atributos));
-        $query .= " ') ";
+        $query .= "') "; // Sin espacio antes del cierre
 
          //debuguear($query); // Descomentar si no te funciona algo
 

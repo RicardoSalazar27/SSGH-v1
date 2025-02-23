@@ -133,7 +133,7 @@ if (window.location.pathname === '/admin/usuarios') {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
-                        const url = `http://localhost:3000/api/usuarios/${id}`; // 🔥 Aquí se inyecta el ID en la URL
+                        const url = `/api/usuarios/${id}`; // 🔥 Aquí se inyecta el ID en la URL
         
                         const respuesta = await fetch(url, {
                             method: 'DELETE',  // 🔥 Método DELETE para eliminar
@@ -155,7 +155,7 @@ if (window.location.pathname === '/admin/usuarios') {
 
     async function cargarDatosUsuario(id) {
         try {
-            const url = `http://localhost:3000/api/usuarios/${id}`;
+            const url = `/api/usuarios/${id}`;
             const resultado = await fetch(url);
     
             if (resultado.ok) {
@@ -191,7 +191,7 @@ if (window.location.pathname === '/admin/usuarios') {
                         // **Validación de contraseñas**
                         if (usuarioactualizado.password || usuarioactualizado.password2) {
                             if (usuarioactualizado.password !== usuarioactualizado.password2) {
-                                mostrarAlerta("Error", "Las contraseñas no coinciden.", "error");
+                                mostrarAlerta2("Las contraseñas no coinciden.", "error");
                                 return; // Detiene la ejecución si las contraseñas no coinciden
                             }
                         }
@@ -199,7 +199,7 @@ if (window.location.pathname === '/admin/usuarios') {
                         // **Validación de email**
                         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                         if (!emailRegex.test(usuarioactualizado.email)) {
-                            mostrarAlerta("Error", "El correo electrónico no tiene un formato válido.", "error");
+                            mostrarAlerta2("El correo electrónico no tiene un formato válido.", "error");
                             return; // Detiene la ejecución si el email no es válido
                         }
     
@@ -213,8 +213,6 @@ if (window.location.pathname === '/admin/usuarios') {
                         if (usuarioactualizado.telefono !== usuario.telefono) cambios.telefono = usuarioactualizado.telefono;
                         if (usuarioactualizado.password && usuarioactualizado.password2) {
                             cambios.password = usuarioactualizado.password;
-                            delete usuarioactualizado.password2;
-
                         }
                         if (usuarioactualizado.rol_id !== usuario.rol_id) cambios.rol_id = usuarioactualizado.rol_id;
                         
@@ -222,22 +220,31 @@ if (window.location.pathname === '/admin/usuarios') {
                         if (usuarioactualizado.img instanceof File) {
                             cambios.img = usuarioactualizado.img;
                         }
+
+                        delete usuarioactualizado.password2;
+
+                        //console.log(cambios);
     
-                        // Determinar si usar PUT o PATCH
-                        if (Object.keys(cambios).length === Object.keys(usuarioactualizado).length) {
-                            console.log('Se actualizaron todos los campos, se usará PUT');
-                            console.log('cambios registrados');
-                            console.log(cambios);
-                            console.log('valores obtenidos del formulario');
-                            console.log(usuarioactualizado);
+                        if (Object.keys(cambios).length > 0) {
+                            try {
+                                const datos = new FormData();
+                                Object.entries(usuarioactualizado).forEach(([key, value]) => datos.append(key, value));
+                                const url = `/api/usuarios/${id}`; 
+                                const respuesta = await fetch(url, { // Corregido: Usar un objeto en lugar de un array
+                                    method: 'POST',
+                                    body: datos
+                                });
+                                
+                                // Esperar la respuesta en formato JSON
+                                const resultado = await respuesta.json();
+                                mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+                            } catch (error) {
+                                console.log(error);
+                            }
+                            
                         } else {
-                            console.log('Se actualizaron algunos campos, se usará PATCH');
-                            console.log('cambios registrados');
-                            console.log(cambios);
-                            console.log('valores obtenidos del formulario');
-                            console.log(usuarioactualizado);
-                        }
-    
+                            mostrarAlerta('Sin Cambios', 'No hay cambios por mostrar', 'warning')
+                        }    
                         // Aquí iría tu función de envío de datos al servidor
                     });
                 }
@@ -269,5 +276,25 @@ if (window.location.pathname === '/admin/usuarios') {
         }).then(() => {
             $('.modal').modal('hide'); // Cierra todos los modales activos
         });
-    }    
+    }
+    
+    function mostrarAlerta2(mensaje, tipo) {
+        const mensajeResultado = document.getElementById('mensaje-resultado');
+        mensajeResultado.style.display = 'block'; // Asegúrate de que el contenedor se muestre
+        mensajeResultado.textContent = mensaje; // Mostrar solo el mensaje
+    
+        // Cambiar el color de fondo del contenedor según el tipo de mensaje
+        if (tipo === 'error') {
+            mensajeResultado.className = 'alert alert-danger'; // Rojo para error
+        } else if (tipo === 'success') {
+            mensajeResultado.className = 'alert alert-success'; // Verde para éxito
+        } else {
+            mensajeResultado.className = 'alert alert-info'; // Azul o información por defecto
+        }
+    
+        // Opcional: Ocultar el mensaje después de 5 segundos
+        setTimeout(() => {
+            mensajeResultado.style.display = 'none';
+        }, 5000);
+    }
 }

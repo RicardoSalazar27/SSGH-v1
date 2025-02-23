@@ -98,6 +98,7 @@
                     <option value="1">Activo</option>
                  </select>
             </div>
+            <div id="mensaje-resultado" class="alert alert-dismissible" style="display: none;"></div>
             <!-- Botones en el formulario -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
