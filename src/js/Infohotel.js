@@ -20,7 +20,7 @@ if (window.location.pathname === '/admin/configuracion/informacion') {
                 //Crear datos para enviar en formdata
                 const datos  = new FormData();
                 Object.entries(hotel).forEach(([key, value]) => datos.append(key, value));
-                const url = 'http://localhost:3000/admin/configuracion/informacion/actualizar';
+                const url = '/admin/configuracion/informacion/actualizar';
                 const respuesta = await fetch(url, { // Corregido: Usar un objeto en lugar de un array
                     method: 'POST',
                     body: datos
