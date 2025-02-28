@@ -86,10 +86,11 @@ if (window.location.pathname === '/admin/usuarios') {
                     <td>
                         <!-- Botón de editar que abre el modal -->
                         <button 
-                            class="btn btn-sm btn-primary btn-editarUsuario"
+                            id="btnEditarUsuario" 
+                            class="btn btn-sm btn-primary btnEditarUsuario" 
                             data-id="${user.id}" 
                             data-toggle="modal" 
-                            data-target="#usuariosModal">
+                            data-target="#usuarioEditarModal">
                             <i class="fa-solid fa-pen"></i>
                         </button>
                         <!-- Botón de eliminar -->
@@ -102,23 +103,14 @@ if (window.location.pathname === '/admin/usuarios') {
             tbody.innerHTML += row;
         });
 
-        tbody.addEventListener('click', function(e){
-            //Delegacion para actualizar el cliente
-            if( e.target.closest('.btn-editarUsuario') ){
-                // Cambiar la clase del botón para que sea de 'Actualizar' y no de 'Crear'
-                const botonSubirUsuario = document.querySelector('.btnSubirUsuario');
-                if ( botonSubirUsuario ){
-                    botonSubirUsuario.classList.replace('btnSubirUsuario','btnActualizarUsuario');
-                }
-
-                const usuarioId = e.target.closest('.btn-editarUsuario').getAttribute('data-id');
-                cargarDatosUsuario(usuarioId); //Llama a la funcion de cargar los datos
-            }
-            if (e.target.classList.contains('btn-eliminarUsuario')) {
-                const usuarioId = e.target.getAttribute('data-id');
+        // -----------------    ELIMINAR USUARIO     -----------------------------
+        const botonesEliminar = document.querySelectorAll('.btn-eliminarUsuario');
+        botonesEliminar.forEach(boton => {
+            boton.addEventListener('click', function (e) {
+                const usuarioId = this.getAttribute('data-id');
                 confirmarEliminacion(usuarioId);
-            }            
-        })
+            });
+        });
 
         async function confirmarEliminacion(id) {
             Swal.fire({
@@ -133,141 +125,167 @@ if (window.location.pathname === '/admin/usuarios') {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
-                        const url = `/api/usuarios/${id}`; // 🔥 Aquí se inyecta el ID en la URL
-        
+                        const url = `/api/usuarios/${id}`;
                         const respuesta = await fetch(url, {
-                            method: 'DELETE',  // 🔥 Método DELETE para eliminar
+                            method: 'DELETE',
                         });
-        
+
                         const resultado = await respuesta.json();
                         mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
-        
+
                         if (resultado.tipo === 'success') {
-                            await initDataTable(); // Recarga la tabla de clientes
+                            await initDataTable();
                         }
                     } catch (error) {
                         console.error(error);
                     }
                 }
             });
-        }        
-    }
+        } // --------- TERMINA ELIMINAR USUARIO  ------------
 
-    async function cargarDatosUsuario(id) {
-        try {
-            const url = `/api/usuarios/${id}`;
-            const resultado = await fetch(url);
-    
-            if (resultado.ok) {
-                const usuario = await resultado.json();
-                console.log(usuario);
-                llenarModal(usuario);
-    
-                let btnActualizarUsuario = document.querySelector('.btnActualizarUsuario');
-    
-                if (btnActualizarUsuario) {
-                    // Eliminar eventos previos correctamente
-                    let nuevoBtn = btnActualizarUsuario.cloneNode(true);
-                    btnActualizarUsuario.replaceWith(nuevoBtn);
-                    btnActualizarUsuario = document.querySelector('.btnActualizarUsuario');
-    
-                    btnActualizarUsuario.addEventListener('click', async function (e) {
-                        e.preventDefault();
-    
-                        // Obtener los valores actualizados
-                        const usuarioactualizado = {
-                            nombre: document.getElementById('nombre').value.trim(),
-                            apellido: document.getElementById('apellido').value.trim(),
-                            direccion: document.getElementById('direccion').value.trim(),
-                            email: document.getElementById('email').value.trim(),
-                            telefono: document.getElementById('telefono').value.trim(),
-                            password: document.getElementById('password').value.trim(),
-                            password2: document.getElementById('password2').value.trim(),
-                            rol_id: document.getElementById('rol_id').value.trim(),
-                            estatus: document.getElementById('estatus').value.trim(),
-                            img: document.getElementById('logo').files[0] || usuario.img // Si no se carga imagen, mantener la existente
-                        };
-    
-                        // **Validación de contraseñas**
-                        if (usuarioactualizado.password || usuarioactualizado.password2) {
-                            if (usuarioactualizado.password !== usuarioactualizado.password2) {
-                                mostrarAlerta2("Las contraseñas no coinciden.", "error");
-                                return; // Detiene la ejecución si las contraseñas no coinciden
-                            }
-                        }
-    
-                        // **Validación de email**
-                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                        if (!emailRegex.test(usuarioactualizado.email)) {
-                            mostrarAlerta2("El correo electrónico no tiene un formato válido.", "error");
-                            return; // Detiene la ejecución si el email no es válido
-                        }
-    
-                        let cambios = {};
-    
-                        if (usuarioactualizado.nombre !== usuario.nombre) cambios.nombre = usuarioactualizado.nombre;
-                        if (usuarioactualizado.apellido !== usuario.apellido) cambios.apellido = usuarioactualizado.apellido;
-                        if (usuarioactualizado.direccion !== usuario.direccion) cambios.direccion = usuarioactualizado.direccion;
-                        if (usuarioactualizado.email !== usuario.email) cambios.email = usuarioactualizado.email;
-                        if (usuarioactualizado.estatus !== usuario.estatus) cambios.estatus = usuarioactualizado.estatus;
-                        if (usuarioactualizado.telefono !== usuario.telefono) cambios.telefono = usuarioactualizado.telefono;
-                        if (usuarioactualizado.password && usuarioactualizado.password2) {
-                            cambios.password = usuarioactualizado.password;
-                        }
-                        if (usuarioactualizado.rol_id !== usuario.rol_id) cambios.rol_id = usuarioactualizado.rol_id;
-                        
-                        // Si se seleccionó una imagen nueva, incluirla
-                        if (usuarioactualizado.img instanceof File) {
-                            cambios.img = usuarioactualizado.img;
-                        }
 
-                        delete usuarioactualizado.password2;
-
-                        //console.log(cambios);
-    
-                        if (Object.keys(cambios).length > 0) {
-                            try {
-                                const datos = new FormData();
-                                Object.entries(usuarioactualizado).forEach(([key, value]) => datos.append(key, value));
-                                const url = `/api/usuarios/${id}`; 
-                                const respuesta = await fetch(url, { // Corregido: Usar un objeto en lugar de un array
-                                    method: 'POST',
-                                    body: datos
-                                });
-                                
-                                // Esperar la respuesta en formato JSON
-                                const resultado = await respuesta.json();
-                                mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
-                                initDataTable();
-                            } catch (error) {
-                                console.log(error);
-                            }
-                            
-                        } else {
-                            mostrarAlerta('Sin Cambios', 'No hay cambios por mostrar', 'warning')
-                        }    
-                        // Aquí iría tu función de envío de datos al servidor
-                    });
+        // ------------------   LLENAR MODAL PARA ACTUALIZAR    -----------------
+        document.addEventListener('click', async function (event) {
+            if (event.target.closest('.btnEditarUsuario')) {
+                const boton = event.target.closest('.btnEditarUsuario');
+                const userId = boton.dataset.id;
+                
+                try {
+                    // Obtener los datos del usuario desde la API o una variable global
+                    const respuesta = await fetch(`/api/usuarios/${userId}`);
+                    if (!respuesta.ok) {
+                        throw new Error(`Error al obtener usuario: ${respuesta.statusText}`);
+                    }
+        
+                    const usuario = await respuesta.json();
+                    // Llenar los campos del modal con los datos del usuario
+                    document.getElementById('nombreEditar').value = usuario.nombre;
+                    document.getElementById('apellidoEditar').value = usuario.apellido;
+                    document.getElementById('direccionEditar').value = usuario.direccion;
+                    document.getElementById('emailEditar').value = usuario.email;
+                    document.getElementById('telefonoEditar').value = usuario.telefono;
+                    document.getElementById('rol_idEditar').value = usuario.rol_id;
+                    document.getElementById('estatusEditar').value = usuario.estatus;
+        
+                    // Mostrar la imagen si existe
+                    const imgElement = document.getElementById('imgEditar');
+                    imgElement.src = usuario.img ? `/build/img/${usuario.img}.png` : '/build/img/default.png';                    
+        
+                    // Guardar el ID en el botón de actualización
+                    document.querySelector('.btnActualizarUsuario').dataset.id = userId;
+        
+                    // Abrir el modal manualmente si es necesario
+                    $('#usuarioEditarModal').modal('show');
+        
+                } catch (error) {
+                    console.error('Error al obtener los datos del usuario:', error);
                 }
             }
-    
-            function llenarModal(usuario) {
-                document.getElementById('nombre').value = usuario.nombre;
-                document.getElementById('apellido').value = usuario.apellido;
-                document.getElementById('direccion').value = usuario.direccion;
-                document.getElementById('email').value = usuario.email;
-                document.getElementById('telefono').value = usuario.telefono;
-                document.getElementById('rol_id').value = usuario.rol_id;
-                document.getElementById('estatus').value = usuario.estatus;
-    
-                const imgElement = document.getElementById('img');
-                imgElement.src = `/build/img/${usuario.img}.png`;
+        });
+        
+        // ------------------ ACTUALIZAR USUARIO -----------------
+        document.getElementById('formEditarUsuario').addEventListener('submit', async function (e) {
+            e.preventDefault();
+        
+            const userId = document.querySelector('.btnActualizarUsuario').dataset.id;
+        
+            const usuarioActualizado = {
+                nombre: document.getElementById('nombreEditar').value.trim(),
+                apellido: document.getElementById('apellidoEditar').value.trim(),
+                direccion: document.getElementById('direccionEditar').value.trim(),
+                email: document.getElementById('emailEditar').value.trim(),
+                telefono: document.getElementById('telefonoEditar').value.trim(),
+                password: document.getElementById('passwordEditar').value.trim(),
+                password2: document.getElementById('password2Editar').value.trim(),
+                rol_id: document.getElementById('rol_idEditar').value.trim(),
+                estatus: document.getElementById('estatusEditar').value.trim(),
+                img: document.getElementById('logoEditar').files[0]
+            };
+        
+            if (!userId) {
+                mostrarAlerta('Error', 'No se encontró el ID del usuario.', 'error');
+                return;
             }
-    
-        } catch (error) {
-            console.error(error);
-        }
+        
+            if (usuarioActualizado.password !== usuarioActualizado.password2) {
+                mostrarAlerta('Error', 'Las contraseñas no coinciden.', 'error');
+                return;
+            }
+        
+            delete usuarioActualizado.password2; // No enviar password2 al backend
+        
+            try {
+                const datos = new FormData();
+                Object.entries(usuarioActualizado).forEach(([key, value]) => datos.append(key, value));
+                const respuesta = await fetch(`/api/usuarios/${userId}`, {
+                    method: 'POST',
+                    body: datos
+                });
+        
+                const resultado = await respuesta.json();
+                mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+                initDataTable();
+        
+            } catch (error) {
+                console.error('Error al actualizar usuario:', error);
+            }
+        });        
     }
+
+    //  ------------- CREAR NUEVO USUARIO  ----------------
+    const botonSubirUsuario = document.querySelector('.btnSubirUsuario');
+    botonSubirUsuario.addEventListener('click', async function (e) {
+        e.preventDefault();
+
+        const usuarioNuevo = {
+            nombre: document.getElementById('nombre').value.trim(),
+            apellido: document.getElementById('apellido').value.trim(),
+            direccion: document.getElementById('direccion').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            telefono: document.getElementById('telefono').value.trim(),
+            password: document.getElementById('password').value.trim(),
+            password2: document.getElementById('password2').value.trim(),
+            rol_id: document.getElementById('rol_id').value.trim(),
+            estatus: document.getElementById('estatus').value.trim(),
+            img: document.getElementById('logo').files[0]
+        };
+
+        if (usuarioNuevo.email === "" || usuarioNuevo.nombre === "" || usuarioNuevo.direccion === "" || usuarioNuevo.password === "" || usuarioNuevo.password2 === "" || usuarioNuevo.telefono === "") {
+            mostrarAlerta2('Todos los campos son necesarios', 'error');
+            return;
+        }
+
+        if (usuarioNuevo.password !== usuarioNuevo.password2) {
+            mostrarAlerta2("Las contraseñas no coinciden.", "error");
+            return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(usuarioNuevo.email)) {
+            mostrarAlerta2("El correo electrónico no tiene un formato válido.", "error");
+            return;
+        }
+
+        delete usuarioNuevo.password2;
+
+        try {
+            const datos = new FormData();
+            Object.entries(usuarioNuevo).forEach(([key, value]) => datos.append(key, value));
+            const respuesta = await fetch('/api/usuarios', {
+                method: 'POST',
+                body: datos
+            });
+
+            const resultado = await respuesta.json();
+            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+            initDataTable();
+
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
+        }
+    });
+    // ------------------ TERMINA CREACION DE USUARIO --------------------
+
 
     function mostrarAlerta(titulo, mensaje, tipo) {
         Swal.fire({
@@ -278,7 +296,6 @@ if (window.location.pathname === '/admin/usuarios') {
             $('.modal').modal('hide'); // Cierra todos los modales activos
         });
     }
-    
     function mostrarAlerta2(mensaje, tipo) {
         const mensajeResultado = document.getElementById('mensaje-resultado');
         mensajeResultado.style.display = 'block'; // Asegúrate de que el contenedor se muestre

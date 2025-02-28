@@ -25,7 +25,7 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
                             <h1 class="h4 mb-0">Usuarios</h1>
-                            <button id="btnAgregarUsuario" class="btn btn-primary" data-toggle="modal" data-target="#usuariosModal">Agregar Nuevo</button>
+                            <button id="btnAgregarUsuario" class="btn btn-primary" data-toggle="modal" data-target="#usuarioNuevoModal">Agregar Nuevo</button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -54,4 +54,5 @@
     </div>
 </section>
 
-<?php include_once __DIR__ . '/modal.php';?>
+<?php include_once __DIR__ . '/modalNuevo.php';?>
+<?php include_once __DIR__ . '/modalEditar.php';?>

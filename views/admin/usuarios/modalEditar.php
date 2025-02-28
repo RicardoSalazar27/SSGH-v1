@@ -1,24 +1,25 @@
-<!-- Modal Crear-->
-<div class="modal fade" id="usuariosModal" tabindex="-1" role="dialog" aria-labelledby="usuariosModalLabel" aria-hidden="true">
+<!-- Modal Editar-->
+<div class="modal fade" id="usuarioEditarModal" tabindex="-1" role="dialog" aria-labelledby="usuariosModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="usuariosModalLabel">Agregar Nuevo</h5>
+        <h5 class="modal-title" id="usuariosEditarModalLabel">Editar Usuario</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
+        <form id="formEditarUsuario">
             <div class="form-group text-center">
-                <img id="img" alt="imagen-empleado" class="img-fluid mb-2" style="height: 100px;">
-                <input type="file" class="form-control-file" id="logo" name="logo">
+                <img id="imgEditar" alt="imagen-empleado" class="img-fluid mb-2" style="height: 100px;">
+                <input type="file" class="form-control-file" id="logoEditar" name="logoEditar">
             </div>
             <div class="form-group">
                 <label for="nombre">Nombre</label>
                 <input 
                     type="text"
                     class="form-control"
-                    id="nombre"
+                    id="nombreEditar"
                     name="nombre"
                     placeholder="Tu Nombre"
                 />
@@ -28,7 +29,7 @@
                 <input 
                     type="text"
                     class="form-control"
-                    id="apellido"
+                    id="apellidoEditar"
                     name="apellido"
                     placeholder="Tus Apellidos"
                 />
@@ -38,7 +39,7 @@
                 <input 
                     type="text"
                     class="form-control"
-                    id="direccion"
+                    id="direccionEditar"
                     name="direccion"
                     placeholder="Tu Direccion"
                 />
@@ -48,7 +49,7 @@
                 <input 
                     type="email"
                     class="form-control"
-                    id="email"
+                    id="emailEditar"
                     name="email"
                     placeholder="Tu Email"
                 />
@@ -58,7 +59,7 @@
                 <input 
                     type="telefono"
                     class="form-control"
-                    id="telefono"
+                    id="telefonoEditar"
                     name="telefono"
                     placeholder="Tu telefono"
                 />
@@ -68,32 +69,32 @@
                 <input 
                     type="password"
                     class="form-control"
-                    id="password"
+                    id="passwordEditar"
                     name="password"
                     placeholder="Tu Contraseña"
                 />
             </div>
             <div class="form-group">
-                <label for="passowrd2">Repite Tu Password</label>
+                <label for="password2">Repite Tu Password</label>
                 <input 
                     type="password"
                     class="form-control"
-                    id="password2"
+                    id="password2Editar"
                     name="password2"
                     placeholder="Tu Contraseña"
                 />
             </div>
             <div class="form-group">
-                <label for="rol_id">Rol</label>
-                <select class="form-control" id="rol_id" name="rol_id">
+                <label for="rol_idEditar">Rol</label>
+                <select class="form-control" id="rol_idEditar" name="rol_idEditar">
                     <option value="1">Administrador</option>
                     <option value="2">General</option>
                     <option value="3">Limpieza</option>
                  </select>
             </div>
             <div class="form-group">
-                <label for="estatus">Estatus</label>
-                <select class="form-control" id="estatus" name="estatus">
+                <label for="estatusEditar">Estatus</label>
+                <select class="form-control" id="estatusEditar" name="estatusEditar">
                     <option value="0">Inactivo</option>
                     <option value="1">Activo</option>
                  </select>
@@ -102,8 +103,9 @@
             <!-- Botones en el formulario -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary btnSubirUsuario">Guardar</button>
+                <button type="submit" class="btn btn-primary btnActualizarUsuario">Guardar Cambios</button>
             </div>
+        </form>
       </div>
     </div>
   </div>
