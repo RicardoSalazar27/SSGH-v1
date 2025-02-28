@@ -126,7 +126,65 @@ if(window.location.pathname === '/admin/configuracion/niveles'){
         }
     });
     
-    //ACTUALIZAR NIVEL
+    // ---------------    LLENAR MODAL PARA ACTUALIZAR  -----------------
+    document.addEventListener('click', async function (event) {
+        if (event.target.closest('.btnEditarNivel')) {
+            const boton = event.target.closest('.btnEditarNivel');
+            const nivelId = boton.dataset.id;
+            
+            try {
+                // Obtener los datos del usuario desde la API o una variable global
+                const respuesta = await fetch(`/api/niveles/${nivelId}`);
+                if (!respuesta.ok) {
+                    throw new Error(`Error al obtener nivel: ${respuesta.statusText}`);
+                }
+    
+                const nivel = await respuesta.json();
+                // Llenar los campos del modal con los datos del nivel
+                document.getElementById('nombreEditar').value = nivel.nombre;
+                document.getElementById('numeroEditar').value = nivel.numero;
+                document.getElementById('estatusEditar').value = nivel.estatus;
+                
+                // Guardar el ID en el botón de actualización
+                document.querySelector('.btnActualizarNivel').dataset.id = nivelId;
+    
+                // Abrir el modal manualmente si es necesario
+                //$('#modalEditarNivel').modal('show');
+    
+            } catch (error) {
+                console.error('Error al obtener los datos del usuario:', error);
+            }
+        }
+    });
+
+    // ---------------    ACTUALIZAR NIVEL (PENDIENTE)     - ----------------
+    document.getElementById('formEditarUsuario').addEventListener('submit', async function (e) {
+        e.preventDefault();
+    
+        const userId = document.querySelector('.btnActualizarUsuario').dataset.id;
+    
+        const usuarioActualizado = {
+            nombre: document.getElementById('nombreEditar').value.trim(),
+            apellido: document.getElementById('apellidoEditar').value.trim(),
+            direccion: document.getElementById('direccionEditar').value.trim()
+        };
+        
+        try {
+            const datos = new FormData();
+            Object.entries(usuarioActualizado).forEach(([key, value]) => datos.append(key, value));
+            const respuesta = await fetch(`/api/usuarios/${userId}`, {
+                method: 'POST',
+                body: datos
+            });
+    
+            const resultado = await respuesta.json();
+            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+            initDataTable();
+    
+        } catch (error) {
+            console.error('Error al actualizar usuario:', error);
+        }
+    });
 
     //  --------------    CREAR NUEVO NIVEL     ----------------
     const botonSubirNivel = document.querySelector('.btnSubirNivel');

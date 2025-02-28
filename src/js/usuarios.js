@@ -197,11 +197,6 @@ if (window.location.pathname === '/admin/usuarios') {
             img: document.getElementById('logoEditar').files[0]
         };
     
-        if (!userId) {
-            mostrarAlerta('Error', 'No se encontró el ID del usuario.', 'error');
-            return;
-        }
-    
         if (usuarioActualizado.password !== usuarioActualizado.password2) {
             mostrarAlerta('Error', 'Las contraseñas no coinciden.', 'error');
             return;
