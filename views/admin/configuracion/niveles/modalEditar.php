@@ -3,22 +3,12 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Agregar Nuevo</h5>
+        <h5 class="modal-title">Editar Nivel</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-            <div class="form-group">
-                <label for="numero">Numero</label>
-                <input 
-                    type="number"
-                    class="form-control"
-                    id="numero"
-                    name="numero"
-                    placeholder="Numero Ej. 1"
-                />
-            </div>
             <div class="form-group">
                 <label for="nombre">Nombre</label>
                 <input 
@@ -27,6 +17,16 @@
                     id="nombre"
                     name="nombre"
                     placeholder="Nombre Del Nivel Ej. Primer Nivel"
+                />
+            </div>
+            <div class="form-group">
+                <label for="numero">Numero</label>
+                <input 
+                    type="number"
+                    class="form-control"
+                    id="numero"
+                    name="numero"
+                    placeholder="Intervalo de Habitaciones Ej- 100-109"
                 />
             </div>
             <div class="form-group">

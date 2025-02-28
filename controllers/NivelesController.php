@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Model\Hotel;
+use Model\Nivel;
 use Model\Usuario;
 use MVC\Router;
 
@@ -19,5 +20,10 @@ class NivelesController {
             'usuario' => $usuario,
             'hotel' => $hotel
         ]);
+    }
+
+    public static function listar(){
+        $niveles = Nivel::all();
+        echo json_encode($niveles);
     }
 }
