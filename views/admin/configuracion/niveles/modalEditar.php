@@ -22,7 +22,7 @@
             <div class="form-group">
                 <label for="numeroEditar">Numero</label>
                 <input 
-                    type="text"
+                    type="number"
                     class="form-control"
                     id="numeroEditar"
                     name="numeroEditar"

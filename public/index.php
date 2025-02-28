@@ -52,6 +52,7 @@ $router->get('/api/usuarios/{id}', [UsuariosController::class, 'obtener']);
 $router->post('/api/usuarios/{id}', [UsuariosController::class, 'actualizar']);
 
 $router->get('/api/niveles', [NivelesController::class, 'listar']);
+$router->post('/api/niveles', [NivelesController::class, 'crear']);
 $router->get('/api/niveles/{id}', [NivelesController::class, 'obtener']);
 $router->delete('/api/niveles/{id}', [NivelesController::class, 'eliminar']);
 

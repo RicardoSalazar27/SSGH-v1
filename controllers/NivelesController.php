@@ -69,4 +69,48 @@ class NivelesController {
             }
         }
     }
+
+    public static function crear(){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+            // Verificar si el Nivel ya existe
+            $existeNivel = Nivel::where('numero', $_POST['numero']);
+            if ($existeNivel) {
+                http_response_code(400);
+                $respuesta = [
+                    'tipo' => 'error',
+                    'titulo' => 'Ooops...',
+                    'mensaje' => 'El Nivel ya existe'
+                ];
+                echo json_encode($respuesta);
+                exit;
+            }
+    
+            // Crear nuevo nivel
+            $nivel = new Nivel();
+            $nivel->sincronizar($_POST);
+    
+            // Guardar el nivel en la base de datos
+            $resultado = $nivel->guardar();
+    
+            // Responder según el resultado de la creación del nivel
+            if ($resultado) {
+                $respuesta = [
+                    'tipo' => 'success',
+                    'titulo' => 'Creado',
+                    'mensaje' => 'Nivel creado correctamente'
+                ];
+            } else {
+                http_response_code(500);
+                $respuesta = [
+                    'tipo' => 'error',
+                    'titulo' => 'Error',
+                    'mensaje' => 'Hubo un problema al crear el Nivel'
+                ];
+            }
+    
+            echo json_encode($respuesta);
+            exit;
+        }
+    }
 }

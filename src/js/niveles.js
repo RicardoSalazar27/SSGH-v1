@@ -127,4 +127,42 @@ if(window.location.pathname === '/admin/configuracion/niveles'){
     });
     
     //ACTUALIZAR NIVEL
+
+    //  --------------    CREAR NUEVO NIVEL     ----------------
+    const botonSubirNivel = document.querySelector('.btnSubirNivel');
+    botonSubirNivel.addEventListener('click', async function (e) {
+        e.preventDefault();
+
+        const nivelNuevo = {
+            nombre: document.getElementById('nombre').value.trim(),
+            numero: document.getElementById('numero').value.trim(),
+            estatus: document.getElementById('estatus').value.trim()
+        };
+
+        if (nivelNuevo.nombre === "" || nivelNuevo.numero === "") {
+            mostrarAlerta2('Todos los campos son necesarios', 'error');
+            return;
+        }
+        
+        try {
+            const datos = new FormData();
+            Object.entries(nivelNuevo).forEach(([key, value]) => datos.append(key, value));
+            const respuesta = await fetch('/api/niveles', {
+                method: 'POST',
+                body: datos
+            });
+
+            const resultado = await respuesta.json();
+            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+            initDataTable();
+
+            // Limpiar los campos del formulario
+            document.getElementById('nombre').value = '';
+            document.getElementById('numero').value = '';
+            document.getElementById('estatus').value = '';
+
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
+        }
+    });
 }
