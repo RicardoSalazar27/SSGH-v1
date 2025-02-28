@@ -38,24 +38,4 @@ if (window.location.pathname === '/login') {
             }
         })
     }
-
-    function mostrarAlerta2(mensaje, tipo) {
-        const mensajeResultado = document.getElementById('mensaje-resultado');
-        mensajeResultado.style.display = 'block'; // Asegúrate de que el contenedor se muestre
-        mensajeResultado.textContent = mensaje; // Mostrar solo el mensaje
-    
-        // Cambiar el color de fondo del contenedor según el tipo de mensaje
-        if (tipo === 'error') {
-            mensajeResultado.className = 'alert alert-danger'; // Rojo para error
-        } else if (tipo === 'success') {
-            mensajeResultado.className = 'alert alert-success'; // Verde para éxito
-        } else {
-            mensajeResultado.className = 'alert alert-info'; // Azul o información por defecto
-        }
-    
-        // Opcional: Ocultar el mensaje después de 5 segundos
-        setTimeout(() => {
-            mensajeResultado.style.display = 'none';
-        }, 5000);
-    }
 }
