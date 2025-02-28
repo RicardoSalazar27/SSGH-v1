@@ -5,18 +5,18 @@ namespace Model;
 class Nivel extends ActiveRecord{
 
     public static $tabla = 'Niveles';
-    public static $columnasDB = ['id', 'nombre', 'numero', 'descripcion'];
+    public static $columnasDB = ['id', 'nombre', 'numero', 'estatus'];
 
     public $id;
     public $nombre;
     public $numero;
-    public $descripcion;
+    public $estatus;
 
     public function __construct($args = []) {
         $this->id = $args['id'] ?? null;
         $this->nombre = $args['nombre'] ?? '';
         $this->numero = $args['numero'] ?? '';
-        $this->descripcion = $args['descripcion'] ?? 'Sin descripcion';
+        $this->estatus = $args['estatus'] ?? 0;
     }
 
     public function validarDatos(){

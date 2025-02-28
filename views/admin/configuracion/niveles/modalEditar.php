@@ -1,9 +1,9 @@
 <!-- Modal Crear-->
-<div class="modal fade" id="nivelesModal" tabindex="-1" role="dialog" aria-labelledby="nivelesModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalEditarNivel" tabindex="-1" role="dialog" aria-labelledby="modalEditarNivel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="nivelesModalLabel">Agregar Nuevo</h5>
+        <h5 class="modal-title">Agregar Nuevo</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -40,7 +40,7 @@
             <!-- Botones en el formulario -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary btnSubirNivel">Guardar</button>
+                <button type="submit" class="btn btn-primary btnActualizarNivel">Guardar</button>
             </div>
       </div>
     </div>

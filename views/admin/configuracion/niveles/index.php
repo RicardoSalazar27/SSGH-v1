@@ -16,7 +16,6 @@
         </div>
     </div>
 </section>
-
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -25,7 +24,7 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
                             <h1 class="h4 mb-0">Niveles</h1>
-                            <button id="btnAgregarNivel" class="btn btn-primary" data-toggle="modal" data-target="#nivelesModal">Agregar Nuevo</button>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#modalCrearNivel">Agregar Nuevo</button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -34,6 +33,7 @@
                                 <tr>
                                     <th>No.</th>
                                     <th>Nombre</th>
+                                    <th>Numero</th>
                                     <th>Estatus</th>
                                     <th class="no-export">Acciones</th>
                                 </tr>
@@ -47,4 +47,5 @@
     </div>
 </section>
 
-<?php include_once __DIR__ . '/modal.php';?>
+<?php include_once __DIR__ . '/modalCrear.php';?>
+<?php include_once __DIR__ . '/modalEditar.php';?>

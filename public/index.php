@@ -6,6 +6,7 @@ use MVC\Router;
 use Controllers\AuthController;
 use Controllers\DashboardController;
 use Controllers\informacionController;
+use Controllers\NivelesController;
 use Controllers\UsuariosController;
 
 $router = new Router();
@@ -38,7 +39,7 @@ $router->get('/admin/configuracion/informacion', [informacionController::class, 
 $router->post('/admin/configuracion/informacion/actualizar', [informacionController::class, 'actualizar']);
 // $router->get('/admin/configuracion/habitaciones', [HabitacionesController::class, 'index']);
 // $router->get('/admin/configuracion/categorias', [CategoriasController::class, 'index']);
-// $router->get('/admin/configuracion/niveles', [NivelesController::class, 'index']);
+$router->get('/admin/configuracion/niveles', [NivelesController::class, 'index']);
 $router->get('/admin/usuarios', [UsuariosController::class, 'index']);
 // $router->get('/admin/clientes', [ClientesController::class, 'index']);
 
