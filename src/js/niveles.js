@@ -45,6 +45,18 @@ if(window.location.pathname === '/admin/configuracion/niveles'){
         dataTableInit = true;
     }
 
+    // Función para obtener los datos de la API
+    async function listarNiveles() {
+        try {
+            const response = await fetch('/api/niveles');
+            const niveles = await response.json();
+            return niveles;
+        } catch (error) {
+            console.error('Error al obtener niveles:', error);
+            return [];
+        }
+    }
+
     // Función para llenar la tabla con los datos obtenidos
     function llenarTabla(niveles) {
         const tbody = document.getElementById('tableBody_niveles');
@@ -79,15 +91,40 @@ if(window.location.pathname === '/admin/configuracion/niveles'){
         });
     }
 
-    // Función para obtener los datos de la API
-    async function listarNiveles() {
-        try {
-            const response = await fetch('/api/niveles');
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error('Error al obtener niveles:', error);
-            return [];
+    // Delegación de eventos para eliminación de usuarios
+    document.getElementById('tableBody_niveles').addEventListener('click', async function (event) {
+        if (event.target.closest('.btn-eliminarNivel')) {
+            const nivelId = event.target.closest('.btn-eliminarNivel').getAttribute('data-id');
+            const result = await Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    const url = `/api/niveles/${nivelId}`;
+                    const respuesta = await fetch(url, {
+                        method: 'DELETE',
+                    });
+
+                    const resultado = await respuesta.json();
+                    mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+
+                    if (resultado.tipo === 'success') {
+                        await initDataTable();
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
         }
-    }
+    });
+    
+    //ACTUALIZAR NIVEL
 }

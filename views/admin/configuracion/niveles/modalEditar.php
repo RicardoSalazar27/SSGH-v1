@@ -10,28 +10,28 @@
       </div>
       <div class="modal-body">
             <div class="form-group">
-                <label for="nombre">Nombre</label>
+                <label for="nombreEditar">Nombre</label>
                 <input 
                     type="text"
                     class="form-control"
-                    id="nombre"
-                    name="nombre"
+                    id="nombreEditar"
+                    name="nombreEditar"
                     placeholder="Nombre Del Nivel Ej. Primer Nivel"
                 />
             </div>
             <div class="form-group">
-                <label for="numero">Numero</label>
+                <label for="numeroEditar">Numero</label>
                 <input 
-                    type="number"
+                    type="text"
                     class="form-control"
-                    id="numero"
-                    name="numero"
+                    id="numeroEditar"
+                    name="numeroEditar"
                     placeholder="Intervalo de Habitaciones Ej- 100-109"
                 />
             </div>
             <div class="form-group">
-                <label for="estatus">Estatus</label>
-                <select class="form-control" id="estatus" name="estatus">
+                <label for="estatusEditar">Estatus</label>
+                <select class="form-control" id="estatusEditar" name="estatusEditar">
                     <option value="1">Activo</option>
                     <option value="0">Desactivado</option>
                  </select>
