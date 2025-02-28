@@ -48,6 +48,27 @@ class UsuariosController {
                 echo json_encode($respuesta);
                 exit;
             }
+
+            // Carpeta donde se guardarán las imágenes
+            $carpeta_imagenes = '../public/build/img';
+            if (!is_dir($carpeta_imagenes)) {
+                mkdir($carpeta_imagenes, 0755, true);
+            }
+
+            $rutaDocumentoAnterior = "$carpeta_imagenes/{$usuario->img}.png";
+            // Eliminar la imagen anterior si existe
+            if (!empty($usuario->img) && file_exists($rutaDocumentoAnterior)) {
+                if (!unlink($rutaDocumentoAnterior)) {
+                    $respuesta = [
+                        'tipo' => 'error',
+                        'titulo' => 'Error',
+                        'mensaje' => 'No se pudo eliminar la imagen anterior.'
+                    ];
+                    echo json_encode($respuesta);
+                    exit;
+                    }
+            }
+
             $resultado = $usuario->eliminar();
             if( $resultado ){
                 // Ahora puedes usar el $id que viene de la URL
