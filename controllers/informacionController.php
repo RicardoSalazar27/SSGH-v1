@@ -27,6 +27,8 @@ class informacionController {
     }
 
     public static function actualizar() {
+
+        is_auth();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
             // Buscar el hotel por correo

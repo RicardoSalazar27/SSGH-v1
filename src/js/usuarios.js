@@ -201,6 +201,11 @@ if (window.location.pathname === '/admin/usuarios') {
             mostrarAlerta('Error', 'Las contraseñas no coinciden.', 'error');
             return;
         }
+
+        if (usuarioActualizado.telefono.length > 10) {
+            mostrarAlerta('Error', 'Telefono no valido', 'error');
+            return;
+        }
     
         delete usuarioActualizado.password2; // No enviar password2 al backend
     
@@ -246,6 +251,11 @@ if (window.location.pathname === '/admin/usuarios') {
 
         if (usuarioNuevo.password !== usuarioNuevo.password2) {
             mostrarAlerta2("Las contraseñas no coinciden.", "error");
+            return;
+        }
+
+        if (usuarioNuevo.telefono.length > 10) {
+            mostrarAlerta2('Telefono no valido', 'error');
             return;
         }
 

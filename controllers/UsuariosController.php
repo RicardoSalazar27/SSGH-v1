@@ -24,11 +24,13 @@ class UsuariosController {
     }
 
     public static function listar(){
+        is_auth();
         $usuarios = Usuario::all();
         echo json_encode($usuarios);
     }
 
     public static function obtener($id){
+        is_auth();
         if ($_SERVER['REQUEST_METHOD'] === 'GET'){
             $usuario = Usuario::find($id);
             echo json_encode($usuario);
@@ -36,6 +38,7 @@ class UsuariosController {
     }
 
     public static function eliminar($id){
+        is_auth();
         if ($_SERVER['REQUEST_METHOD'] === 'DELETE'){
 
             $usuario = Usuario::find($id);
@@ -90,10 +93,11 @@ class UsuariosController {
             }
         }
     }
-    public static function actualizar($id){
-        $usuario = Usuario::find($id);
-        //debuguear($usuario);
     
+    public static function actualizar($id){
+
+        is_auth();
+        $usuario = Usuario::find($id);
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             if( !$usuario ){
                 $respuesta = [
@@ -180,7 +184,9 @@ class UsuariosController {
             }
         }
     }
+    
     public static function crear(){
+        is_auth();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
             // Validar que el email esté presente

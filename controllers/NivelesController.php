@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Model\Auditoria;
 use Model\Hotel;
 use Model\Nivel;
 use Model\Usuario;
@@ -23,11 +24,13 @@ class NivelesController {
     }
 
     public static function listar(){
+        is_auth();
         $niveles = Nivel::all();
         echo json_encode($niveles);
     }
 
     public static function obtener($id){
+        is_auth();
         if ($_SERVER['REQUEST_METHOD'] === 'GET'){
             $nivel = Nivel::find($id);
             echo json_encode($nivel);
@@ -35,6 +38,9 @@ class NivelesController {
     }
 
     public static function eliminar($id){
+        
+        is_auth();
+
         if ($_SERVER['REQUEST_METHOD'] === 'DELETE'){
 
             $nivel = Nivel::find($id);
@@ -71,6 +77,9 @@ class NivelesController {
     }
 
     public static function crear(){
+
+        is_auth();
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
             // Verificar si el Nivel ya existe
@@ -115,6 +124,9 @@ class NivelesController {
     }
 
     public static function actualizar($id) {
+
+        is_auth();
+
         // Establecer los headers al inicio
         header('Content-Type: application/json');
         header('Access-Control-Allow-Origin: *');
@@ -162,6 +174,22 @@ class NivelesController {
             $resultado = ($_SERVER['REQUEST_METHOD'] === 'PUT') 
                 ? $nivel->update($datos) 
                 : $nivel->updatepartially($datos);
+
+                $usuarioId = $_SESSION['id'];  // Asegúrate que $_SESSION['id'] tenga un valor válido
+                $auditoria = new Auditoria();
+                $registro = 'NULL';  // Si id_registro_afectado es NULL, esto está bien
+                $fechaHora = date('Y-m-d H:i:s');  // Esto devuelve la fecha y hora actuales en formato "YYYY-MM-DD HH:MM:SS"
+                $datos = [
+                    'id_usuario' => $usuarioId,
+                    'accion' => 'EDITAR',
+                    'tabla_afectada' => 'Niveles',
+                    'id_registro_afectado' => $registro,
+                    'detalle' => "Edito Nivel $id",
+                    'fecha_hora' => $fechaHora 
+                ];
+                
+                $auditoria->sincronizar($datos);
+                $auditoria->guardar();                
     
             // Responder según el resultado
             if ($resultado) {

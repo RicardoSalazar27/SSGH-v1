@@ -209,7 +209,6 @@ if(window.location.pathname === '/admin/configuracion/niveles'){
             const resultado = await respuestaUpdate.json();
             mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
             initDataTable();
-            nivelOriginal = '';
 
         } catch (error) {
             console.error('Error al actualizar nivel:', error);
