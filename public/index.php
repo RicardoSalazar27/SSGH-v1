@@ -55,5 +55,7 @@ $router->get('/api/niveles', [NivelesController::class, 'listar']);
 $router->post('/api/niveles', [NivelesController::class, 'crear']);
 $router->get('/api/niveles/{id}', [NivelesController::class, 'obtener']);
 $router->delete('/api/niveles/{id}', [NivelesController::class, 'eliminar']);
+$router->put('/api/niveles/{id}', [NivelesController::class, 'actualizar']);
+$router->patch('/api/niveles/{id}', [NivelesController::class, 'actualizar']);
 
 $router->comprobarRutas();

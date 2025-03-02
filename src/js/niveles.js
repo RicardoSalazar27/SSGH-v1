@@ -147,7 +147,7 @@ if(window.location.pathname === '/admin/configuracion/niveles'){
                 
                 // Guardar el ID en el botón de actualización
                 document.querySelector('.btnActualizarNivel').dataset.id = nivelId;
-    
+                //window.nivelOriginal = { ...nivel }; // Guardar copia de los datos iniciales
                 // Abrir el modal manualmente si es necesario
                 //$('#modalEditarNivel').modal('show');
     
@@ -158,34 +158,62 @@ if(window.location.pathname === '/admin/configuracion/niveles'){
     });
 
     // ---------------    ACTUALIZAR NIVEL (PENDIENTE)     - ----------------
-    document.getElementById('formEditarUsuario').addEventListener('submit', async function (e) {
+    // ---------------    ACTUALIZAR NIVEL -----------------
+    document.getElementById('formEditarNivel').addEventListener('submit', async function(e) {
         e.preventDefault();
     
-        const userId = document.querySelector('.btnActualizarUsuario').dataset.id;
+        const nivelId = document.querySelector('.btnActualizarNivel').dataset.id;
     
-        const usuarioActualizado = {
+        const nivelActualizado = {
             nombre: document.getElementById('nombreEditar').value.trim(),
-            apellido: document.getElementById('apellidoEditar').value.trim(),
-            direccion: document.getElementById('direccionEditar').value.trim()
+            numero: document.getElementById('numeroEditar').value.trim(),
+            estatus: document.getElementById('estatusEditar').value.trim(),
         };
-        
-        try {
-            const datos = new FormData();
-            Object.entries(usuarioActualizado).forEach(([key, value]) => datos.append(key, value));
-            const respuesta = await fetch(`/api/usuarios/${userId}`, {
-                method: 'POST',
-                body: datos
-            });
     
-            const resultado = await respuesta.json();
-            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
-            initDataTable();
+        try {
+            const respuesta = await fetch(`/api/niveles/${nivelId}`);
+            const nivelOriginal = await respuesta.json();
+    
+            let cambios = {};
+    
+            if (nivelActualizado.nombre !== nivelOriginal.nombre) cambios.nombre = nivelActualizado.nombre;
+            if (nivelActualizado.numero !== nivelOriginal.numero) cambios.numero = nivelActualizado.numero;
+            if (nivelActualizado.estatus !== nivelOriginal.estatus) cambios.estatus = nivelActualizado.estatus;
+    
+            const cambiosCount = Object.keys(cambios).length;
+    
+            if (cambiosCount === 0) {
+                mostrarAlerta2('No hay cambios por enviar', 'error');
+                return;
+            }
+    
+            const metodo = cambiosCount === 3 ? "PUT" : "PATCH";
+    
+            //console.log({ metodo, datos: cambios });
+            //console.log(cambios);
+
+            try {
+                const respuesta = await fetch(`/api/niveles/${nivelId}`, {
+                    method: metodo,
+                    headers: {
+                        'Content-Type': 'application/json', // Aseguramos que el contenido sea JSON
+                    },
+                    body: JSON.stringify(cambios) // Convertimos el objeto `cambios` a JSON
+                });
+            
+                const resultado = await respuesta.json();
+                mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+                initDataTable();
+            
+            } catch (error) {
+                console.error('Error al actualizar usuario:', error);
+            }                        
     
         } catch (error) {
-            console.error('Error al actualizar usuario:', error);
+            console.log("Error obteniendo nivel:", error);
         }
-    });
-
+    });    
+    
     //  --------------    CREAR NUEVO NIVEL     ----------------
     const botonSubirNivel = document.querySelector('.btnSubirNivel');
     botonSubirNivel.addEventListener('click', async function (e) {
@@ -224,3 +252,19 @@ if(window.location.pathname === '/admin/configuracion/niveles'){
         }
     });
 }
+
+// try {
+//     const datos = new FormData();
+//     Object.entries(usuarioActualizado).forEach(([key, value]) => datos.append(key, value));
+//     const respuesta = await fetch(`/api/usuarios/${userId}`, {
+//         method: 'POST',
+//         body: datos
+//     });
+
+//     const resultado = await respuesta.json();
+//     mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+//     initDataTable();
+
+// } catch (error) {
+//     console.error('Error al actualizar usuario:', error);
+// }

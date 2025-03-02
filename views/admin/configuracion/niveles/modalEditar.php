@@ -9,39 +9,41 @@
         </button>
       </div>
       <div class="modal-body">
-            <div class="form-group">
-                <label for="nombreEditar">Nombre</label>
-                <input 
-                    type="text"
-                    class="form-control"
-                    id="nombreEditar"
-                    name="nombreEditar"
-                    placeholder="Nombre Del Nivel Ej. Primer Nivel"
-                />
-            </div>
-            <div class="form-group">
-                <label for="numeroEditar">Numero</label>
-                <input 
-                    type="number"
-                    class="form-control"
-                    id="numeroEditar"
-                    name="numeroEditar"
-                    placeholder="Intervalo de Habitaciones Ej- 100-109"
-                />
-            </div>
-            <div class="form-group">
-                <label for="estatusEditar">Estatus</label>
-                <select class="form-control" id="estatusEditar" name="estatusEditar">
-                    <option value="1">Activo</option>
-                    <option value="0">Desactivado</option>
-                 </select>
-            </div>
-
-            <!-- Botones en el formulario -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary btnActualizarNivel">Guardar</button>
-            </div>
+            <form id="formEditarNivel">
+              <div class="form-group">
+                  <label for="nombreEditar">Nombre</label>
+                  <input 
+                      type="text"
+                      class="form-control"
+                      id="nombreEditar"
+                      name="nombreEditar"
+                      placeholder="Nombre Del Nivel Ej. Primer Nivel"
+                  />
+              </div>
+              <div class="form-group">
+                  <label for="numeroEditar">Numero</label>
+                  <input 
+                      type="number"
+                      class="form-control"
+                      id="numeroEditar"
+                      name="numeroEditar"
+                      placeholder="Intervalo de Habitaciones Ej- 100-109"
+                  />
+              </div>
+              <div class="form-group">
+                  <label for="estatusEditar">Estatus</label>
+                  <select class="form-control" id="estatusEditar" name="estatusEditar">
+                      <option value="1">Activo</option>
+                      <option value="0">Desactivado</option>
+                  </select>
+              </div>
+              <div id="mensaje-resultado" class="alert alert-dismissible" style="display: none;"></div>
+              <!-- Botones en el formulario -->
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                  <button type="submit" class="btn btn-primary btnActualizarNivel">Guardar</button>
+              </div>
+            </form>
       </div>
     </div>
   </div>

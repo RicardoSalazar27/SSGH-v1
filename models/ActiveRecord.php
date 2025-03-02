@@ -177,6 +177,45 @@ class ActiveRecord {
         return $resultado;
     }
 
+    public function update($datos) {
+        if (empty($datos)) {
+            return false; // No hay datos para actualizar
+        }
+    
+        // Filtrar solo los datos enviados en la petición que están en el modelo
+        $atributos = [];
+        foreach ($datos as $key => $value) {
+            if (in_array($key, array_keys($this->atributos()))) {
+                // 🔥 Actualiza el valor en el objeto antes de sanitizarlo
+                $this->$key = $value;  
+                
+                // 🔥 Luego sanitízalo y agrégalo a la lista de actualización
+                $atributos[$key] = self::$db->escape_string($value);
+            }
+        }
+    
+        //debuguear($atributos);
+    
+        if (empty($atributos)) {
+            return false; // No hay cambios válidos para actualizar
+        }
+    
+        // Construcción de la consulta UPDATE
+        $valores = [];
+        foreach ($atributos as $key => $value) {
+            $valores[] = "{$key} = '{$value}'";
+        }
+    
+        $query = "UPDATE " . static::$tabla . " SET " . join(', ', $valores);
+        $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' LIMIT 1";
+    
+        //debuguear($query);
+    
+        // Ejecutar la consulta
+        $resultado = self::$db->query($query);
+        return $resultado;
+    }        
+
     // Eliminar un Registro por su ID
     public function eliminar() {
         $query = "DELETE FROM "  . static::$tabla . " WHERE id = " . self::$db->escape_string($this->id) . " LIMIT 1";
