@@ -115,6 +115,12 @@ class NivelesController {
     }
 
     public static function actualizar($id) {
+        // Establecer los headers al inicio
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: PUT, PATCH, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
         if ($_SERVER['REQUEST_METHOD'] === 'PUT' || $_SERVER['REQUEST_METHOD'] === 'PATCH') {
             // Verificar si se recibió un ID válido desde la URL
             if (!$id) {
@@ -127,10 +133,9 @@ class NivelesController {
                 exit;
             }
     
-            // Obtener los datos de la solicitud (los datos del cuerpo serán JSON)
+            // Obtener los datos del cuerpo de la solicitud
             $datos = json_decode(file_get_contents('php://input'), true);
     
-            // Verificar si se enviaron datos válidos
             if (empty($datos)) {
                 http_response_code(400);
                 echo json_encode([
@@ -152,20 +157,15 @@ class NivelesController {
                 ]);
                 exit;
             }
-
-            if ($_SERVER['REQUEST_METHOD'] === 'PUT'){
-
-                // Actualizar el nivel con los datos proporcionados
-                $resultado = $nivel->update($datos);
-
-            } elseif ($_SERVER['REQUEST_METHOD'] === 'PATCH'){
-
-                // Actualizar el nivel con los datos proporcionados
-                $resultado = $nivel->updatepartially($datos);
-
-            }
+    
+            // Determinar si es PUT o PATCH
+            $resultado = ($_SERVER['REQUEST_METHOD'] === 'PUT') 
+                ? $nivel->update($datos) 
+                : $nivel->updatepartially($datos);
+    
             // Responder según el resultado
             if ($resultado) {
+                http_response_code(200);
                 echo json_encode([
                     'tipo' => 'success',
                     'titulo' => 'Actualizado',
@@ -181,6 +181,6 @@ class NivelesController {
             }
             exit;
         }
-    }    
+    }        
     
 }

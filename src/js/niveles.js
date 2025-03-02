@@ -1,5 +1,4 @@
 if(window.location.pathname === '/admin/configuracion/niveles'){
-    //alert('cargado con exito el scrip de niveles');
 
     let dataTable;
     let dataTableInit = false;
@@ -126,87 +125,98 @@ if(window.location.pathname === '/admin/configuracion/niveles'){
         }
     });
     
-    // ---------------    LLENAR MODAL PARA ACTUALIZAR  -----------------
+    // Variable global para almacenar el nivel original
+    let nivelOriginal = null;
+
+    // --------------- LLENAR MODAL PARA ACTUALIZAR -----------------
     document.addEventListener('click', async function (event) {
         if (event.target.closest('.btnEditarNivel')) {
             const boton = event.target.closest('.btnEditarNivel');
             const nivelId = boton.dataset.id;
-            
+            nivelOriginal= '';
             try {
-                // Obtener los datos del usuario desde la API o una variable global
+                // Obtener los datos del nivel desde la API
                 const respuesta = await fetch(`/api/niveles/${nivelId}`);
                 if (!respuesta.ok) {
                     throw new Error(`Error al obtener nivel: ${respuesta.statusText}`);
                 }
-    
                 const nivel = await respuesta.json();
+                nivelOriginal = { ...nivel }; // Guardar en variable global
+
                 // Llenar los campos del modal con los datos del nivel
                 document.getElementById('nombreEditar').value = nivel.nombre;
                 document.getElementById('numeroEditar').value = nivel.numero;
                 document.getElementById('estatusEditar').value = nivel.estatus;
-                
+
                 // Guardar el ID en el botón de actualización
                 document.querySelector('.btnActualizarNivel').dataset.id = nivelId;
-                //window.nivelOriginal = { ...nivel }; // Guardar copia de los datos iniciales
-    
+
             } catch (error) {
-                console.error('Error al obtener los datos del usuario:', error);
+                console.error('Error al obtener los datos del nivel:', error);
             }
         }
     });
 
-    // ---------------    ACTUALIZAR NIVEL -----------------
-    document.getElementById('formEditarNivel').addEventListener('submit', async function(e) {
+    // --------------- ACTUALIZAR NIVEL -----------------
+    document.getElementById('formEditarNivel').addEventListener('submit', async function (e) {
         e.preventDefault();
-    
+
         const nivelId = document.querySelector('.btnActualizarNivel').dataset.id;
-    
+
         const nivelActualizado = {
             nombre: document.getElementById('nombreEditar').value.trim(),
             numero: document.getElementById('numeroEditar').value.trim(),
             estatus: document.getElementById('estatusEditar').value.trim(),
         };
-    
-        try {
-            const respuesta = await fetch(`/api/niveles/${nivelId}`);
-            const nivelOriginal = await respuesta.json();
-    
-            let cambios = {};
-    
-            if (nivelActualizado.nombre !== nivelOriginal.nombre) cambios.nombre = nivelActualizado.nombre;
-            if (nivelActualizado.numero !== nivelOriginal.numero) cambios.numero = nivelActualizado.numero;
-            if (nivelActualizado.estatus !== nivelOriginal.estatus) cambios.estatus = nivelActualizado.estatus;
-    
-            const cambiosCount = Object.keys(cambios).length;
-    
-            if (cambiosCount === 0) {
-                mostrarAlerta2('No hay cambios por enviar', 'error');
-                return;
-            }
-    
-            const metodo = cambiosCount === 3 ? "PUT" : "PATCH";
 
-            try {
-                const respuesta = await fetch(`/api/niveles/${nivelId}`, {
-                    method: metodo,
-                    headers: {
-                        'Content-Type': 'application/json', // Aseguramos que el contenido sea JSON
-                    },
-                    body: JSON.stringify(cambios) // Convertimos el objeto `cambios` a JSON
-                });
-            
-                const resultado = await respuesta.json();
-                mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
-                initDataTable();
-            
-            } catch (error) {
-                console.error('Error al actualizar usuario:', error);
-            }                        
-    
-        } catch (error) {
-            console.log("Error obteniendo nivel:", error);
+        if (!nivelOriginal) {
+            console.error('Error: No hay datos originales del nivel');
+            mostrarAlerta('Error', 'No se pudieron comparar los datos originales', 'error');
+            return;
         }
-    });    
+
+        // Comparar con los datos originales sin hacer otra petición
+        let cambios = {};
+        if (nivelActualizado.nombre !== nivelOriginal.nombre) cambios.nombre = nivelActualizado.nombre;
+        if (nivelActualizado.numero !== nivelOriginal.numero) cambios.numero = nivelActualizado.numero;
+        if (nivelActualizado.estatus !== nivelOriginal.estatus) cambios.estatus = nivelActualizado.estatus;
+
+        // Si no hay cambios, no enviamos la petición
+        if (Object.keys(cambios).length === 0) {
+            mostrarAlerta2('No hay cambios por enviar', 'error');
+            return;
+        }
+
+        // Determinar si usar PUT o PATCH
+        const metodo = Object.keys(cambios).length === 3 ? "PUT" : "PATCH";
+        const datos = metodo === "PUT" ? nivelActualizado : cambios;
+
+        try {
+            // Enviar la actualización con una sola petición
+            const respuestaUpdate = await fetch(`/api/niveles/${nivelId}`, {
+                method: metodo,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(datos)
+            });
+
+            if (!respuestaUpdate.ok) {
+                const errorData = await respuestaUpdate.json();
+                throw new Error(errorData.mensaje || 'Error desconocido al actualizar');
+            }
+
+            const resultado = await respuestaUpdate.json();
+            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+            initDataTable();
+            nivelOriginal = '';
+
+        } catch (error) {
+            console.error('Error al actualizar nivel:', error);
+            mostrarAlerta('Error', error.message, 'error');
+        }
+    });
+    
     
     //  --------------    CREAR NUEVO NIVEL     ----------------
     const botonSubirNivel = document.querySelector('.btnSubirNivel');

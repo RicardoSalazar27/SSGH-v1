@@ -115,9 +115,11 @@ CREATE TABLE Facturacion (
 CREATE TABLE Auditoria (
     ID_auditoria INT PRIMARY KEY AUTO_INCREMENT,
     ID_usuario INT,  -- Clave foránea que referencia al usuario que realizó la acción
-    accion VARCHAR(255),  -- Descripción de la acción (Ej. "Creó una nueva reserva")
-    tabla_afectada VARCHAR(50),  -- Nombre de la tabla afectada (Ej. "Reservas", "Habitaciones")
-    registro_afectado VARCHAR(255),  -- ID del registro afectado (Ej. "ID_reserva = 15")
-    fecha_hora DATETIME,  -- Fecha y hora de la acción
+    accion ENUM('CREAR', 'EDITAR', 'ELIMINAR', 'CONFIRMAR', 'LOGIN', 'LOGOUT'),  
+    tabla_afectada VARCHAR(50),  -- Nombre de la tabla afectada (Ej. "reservas", "usuarios")
+    ID_registro_afectado INT,  -- ID del registro afectado en la tabla correspondiente
+    detalle TEXT,  -- Información adicional (Ej. cambios realizados, valores previos, etc.)
+    fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Fecha y hora de la acción
+    ip_usuario VARCHAR(45),  -- IP del usuario que hizo la acción
     FOREIGN KEY (ID_usuario) REFERENCES Usuarios(ID_usuario)
 );
