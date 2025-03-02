@@ -177,17 +177,29 @@ class ActiveRecord {
         return $resultado;
     }
 
+    // Actualizar (PUT)
     public function update($datos) {
         if (empty($datos)) {
             return false; // No hay datos para actualizar
         }
     
-        // Filtrar solo los datos enviados en la petición que están en el modelo
+        // Obtener todas las columnas de la base de datos, excepto 'id'
+        $columnasDB = static::$columnasDB;
+        $columnasDB = array_diff($columnasDB, ['id']); // Excluir ID
+    
+        // Verificar que todas las columnas existan en los datos proporcionados
+        foreach ($columnasDB as $columna) {
+            if (!array_key_exists($columna, $datos)) {
+                return false; // Falta un dato obligatorio
+            }
+        }
+    
+        // Filtrar y sanitizar los datos recibidos
         $atributos = [];
         foreach ($datos as $key => $value) {
-            if (in_array($key, array_keys($this->atributos()))) {
+            if (in_array($key, $columnasDB)) {
                 // 🔥 Actualiza el valor en el objeto antes de sanitizarlo
-                $this->$key = $value;  
+                $this->$key = $value;
                 
                 // 🔥 Luego sanitízalo y agrégalo a la lista de actualización
                 $atributos[$key] = self::$db->escape_string($value);
@@ -206,13 +218,15 @@ class ActiveRecord {
     
         $query = "UPDATE " . static::$tabla . " SET " . join(', ', $valores);
         $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' LIMIT 1";
+        //debuguear($query);
     
         // Ejecutar la consulta
         $resultado = self::$db->query($query);
         return $resultado;
     }
     
-    // Actualizar (PUT)
+    
+    // Actualizar (PATCH)
     public function updatepartially($datos) {
         if (empty($datos)) {
             return false; // No hay datos para actualizar
@@ -243,6 +257,7 @@ class ActiveRecord {
         $query = "UPDATE " . static::$tabla . " SET " . join(', ', $valores);
         $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' LIMIT 1";
     
+        //debuguear($query);
         // Ejecutar la consulta
         $resultado = self::$db->query($query);
         return $resultado;
