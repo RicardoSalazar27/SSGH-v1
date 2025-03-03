@@ -23,75 +23,153 @@ class NivelesController {
         ]);
     }
 
-    public static function listar(){
+    public static function listar() {
         is_auth();
+    
+        // Establecer los headers al inicio
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
+        // Obtener todos los niveles
         $niveles = Nivel::all();
-        echo json_encode($niveles);
-    }
+    
+        // Responder con los datos o con un mensaje si no hay registros
+        if (empty($niveles)) {
+            http_response_code(204); // 204 No Content cuando no hay datos
+            $respuesta = [
+                'tipo' => 'info',
+                'titulo' => 'Sin contenido',
+                'mensaje' => 'No hay niveles registrados'
+            ];
+            echo json_encode($respuesta);
+        } else {
+            http_response_code(200); // 200 OK
+            echo json_encode($niveles);
+        }
+    }    
 
-    public static function obtener($id){
+    public static function obtener($id) {
         is_auth();
-        if ($_SERVER['REQUEST_METHOD'] === 'GET'){
+    
+        // Establecer los headers al inicio
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            // Buscar el nivel
             $nivel = Nivel::find($id);
+    
+            // Verificar si se encontró el nivel
+            if (!$nivel) {
+                http_response_code(404);
+                $respuesta = [
+                    'tipo' => 'error',
+                    'titulo' => 'No encontrado',
+                    'mensaje' => 'El nivel no existe'
+                ];
+                echo json_encode($respuesta);
+                exit;
+            }
+    
+            // Responder con el objeto encontrado
+            http_response_code(200);
             echo json_encode($nivel);
         }
-    }
+    }    
 
-    public static function eliminar($id){
-        
+    public static function eliminar($id) {
+
         is_auth();
-
-        if ($_SERVER['REQUEST_METHOD'] === 'DELETE'){
-
+    
+        // Establecer los headers al inicio
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: DELETE, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    
+            // Verificar si el nivel existe
             $nivel = Nivel::find($id);
-            if( !$nivel ){
+            if (!$nivel) {
+                http_response_code(404);
                 $respuesta = [
-                    'tipo' => 'error',  // Cambié el tipo a 'success' porque el mensaje era de error
+                    'tipo' => 'error',
                     'titulo' => 'Error',
                     'mensaje' => "El nivel no existe."
                 ];
                 echo json_encode($respuesta);
                 exit;
             }
-
+    
+            // Intentar eliminar el nivel
             $resultado = $nivel->eliminar();
-            if( $resultado ){
-                // Ahora puedes usar el $id que viene de la URL
+            if ($resultado) {
+    
+                // Auditoría de la eliminación
+                $usuarioId = $_SESSION['id'];  
+                $fechaHora = date('Y-m-d H:i:s');  
+                $datosAuditoria = [
+                    'id_usuario' => $usuarioId,
+                    'accion' => 'ELIMINAR',
+                    'tabla_afectada' => 'Niveles',
+                    'id_registro_afectado' => $id,
+                    'detalle' => "Eliminó Nivel con ID $id",
+                    'fecha_hora' => $fechaHora
+                ];
+    
+                $auditoria = new Auditoria();
+                $auditoria->sincronizar($datosAuditoria);
+                $auditoria->guardar();
+    
+                // Responder con éxito
+                http_response_code(200);
                 $respuesta = [
-                    'tipo' => 'success',  // Cambié el tipo a 'success' porque el mensaje era de error
+                    'tipo' => 'success',
                     'titulo' => 'Eliminado',
                     'mensaje' => "El nivel con ID $id ha sido eliminado correctamente."
                 ];
                 echo json_encode($respuesta);
-                exit;
             } else {
+                http_response_code(500);
                 $respuesta = [
-                    'tipo' => 'error',  // Cambié el tipo a 'success' porque el mensaje era de error
+                    'tipo' => 'error',
                     'titulo' => 'Error',
                     'mensaje' => "Hubo un error al eliminar el nivel."
                 ];
                 echo json_encode($respuesta);
-                exit;
             }
+    
+            exit;
         }
     }
+    
 
-    public static function crear(){
+    public static function crear() {
 
         is_auth();
-
+    
+        // Establecer los headers al inicio
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
             // Verificar si el Nivel ya existe
             $existeNivel = Nivel::where('numero', $_POST['numero']);
             if ($existeNivel) {
                 http_response_code(400);
-                $respuesta = [
+                echo json_encode([
                     'tipo' => 'error',
                     'titulo' => 'Ooops...',
                     'mensaje' => 'El Nivel ya existe'
-                ];
-                echo json_encode($respuesta);
+                ]);
                 exit;
             }
     
@@ -102,26 +180,44 @@ class NivelesController {
             // Guardar el nivel en la base de datos
             $resultado = $nivel->guardar();
     
+            // Auditoría de la acción
+            $usuarioId = $_SESSION['id'];  
+            // Definir la zona horaria
+            date_default_timezone_set("America/Mexico_City");
+            $fechaHora = date('Y-m-d H:i:s'); 
+            $datosAuditoria = [
+                'id_usuario' => $usuarioId,
+                'accion' => 'CREAR',
+                'tabla_afectada' => 'Niveles',
+                'id_registro_afectado' => $resultado ? $nivel->id : 'NULL',
+                'detalle' => "Creó Nivel con número {$_POST['numero']}",
+                'fecha_hora' => $fechaHora
+            ];
+    
+            $auditoria = new Auditoria();
+            $auditoria->sincronizar($datosAuditoria);
+            $auditoria->guardar();
+    
             // Responder según el resultado de la creación del nivel
             if ($resultado) {
-                $respuesta = [
+                http_response_code(201);
+                echo json_encode([
                     'tipo' => 'success',
                     'titulo' => 'Creado',
                     'mensaje' => 'Nivel creado correctamente'
-                ];
+                ]);
             } else {
                 http_response_code(500);
-                $respuesta = [
+                echo json_encode([
                     'tipo' => 'error',
                     'titulo' => 'Error',
                     'mensaje' => 'Hubo un problema al crear el Nivel'
-                ];
+                ]);
             }
     
-            echo json_encode($respuesta);
             exit;
         }
-    }
+    }    
 
     public static function actualizar($id) {
 
@@ -178,6 +274,7 @@ class NivelesController {
                 $usuarioId = $_SESSION['id'];  // Asegúrate que $_SESSION['id'] tenga un valor válido
                 $auditoria = new Auditoria();
                 $registro = 'NULL';  // Si id_registro_afectado es NULL, esto está bien
+                date_default_timezone_set("America/Mexico_City");
                 $fechaHora = date('Y-m-d H:i:s');  // Esto devuelve la fecha y hora actuales en formato "YYYY-MM-DD HH:MM:SS"
                 $datos = [
                     'id_usuario' => $usuarioId,
