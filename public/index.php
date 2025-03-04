@@ -4,6 +4,7 @@ require_once __DIR__ . '/../includes/app.php';
 
 use MVC\Router;
 use Controllers\AuthController;
+use Controllers\CategoriasController;
 use Controllers\DashboardController;
 use Controllers\informacionController;
 use Controllers\NivelesController;
@@ -38,7 +39,7 @@ $router->get('/admin/index', [DashboardController:: class, 'index']);
 $router->get('/admin/configuracion/informacion', [informacionController::class, 'index']);
 $router->post('/admin/configuracion/informacion/actualizar', [informacionController::class, 'actualizar']);
 // $router->get('/admin/configuracion/habitaciones', [HabitacionesController::class, 'index']);
-// $router->get('/admin/configuracion/categorias', [CategoriasController::class, 'index']);
+$router->get('/admin/configuracion/categorias', [CategoriasController::class, 'index']);
 $router->get('/admin/configuracion/niveles', [NivelesController::class, 'index']);
 $router->get('/admin/usuarios', [UsuariosController::class, 'index']);
 // $router->get('/admin/clientes', [ClientesController::class, 'index']);
@@ -57,5 +58,7 @@ $router->get('/api/niveles/{id}', [NivelesController::class, 'obtener']);
 $router->delete('/api/niveles/{id}', [NivelesController::class, 'eliminar']);
 $router->put('/api/niveles/{id}', [NivelesController::class, 'actualizar']);
 $router->patch('/api/niveles/{id}', [NivelesController::class, 'actualizar']);
+
+$router->get('/api/categorias', [CategoriasController::class, 'listar']);
 
 $router->comprobarRutas();

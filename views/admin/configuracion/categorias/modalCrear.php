@@ -1,5 +1,5 @@
 <!-- Modal Crear-->
-<div class="modal fade" id="categoriasModal" tabindex="-1" role="dialog" aria-labelledby="categoriasModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalCrearCategoria" tabindex="-1" role="dialog" aria-labelledby="modalCrearCategoria" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">

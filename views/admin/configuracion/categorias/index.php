@@ -25,7 +25,7 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
                             <h1 class="h4 mb-0">Categorias</h1>
-                            <button id="btnAgregarCategoria" class="btn btn-primary" data-toggle="modal" data-target="#categoriasModal">Agregar Nuevo</button>
+                            <button id="btnAbrirModalCrearCategoria" class="btn btn-primary" data-toggle="modal" data-target="#modalCrearCategoria">Agregar Nuevo</button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -35,6 +35,9 @@
                                     <th>No.</th>
                                     <th>Nombre</th>
                                     <th class="text-center">Capacidad Max.</th>
+                                    <th>Cama</th>
+                                    <th>Precio Base</th>
+                                    <th>Servicios</th>
                                     <th>Estatus</th>
                                     <th class="no-export">Acciones</th>
                                 </tr>
@@ -48,4 +51,5 @@
     </div>
 </section>
 
-<?php include_once __DIR__ . '/modal.php';?>
+<?php include_once __DIR__ . '/modalCrear.php';?>
+<?php include_once __DIR__ . '/modalEditar.php';?>
