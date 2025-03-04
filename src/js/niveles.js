@@ -90,7 +90,7 @@ if(window.location.pathname === '/admin/configuracion/niveles'){
         });
     }
 
-    // Delegación de eventos para eliminación de usuarios
+    // Delegación de eventos para eliminación de niveles
     document.getElementById('tableBody_niveles').addEventListener('click', async function (event) {
         if (event.target.closest('.btn-eliminarNivel')) {
             const nivelId = event.target.closest('.btn-eliminarNivel').getAttribute('data-id');
@@ -215,7 +215,6 @@ if(window.location.pathname === '/admin/configuracion/niveles'){
             mostrarAlerta('Error', error.message, 'error');
         }
     });
-    
     
     //  --------------    CREAR NUEVO NIVEL     ----------------
     const botonSubirNivel = document.querySelector('.btnSubirNivel');

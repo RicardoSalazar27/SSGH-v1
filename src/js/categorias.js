@@ -62,7 +62,42 @@ if(window.location.pathname === '/admin/configuracion/categorias'){
             console.error('Error al obtener categorías:', error);
             return null;
         }
-    }    
+    }
+    
+    // Delegación de eventos para eliminación de categorias
+    document.getElementById('tableBody_categorias').addEventListener('click', async function (event) {
+        if (event.target.closest('.btn-eliminarCategoria')) {
+            const categoriaId = event.target.closest('.btn-eliminarCategoria').getAttribute('data-id');
+            const result = await Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    const url = `/api/categorias/${categoriaId}`;
+                    const respuesta = await fetch(url, {
+                        method: 'DELETE',
+                    });
+
+                    const resultado = await respuesta.json();
+                    mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+
+                    if (resultado.tipo === 'success') {
+                        await initDataTable();
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        }
+    });
 
     // Función para llenar la tabla con los datos obtenidos
     function llenarTabla(categorias) {
@@ -136,6 +171,117 @@ if(window.location.pathname === '/admin/configuracion/categorias'){
             } catch (error) {
                 console.log('Error al obtener los datos de la categoria:', error);
             }
+        }
+    });
+
+    // ------------------------     ACTUALIZAR CATEGORIA    ------------------------
+    document.getElementById('formEditarCategoria').addEventListener('submit', async function (e) {
+
+        e.preventDefault();
+
+        const categoriaId = document.querySelector('.btnActualizarCategoria').dataset.id;
+
+        const categoriaActualizada = {
+            nombre: document.getElementById('nombreEditar').value.trim(),
+            capacidad_maxima: document.getElementById('capacidad_maximaEditar').value.trim(),
+            tipo_cama: document.getElementById('tipo_camaEditar').value.trim(),
+            precio_base: document.getElementById('precio_baseEditar').value.trim(),
+            servicios_incluidos: document.getElementById('servicios_incluidosEditar').value.trim(),
+            estado: document.getElementById('estadoEditar').value.trim()
+        }
+
+        if (!categoriaOriginal) {
+            console.error('Error: No hay datos originales de la categoria');
+            mostrarAlerta('Error', 'No se pudieron comparar los datos originales', 'error');
+            return;
+        }
+
+        //Comparar con los datos originales
+        let cambios = {};
+        if (categoriaActualizada.nombre !== categoriaOriginal.nombre) cambios.nombre = categoriaActualizada.nombre;
+        if (categoriaActualizada.capacidad_maxima !== categoriaOriginal.capacidad_maxima) cambios.capacidad_maxima = categoriaActualizada.capacidad_maxima;
+        if (categoriaActualizada.tipo_cama !== categoriaOriginal.tipo_cama) cambios.tipo_cama = categoriaActualizada.tipo_cama;
+        if (categoriaActualizada.precio_base !== categoriaOriginal.precio_base) cambios.precio_base = categoriaActualizada.precio_base;
+        if (categoriaActualizada.servicios_incluidos !== categoriaOriginal.servicios_incluidos) cambios.servicios_incluidos = categoriaActualizada.servicios_incluidos;
+        if (categoriaActualizada.estado !== categoriaOriginal.estado) cambios.estado = categoriaActualizada.estado;
+
+        // Si no hay cambios, no se envia la peticion
+        if(Object.keys(cambios).length === 0){
+            mostrarAlerta2('No hay cambios por enviar', 'error');
+            return;
+        }
+
+        // Determinar si es PUT O PATCH
+        const metodo = Object.keys(cambios).length === 6 ? 'PUT' : 'PATCH';
+        const datos = metodo === 'PUT' ? categoriaActualizada : cambios;
+
+        try {
+            // Enviar la actualizacion al servidor
+            const url = `/api/categorias/${categoriaId}`;
+            const respuesta = await fetch(url, {
+                method: metodo,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(datos)
+            });
+
+            if(!respuesta.ok){
+                const errorData = await respuestaUpdate.json();
+                throw new Error(errorData.mensaje || 'Error desconocido al actualizar');
+            }
+
+            const resultado = await respuesta.json();
+            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+            initDataTable();
+            
+        } catch (error) {
+            console.error('Error al actualizar nivel:', error);
+            mostrarAlerta('Error', error.message, 'error');
+        }
+    });
+
+    //  --------------    CREAR NUEVO NIVEL     ----------------
+    const botonSubirCategoria = document.querySelector('.btnSubirCategoria');
+    botonSubirCategoria.addEventListener('click', async function (e) {
+        e.preventDefault();
+
+        const categoriaNueva = {
+            nombre: document.getElementById('nombre').value.trim(),
+            capacidad_maxima: document.getElementById('capacidad_maxima').value.trim(),
+            tipo_cama: document.getElementById('tipo_cama').value.trim(),
+            precio_base: document.getElementById('precio_base').value.trim(),
+            servicios_incluidos: document.getElementById('servicios_incluidos').value.trim(),
+            estado: document.getElementById('estado').value.trim()
+        };
+
+        if (categoriaNueva.nombre === "" || categoriaNueva.capacidad_maxima === "" || categoriaNueva.tipo_cama === "" || categoriaNueva.precio_base === "") {
+            mostrarAlerta2('Todos los campos son necesarios', 'error');
+            return;
+        }
+        
+        try {
+            const datos = new FormData();
+            Object.entries(categoriaNueva).forEach(([key, value]) => datos.append(key, value));
+            const respuesta = await fetch('/api/categorias', {
+                method: 'POST',
+                body: datos
+            });
+
+            const resultado = await respuesta.json();
+            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+            initDataTable();
+
+            // Limpiar los campos del formulario
+            document.getElementById('nombre').value = '';
+            document.getElementById('capacidad_maxima').value = '';
+            document.getElementById('tipo_cama').value = '';
+            document.getElementById('servicios_incluidos').value = '';
+            document.getElementById('precio_base').value = '';
+            document.getElementById('estatado').value = '';
+
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
         }
     });
 }

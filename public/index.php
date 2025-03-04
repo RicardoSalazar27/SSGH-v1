@@ -60,6 +60,10 @@ $router->put('/api/niveles/{id}', [NivelesController::class, 'actualizar']);
 $router->patch('/api/niveles/{id}', [NivelesController::class, 'actualizar']);
 
 $router->get('/api/categorias', [CategoriasController::class, 'listar']);
+$router->post('/api/categorias', [CategoriasController::class, 'crear']);
 $router->get('/api/categorias/{id}', [CategoriasController::class, 'obtener']);
+$router->delete('/api/categorias/{id}', [CategoriasController::class, 'eliminar']);
+$router->put('/api/categorias/{id}', [CategoriasController::class, 'actualizar']);
+$router->patch('/api/categorias/{id}', [CategoriasController::class, 'actualizar']);
 
 $router->comprobarRutas();
