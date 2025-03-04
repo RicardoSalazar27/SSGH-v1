@@ -100,4 +100,42 @@ if(window.location.pathname === '/admin/configuracion/categorias'){
             tbody.innerHTML += row;
         });
     }
+
+    // Variable global para almacenar la categoria original
+    let categoriaOriginal = null;
+
+    // ---------------------------    LLENAR MODAL PARA ACTUALIZAR    ------------------------------
+    document.addEventListener('click', async function (e) {
+        if(e.target.closest('.btnEditarCategoria')) { //boton editar que abre modal
+            const boton = e.target.closest('.btnEditarCategoria');
+            const categoriaId = boton.dataset.id;
+            categoriaOriginal = null;
+
+            try {
+                
+                // Obtener datos de la categoria desde la API
+                const url = `/api/categorias/${categoriaId}`;
+                const respuesta = await fetch(url);
+                if(!respuesta.ok){
+                    throw new Error(`Error al obtener categoria: ${respuesta.statusText}`);
+                }
+                const categoria = await respuesta.json();
+                categoriaOriginal = { ...categoria }; // Guarda en la variable global
+
+                // Llenar campos del modal con los datos de la categoria
+                document.getElementById('nombreEditar').value = categoria.nombre;
+                document.getElementById('capacidad_maximaEditar').value = categoria.capacidad_maxima;
+                document.getElementById('tipo_camaEditar').value = categoria.tipo_cama;
+                document.getElementById('precio_baseEditar').value = categoria.precio_base;
+                document.getElementById('servicios_incluidosEditar').value = categoria.servicios_incluidos;
+                document.getElementById('estadoEditar').value = categoria.estado;
+
+                // Guardar el ID de la categoria en el botón de actualización
+                document.querySelector('.btnActualizarCategoria').dataset.id = categoriaId;
+
+            } catch (error) {
+                console.log('Error al obtener los datos de la categoria:', error);
+            }
+        }
+    });
 }

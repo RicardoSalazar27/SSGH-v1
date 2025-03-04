@@ -60,5 +60,6 @@ $router->put('/api/niveles/{id}', [NivelesController::class, 'actualizar']);
 $router->patch('/api/niveles/{id}', [NivelesController::class, 'actualizar']);
 
 $router->get('/api/categorias', [CategoriasController::class, 'listar']);
+$router->get('/api/categorias/{id}', [CategoriasController::class, 'obtener']);
 
 $router->comprobarRutas();
