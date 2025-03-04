@@ -148,7 +148,6 @@ class NivelesController {
         }
     }
     
-
     public static function crear() {
 
         is_auth();
