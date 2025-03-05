@@ -25,7 +25,7 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
                             <h1 class="h4 mb-0">Habitaciones</h1>
-                            <button id="btnAgregarHabitacion" class="btn btn-primary" data-toggle="modal" data-target="#habitacionesModal">Agregar Nuevo</button>
+                            <button id="btnAgregarHabitacion" class="btn btn-primary" data-toggle="modal" data-target="#modalCrearHabitacion">Agregar Nuevo</button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -37,6 +37,7 @@
                                     <th>Categoría</th>
                                     <th>Precio</th>
                                     <th>Detalles</th>
+                                    <th>Observaciones</th>
                                     <th>Estatus</th>
                                     <th class="no-export">Acciones</th>
                                 </tr>

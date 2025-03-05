@@ -106,11 +106,23 @@ class ActiveRecord {
     }
 
     // Obtener todos los Registros
-    public static function all() {
-        $query = "SELECT * FROM " . static::$tabla . " ORDER BY id DESC";
-        $resultado = self::consultarSQL($query);
-        return $resultado;
+    // public static function all($orden) {
+    //     $query = "SELECT * FROM " . static::$tabla . " ORDER BY id DESC";
+    //     $resultado = self::consultarSQL($query);
+    //     return $resultado;
+    // }
+    
+    // Obtener todos los registros con opción de orden ascendente o descendente
+    public static function all($orden = 'DESC') {
+    // Validar que solo acepte 'ASC' o 'DESC'
+    if ($orden !== 'ASC' && $orden !== 'DESC') {
+        $orden = 'DESC'; // Si el valor no es válido, se usa DESC por defecto
     }
+
+    $query = "SELECT * FROM " . static::$tabla . " ORDER BY id $orden";
+    return self::consultarSQL($query);
+}
+
 
     // Busca un registro por su id
     public static function find($id) {
