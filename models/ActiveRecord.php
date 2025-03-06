@@ -192,7 +192,8 @@ class ActiveRecord {
     // Actualizar (PUT)
     public function update($datos) {
         if (empty($datos)) {
-            return false; // No hay datos para actualizar
+            debuguear("Datos vacíos: no hay nada que actualizar.");
+            return false;
         }
     
         // Obtener todas las columnas de la base de datos, excepto 'id'
@@ -200,26 +201,34 @@ class ActiveRecord {
         $columnasDB = array_diff($columnasDB, ['id']); // Excluir ID
     
         // Verificar que todas las columnas existan en los datos proporcionados
-        foreach ($columnasDB as $columna) {
-            if (!array_key_exists($columna, $datos)) {
-                return false; // Falta un dato obligatorio
-            }
-        }
+        // foreach ($columnasDB as $columna) {
+        //     if (!array_key_exists($columna, $datos)) {
+        //         debuguear("Falta la columna obligatoria: " . $columna);
+        //         return false;
+        //     }
+        // }
+    
+        // debuguear("Datos recibidos antes de procesar: ");
+        // debuguear($datos);
     
         // Filtrar y sanitizar los datos recibidos
         $atributos = [];
         foreach ($datos as $key => $value) {
             if (in_array($key, $columnasDB)) {
-                // 🔥 Actualiza el valor en el objeto antes de sanitizarlo
+                // Actualiza el valor en el objeto antes de sanitizarlo
                 $this->$key = $value;
-                
-                // 🔥 Luego sanitízalo y agrégalo a la lista de actualización
+    
+                // Sanitiza el valor y agrégalo a la lista de actualización
                 $atributos[$key] = self::$db->escape_string($value);
             }
         }
     
+        // debuguear("Atributos después de sanitización:");
+        // debuguear($atributos);
+    
         if (empty($atributos)) {
-            return false; // No hay cambios válidos para actualizar
+            debuguear("No hay cambios válidos para actualizar.");
+            return false;
         }
     
         // Construcción de la consulta UPDATE
@@ -228,12 +237,21 @@ class ActiveRecord {
             $valores[] = "{$key} = '{$value}'";
         }
     
+        // debuguear("Valores para la consulta UPDATE:");
+        // debuguear($valores);
+    
         $query = "UPDATE " . static::$tabla . " SET " . join(', ', $valores);
         $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' LIMIT 1";
-        //debuguear($query);
+    
+        // debuguear("Consulta SQL generada:");
+        // debuguear($query);
     
         // Ejecutar la consulta
         $resultado = self::$db->query($query);
+    
+        // debuguear("Resultado de la ejecución:");
+        // debuguear($resultado);
+    
         return $resultado;
     }
     

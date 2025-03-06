@@ -72,5 +72,7 @@ $router->patch('/api/categorias/{id}', [CategoriasController::class, 'actualizar
 $router->get('/api/estadoHabitaciones', [HabitacionController::class, 'listar_estado_habitaciones']);
 $router->get('/api/habitaciones', [HabitacionController::class, 'listar']);
 $router->get('/api/habitaciones/{id}', [HabitacionController::class, 'obtener']);
+$router->put('/api/habitaciones/{id}', [HabitacionController::class, 'actualizar']);
+$router->patch('/api/habitaciones/{id}', [HabitacionController::class, 'actualizar']);
 
 $router->comprobarRutas();

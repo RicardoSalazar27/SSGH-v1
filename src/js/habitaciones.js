@@ -96,7 +96,7 @@ if(window.location.pathname === '/admin/configuracion/habitaciones'){
     //eliminar
 
 
-    // Variable global para almacenar el nivel original
+    // Variable global para almacenar el habitacion original
     let habitacionOriginal = null;
 
     // --------------- LLENAR MODAL PARA ACTUALIZAR -----------------
@@ -118,13 +118,13 @@ if(window.location.pathname === '/admin/configuracion/habitaciones'){
     
                 // Llenar los campos del modal con los datos de la habitación
                 document.getElementById('numeroEditar').value = habitacion.numero;
-                document.getElementById('id_nivelEditar').value = habitacion.id_nivel.id; // Aquí se asigna el ID del nivel
+                document.getElementById('id_nivelEditar').value = habitacion.id_nivel.id; // Aquí se asigna el ID del habitacion
                 document.getElementById('id_categoriaEditar').value = habitacion.id_categoria.id; // Aquí el ID de la categoría
                 document.getElementById('detalles_personalizadosEditar').value = habitacion.detalles_personalizados;
                 document.getElementById('estatusEditar').value = habitacion.estatus;
 
                 // Guardar el ID en el botón de actualización
-                document.querySelector('.btnActualizarHabitacion').dataset.id = nivelId;
+                document.querySelector('.btnActualizarHabitacion').dataset.id = habitacionId;
     
             } catch (error) {
                 console.error('Error al obtener los datos de la habitación:', error);
@@ -132,4 +132,66 @@ if(window.location.pathname === '/admin/configuracion/habitaciones'){
         }
     });
     
+    // --------------- ACTUALIZAR HABITACION -----------------
+    document.getElementById('formEditarHabitacion').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const habitacionId = document.querySelector('.btnActualizarHabitacion').dataset.id;
+
+        const habitacionActualizada = {
+            numero: document.getElementById('numeroEditar').value.trim(),
+            id_nivel: document.getElementById('id_nivelEditar').value.trim(),
+            id_categoria: document.getElementById('id_categoriaEditar').value.trim(),
+            detalles_personalizados: document.getElementById('detalles_personalizadosEditar').value.trim(),
+            estatus: document.getElementById('estatusEditar').value.trim()
+        };
+
+        // console.log(habitacionActualizada);
+        // return;
+
+        if (!habitacionOriginal) {
+            console.error('Error: No hay datos originales del habitacion');
+            mostrarAlerta('Error', 'No se pudieron comparar los datos originales', 'error');
+            return;
+        }
+
+        // Comparar con los datos originales sin hacer otra petición
+        let cambios = {};
+        if (habitacionActualizada.numero !== habitacionOriginal.numero) cambios.numero = habitacionActualizada.numero;
+        if (habitacionActualizada.id_nivel !== habitacionOriginal.id_nivel) cambios.id_nivel = habitacionActualizada.id_nivel;
+        if (habitacionActualizada.id_categoria !== habitacionOriginal.id_categoria) cambios.id_categoria = habitacionActualizada.id_categoria;
+        if (habitacionActualizada.detalles_personalizados !== habitacionOriginal.detalles_personalizados) cambios.detalles_personalizados = habitacionActualizada.detalles_personalizados;
+        if (habitacionActualizada.estatus !== habitacionOriginal.estatus) cambios.estatus = habitacionActualizada.estatus;
+
+        // Si no hay cambios, no enviamos la petición
+        if (Object.keys(cambios).length === 0) {
+            mostrarAlerta2('No hay cambios por enviar', 'error');
+            return;
+        }
+        const datos = habitacionActualizada;
+
+        try {
+            // Enviar la actualización con una sola petición
+            const respuestaUpdate = await fetch(`/api/habitaciones/${habitacionId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(datos)
+            });
+
+            if (!respuestaUpdate.ok) {
+                const errorData = await respuestaUpdate.json();
+                throw new Error(errorData.mensaje || 'Error desconocido al actualizar');
+            }
+
+            const resultado = await respuestaUpdate.json();
+            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+            initDataTable();
+
+        } catch (error) {
+            console.error('Error al actualizar habitacion:', error);
+            mostrarAlerta('Error', error.message, 'error');
+        }
+    });
 }
