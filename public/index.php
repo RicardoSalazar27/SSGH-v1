@@ -5,11 +5,13 @@ require_once __DIR__ . '/../includes/app.php';
 use MVC\Router;
 use Controllers\AuthController;
 use Controllers\CategoriasController;
+use Controllers\ClientesController;
 use Controllers\DashboardController;
 use Controllers\HabitacionController;
 use Controllers\informacionController;
 use Controllers\NivelesController;
 use Controllers\UsuariosController;
+use Model\Cliente;
 use Model\EstadoHabitacion;
 
 $router = new Router();
@@ -44,7 +46,7 @@ $router->get('/admin/configuracion/habitaciones', [HabitacionController::class, 
 $router->get('/admin/configuracion/categorias', [CategoriasController::class, 'index']);
 $router->get('/admin/configuracion/niveles', [NivelesController::class, 'index']);
 $router->get('/admin/usuarios', [UsuariosController::class, 'index']);
-// $router->get('/admin/clientes', [ClientesController::class, 'index']);
+$router->get('/admin/clientes', [ClientesController::class, 'index']);
 
 
 // API'S
@@ -76,5 +78,8 @@ $router->get('/api/habitaciones/{id}', [HabitacionController::class, 'obtener'])
 $router->delete('/api/habitaciones/{id}', [HabitacionController::class, 'eliminar']);
 $router->put('/api/habitaciones/{id}', [HabitacionController::class, 'actualizar']);
 $router->patch('/api/habitaciones/{id}', [HabitacionController::class, 'actualizar']);
+
+$router->get('/api/clientes', [ClientesController::class, 'listar']);
+$router->get('/api/clientes/{id}', [ClientesController::class, 'obtener']);
 
 $router->comprobarRutas();
