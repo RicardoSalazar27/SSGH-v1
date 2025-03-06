@@ -218,5 +218,161 @@ class HabitacionController{
             exit;
         }
     }
+
+    public static function eliminar($id) {
+
+        is_auth();
+    
+        // Establecer los headers al inicio
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: DELETE, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    
+            // Verificar si el nivel existe
+            $habitacion = Habitacion::find($id);
+            if (!$habitacion) {
+                http_response_code(404);
+                $respuesta = [
+                    'tipo' => 'error',
+                    'titulo' => 'Error',
+                    'mensaje' => "La habitacion no existe."
+                ];
+                echo json_encode($respuesta);
+                exit;
+            }
+    
+            $registro = $habitacion->id;
+            $numero = $habitacion->numero;
+            // Intentar eliminar el nivel
+            $resultado = $habitacion->eliminar();
+            if ($resultado) {
+    
+                // Auditoría de la eliminación
+                $usuarioId = $_SESSION['id'];  
+                $fechaHora = date('Y-m-d H:i:s');  
+                $datosAuditoria = [
+                    'id_usuario' => $usuarioId,
+                    'accion' => 'ELIMINAR',
+                    'tabla_afectada' => 'Habitaciones',
+                    'id_registro_afectado' => $registro,
+                    'detalle' => "Eliminó Habitacion con ID $registro y NUMERO $numero",
+                    'fecha_hora' => $fechaHora
+                ];
+    
+                $auditoria = new Auditoria();
+                $auditoria->sincronizar($datosAuditoria);
+                $auditoria->guardar();
+    
+                // Responder con éxito
+                http_response_code(200);
+                $respuesta = [
+                    'tipo' => 'success',
+                    'titulo' => 'Eliminado',
+                    'mensaje' => "La habitacion con ID $registro ha sido eliminado correctamente."
+                ];
+                echo json_encode($respuesta);
+            } else {
+                http_response_code(500);
+                $respuesta = [
+                    'tipo' => 'error',
+                    'titulo' => 'Error',
+                    'mensaje' => "Hubo un error al eliminar la habitacion."
+                ];
+                echo json_encode($respuesta);
+            }
+    
+            exit;
+        }
+    }
+
+    public static function crear() {
+
+        is_auth();
+    
+        // Establecer los headers al inicio
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
+        // Validar entrada
+        if (empty($_POST['numero']) || !is_numeric($_POST['numero'])) {
+            http_response_code(400);
+            echo json_encode([
+                'tipo' => 'error',
+                'titulo' => 'Datos inválidos',
+                'mensaje' => 'El número de habitación es requerido y debe ser numérico.'
+            ]);
+            exit;
+        }
+    
+        // Verificar si la habitación ya existe
+        $existeHabitacion = Habitacion::where('numero', $_POST['numero']);
+        if ($existeHabitacion) {
+            http_response_code(400);
+            echo json_encode([
+                'tipo' => 'error',
+                'titulo' => 'Ooops...',
+                'mensaje' => 'La habitación ya existe'
+            ]);
+            exit;
+        }
+    
+        // Crear nueva habitación
+        $habitacion = new Habitacion();
+        $habitacion->sincronizar($_POST);
+        //debuguear($habitacion);
+        
+        // Guardar en la base de datos
+        $resultado = $habitacion->guardar();
+
+        // Responder según el resultado de la creación del nivel
+        if ($resultado) {
+
+            // Auditoría de la acción
+            $usuarioId = $_SESSION['id'] ?? null; // Validar que haya sesión
+            date_default_timezone_set("America/Mexico_City");
+            $fechaHora = date('Y-m-d H:i:s'); 
+        
+            // Obtener el ID de la nueva habitación
+            $habitacionN = Habitacion::where('numero', $_POST['numero']);
+            //error_log(print_r($habitacionN, true)); // Esto imprimirá en el log de PHP
+
+            $registro = $habitacionN ? $habitacionN->id : null;
+        
+            $datosAuditoria = [
+                'id_usuario' => $usuarioId,
+                'accion' => 'CREAR',
+                'tabla_afectada' => 'Habitaciones',
+                'id_registro_afectado' => $registro,
+                'detalle' => "Creó habitación con número {$_POST['numero']}",
+                'fecha_hora' => $fechaHora
+            ];
+        
+            $auditoria = new Auditoria();
+            $auditoria->sincronizar($datosAuditoria);
+            $auditoria->guardar();
+
+            http_response_code(201);
+            echo json_encode([
+            'tipo' => 'success',
+            'titulo' => 'Creado',
+            'mensaje' => 'Habitacion creada correctamente'
+            ]);
+
+        } else {
+            http_response_code(500);
+            echo json_encode([
+                'tipo' => 'error',
+                'titulo' => 'Error',
+                'mensaje' => 'Hubo un problema al crear la Habitacion'
+            ]);
+        }
+    
+        exit;    
+    }
 }
 ?>

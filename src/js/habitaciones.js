@@ -93,7 +93,40 @@ if(window.location.pathname === '/admin/configuracion/habitaciones'){
         });
     }
 
-    //eliminar
+    // Delegación de eventos para eliminación de niveles
+    document.getElementById('tableBody_habitaciones').addEventListener('click', async function (event) {
+        if (event.target.closest('.btn-eliminarHabitacion')) {
+            const habitacionId = event.target.closest('.btn-eliminarHabitacion').getAttribute('data-id');
+            const result = await Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    const url = `/api/habitaciones/${habitacionId}`;
+                    const respuesta = await fetch(url, {
+                        method: 'DELETE',
+                    });
+
+                    const resultado = await respuesta.json();
+                    mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+
+                    if (resultado.tipo === 'success') {
+                        await initDataTable();
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        }
+    });
 
 
     // Variable global para almacenar el habitacion original
@@ -194,4 +227,47 @@ if(window.location.pathname === '/admin/configuracion/habitaciones'){
             mostrarAlerta('Error', error.message, 'error');
         }
     });
+
+    //  --------------     CREAR NUEVa HABITACION     ----------------
+    const botonSubirHabitacion = document.querySelector('.btnSubirHabitacion');
+    botonSubirHabitacion.addEventListener('click', async function (e) {
+        e.preventDefault();
+
+        const habitacionNueva = {
+
+            numero: document.getElementById('numero').value.trim(),
+            id_nivel: document.getElementById('id_nivel').value.trim(),
+            id_categoria: document.getElementById('id_categoria').value.trim(),
+            detalles_personalizados: document.getElementById('detalles_personalizados').value.trim(),
+            estatus: document.getElementById('estatus').value.trim()
+        
+        };
+
+        if (habitacionNueva.id_nivel === "" || habitacionNueva.numero === "" || habitacionNueva.id_categoria === "") {
+            mostrarAlerta2('Todos los campos son necesarios', 'error');
+            return;
+        }
+        
+        try {
+            const datos = new FormData();
+            Object.entries(habitacionNueva).forEach(([key, value]) => datos.append(key, value));
+            const respuesta = await fetch('/api/habitaciones', {
+                method: 'POST',
+                body: datos
+            });
+
+            const resultado = await respuesta.json();
+            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+            initDataTable();
+
+            // Limpiar los campos del formulario después de crear una habitación
+            document.getElementById('numero').value = '';
+            document.getElementById('detalles_personalizados').value = '';
+            document.getElementById('estatus').value = '1';
+
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
+        }
+    });
+
 }

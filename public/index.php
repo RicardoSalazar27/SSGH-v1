@@ -71,7 +71,9 @@ $router->patch('/api/categorias/{id}', [CategoriasController::class, 'actualizar
 
 $router->get('/api/estadoHabitaciones', [HabitacionController::class, 'listar_estado_habitaciones']);
 $router->get('/api/habitaciones', [HabitacionController::class, 'listar']);
+$router->post('/api/habitaciones', [HabitacionController::class, 'crear']);
 $router->get('/api/habitaciones/{id}', [HabitacionController::class, 'obtener']);
+$router->delete('/api/habitaciones/{id}', [HabitacionController::class, 'eliminar']);
 $router->put('/api/habitaciones/{id}', [HabitacionController::class, 'actualizar']);
 $router->patch('/api/habitaciones/{id}', [HabitacionController::class, 'actualizar']);
 
