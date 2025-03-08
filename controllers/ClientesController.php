@@ -170,5 +170,71 @@ class ClientesController{
             exit;
         }
     }
+
+    public static function eliminar($id){
+        is_auth();
+    
+        // Establecer los headers al inicio
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: DELETE, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    
+            // Verificar si el cliente existe
+            $cliente = Cliente::find($id);
+            if (!$cliente) {
+                http_response_code(404);
+                $respuesta = [
+                    'tipo' => 'error',
+                    'titulo' => 'Error',
+                    'mensaje' => "El cliente no existe."
+                ];
+                echo json_encode($respuesta);
+                exit;
+            }
+    
+            // Intentar eliminar el cliente
+            $resultado = $cliente->eliminar();
+            if ($resultado) {
+    
+                // Auditoría de la eliminación
+                $usuarioId = $_SESSION['id'];  
+                $fechaHora = date('Y-m-d H:i:s');  
+                $datosAuditoria = [
+                    'id_usuario' => $usuarioId,
+                    'accion' => 'ELIMINAR',
+                    'tabla_afectada' => 'Clientes',
+                    'id_registro_afectado' => $id,
+                    'detalle' => "Eliminó Cliente con ID $id",
+                    'fecha_hora' => $fechaHora
+                ];
+    
+                $auditoria = new Auditoria();
+                $auditoria->sincronizar($datosAuditoria);
+                $auditoria->guardar();
+    
+                // Responder con éxito
+                http_response_code(200);
+                $respuesta = [
+                    'tipo' => 'success',
+                    'titulo' => 'Eliminado',
+                    'mensaje' => "El Cliente con ID $id ha sido eliminado correctamente."
+                ];
+                echo json_encode($respuesta);
+            } else {
+                http_response_code(500);
+                $respuesta = [
+                    'tipo' => 'error',
+                    'titulo' => 'Error',
+                    'mensaje' => "Hubo un error al eliminar el cliente."
+                ];
+                echo json_encode($respuesta);
+            }
+    
+            exit;
+        }
+    }
 }
 ?>

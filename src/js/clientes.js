@@ -193,4 +193,39 @@ if(window.location.pathname === '/admin/clientes'){
             mostrarAlerta('Error', error.message, 'error');
         }
     });
+
+    // Delegación de eventos para eliminación de clientes
+    document.getElementById('tableBody_clientes').addEventListener('click', async function (event) {
+        if (event.target.closest('.btn-eliminarCliente')) {
+            const clienteId = event.target.closest('.btn-eliminarCliente').getAttribute('data-id');
+            const result = await Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    const url = `/api/clientes/${clienteId}`;
+                    const respuesta = await fetch(url, {
+                        method: 'DELETE',
+                    });
+
+                    const resultado = await respuesta.json();
+                    mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+
+                    if (resultado.tipo === 'success') {
+                        await initDataTable();
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        }
+    });
 }

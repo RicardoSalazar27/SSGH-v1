@@ -83,5 +83,6 @@ $router->get('/api/clientes', [ClientesController::class, 'listar']);
 $router->get('/api/clientes/{id}', [ClientesController::class, 'obtener']);
 $router->put('/api/clientes/{id}', [ClientesController::class, 'actualizar']);
 $router->patch('/api/clientes/{id}', [ClientesController::class, 'actualizar']);
+$router->delete('/api/clientes/{id}', [ClientesController::class, 'eliminar']);
 
 $router->comprobarRutas();
