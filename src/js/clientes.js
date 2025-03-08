@@ -152,12 +152,12 @@ if(window.location.pathname === '/admin/clientes'){
 
         // Comparar con los datos originales sin hacer otra petición
         let cambios = {};
-        if (clienteActualizado.nombre !== nivelOriginal.nombre) cambios.nombre = clienteActualizado.nombre;
-        if (clienteActualizado.apellidos !== nivelOriginal.apellidos) cambios.apellidos = clienteActualizado.apellidos;
-        if (clienteActualizado.telefono !== nivelOriginal.telefono) cambios.telefono = clienteActualizado.telefono;
-        if (clienteActualizado.correo !== nivelOriginal.correo) cambios.correo = clienteActualizado.correo;
-        if (clienteActualizado.direccion !== nivelOriginal.direccion) cambios.direccion = clienteActualizado.direccion;
-        if (clienteActualizado.documento_identidad !== nivelOriginal.documento_identidad) cambios.documento_identidad = clienteActualizado.documento_identidad;
+        if (clienteActualizado.nombre !== clienteOriginal.nombre) cambios.nombre = clienteActualizado.nombre;
+        if (clienteActualizado.apellidos !== clienteOriginal.apellidos) cambios.apellidos = clienteActualizado.apellidos;
+        if (clienteActualizado.telefono !== clienteOriginal.telefono) cambios.telefono = clienteActualizado.telefono;
+        if (clienteActualizado.correo !== clienteOriginal.correo) cambios.correo = clienteActualizado.correo;
+        if (clienteActualizado.direccion !== clienteOriginal.direccion) cambios.direccion = clienteActualizado.direccion;
+        if (clienteActualizado.documento_identidad !== clienteOriginal.documento_identidad) cambios.documento_identidad = clienteActualizado.documento_identidad;
 
         // Si no hay cambios, no enviamos la petición
         if (Object.keys(cambios).length === 0) {
@@ -166,15 +166,12 @@ if(window.location.pathname === '/admin/clientes'){
         }
 
         // Determinar si usar PUT o PATCH
-        const metodo = Object.keys(cambios).length === 3 ? "PUT" : "PATCH";
-        const datos = metodo === "PUT" ? clienteActualizadoActualizado : cambios;
-
-        console.log(datos);
-        return;
+        const metodo = Object.keys(cambios).length === 6 ? "PUT" : "PATCH";
+        const datos = metodo === "PUT" ? clienteActualizado : cambios;
 
         try {
             // Enviar la actualización con una sola petición
-            const respuestaUpdate = await fetch(`/api/niveles/${clienteId}`, {
+            const respuestaUpdate = await fetch(`/api/clientes/${clienteId}`, {
                 method: metodo,
                 headers: {
                     'Content-Type': 'application/json',
@@ -192,7 +189,7 @@ if(window.location.pathname === '/admin/clientes'){
             initDataTable();
 
         } catch (error) {
-            console.error('Error al actualizar nivel:', error);
+            console.error('Error al actualizar cliente:', error);
             mostrarAlerta('Error', error.message, 'error');
         }
     });

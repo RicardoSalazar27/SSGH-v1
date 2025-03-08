@@ -51,6 +51,16 @@
                     />
                 </div>
                 <div class="form-group">
+                    <label for="documento_identidad">DNI</label>
+                    <input 
+                        type="text"
+                        class="form-control"
+                        id="documento_identidad"
+                        name="documento_identidad"
+                        placeholder=""
+                    />
+                </div>
+                <div class="form-group">
                     <label for="direccion">Dirección</label>
                     <textarea 
                         class="form-control"

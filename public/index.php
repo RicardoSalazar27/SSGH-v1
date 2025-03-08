@@ -81,5 +81,7 @@ $router->patch('/api/habitaciones/{id}', [HabitacionController::class, 'actualiz
 
 $router->get('/api/clientes', [ClientesController::class, 'listar']);
 $router->get('/api/clientes/{id}', [ClientesController::class, 'obtener']);
+$router->put('/api/clientes/{id}', [ClientesController::class, 'actualizar']);
+$router->patch('/api/clientes/{id}', [ClientesController::class, 'actualizar']);
 
 $router->comprobarRutas();
