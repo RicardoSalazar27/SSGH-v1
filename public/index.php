@@ -4,6 +4,7 @@ require_once __DIR__ . '/../includes/app.php';
 
 use MVC\Router;
 use Controllers\AuthController;
+use Controllers\CatalogoProductosController;
 use Controllers\CategoriasController;
 use Controllers\ClientesController;
 use Controllers\DashboardController;
@@ -47,6 +48,7 @@ $router->get('/admin/configuracion/categorias', [CategoriasController::class, 'i
 $router->get('/admin/configuracion/niveles', [NivelesController::class, 'index']);
 $router->get('/admin/usuarios', [UsuariosController::class, 'index']);
 $router->get('/admin/clientes', [ClientesController::class, 'index']);
+$router->get('/admin/puntodeventa/catalogo', [CatalogoProductosController::class, 'index']);
 
 
 // API'S
@@ -84,5 +86,7 @@ $router->get('/api/clientes/{id}', [ClientesController::class, 'obtener']);
 $router->put('/api/clientes/{id}', [ClientesController::class, 'actualizar']);
 $router->patch('/api/clientes/{id}', [ClientesController::class, 'actualizar']);
 $router->delete('/api/clientes/{id}', [ClientesController::class, 'eliminar']);
+
+$router->get('/api/productos', [CatalogoProductosController::class, 'listar']);
 
 $router->comprobarRutas();
