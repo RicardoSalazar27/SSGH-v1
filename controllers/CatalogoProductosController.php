@@ -177,6 +177,64 @@ class CatalogoProductosController{
             }
         }
     }
+
+    public static function eliminar($id){
+        is_auth();
+        if ($_SERVER['REQUEST_METHOD'] === 'DELETE'){
+
+            $producto = Producto::find($id);
+            if( !$producto ){
+                $respuesta = [
+                    'tipo' => 'error',  // Cambié el tipo a 'success' porque el mensaje era de error
+                    'titulo' => 'Error',
+                    'mensaje' => "El producto no existe."
+                ];
+                echo json_encode($respuesta);
+                exit;
+            }
+
+            // Carpeta donde se guardarán las imágenes
+            $carpeta_imagenes = '../public/build/img';
+            if (!is_dir($carpeta_imagenes)) {
+                mkdir($carpeta_imagenes, 0755, true);
+            }
+
+            $rutaDocumentoAnterior = "$carpeta_imagenes/{$producto->foto}.png";
+            
+            // Eliminar la imagen anterior si existe
+            if (!empty($producto->foto) && file_exists($rutaDocumentoAnterior)) {
+                if (!unlink($rutaDocumentoAnterior)) {
+                    $respuesta = [
+                        'tipo' => 'error',
+                        'titulo' => 'Error',
+                        'mensaje' => 'No se pudo eliminar la imagen anterior.'
+                    ];
+                    echo json_encode($respuesta);
+                    exit;
+                    }
+            }
+
+            $resultado = $producto->eliminar();
+            if( $resultado ){
+                // Ahora puedes usar el $id que viene de la URL
+                $respuesta = [
+                    'tipo' => 'success',  // Cambié el tipo a 'success' porque el mensaje era de error
+                    'titulo' => 'Eliminado',
+                    'mensaje' => "El producto con ID $id ha sido eliminado correctamente."
+                ];
+                echo json_encode($respuesta);
+                exit;
+            } else {
+                $respuesta = [
+                    'tipo' => 'error',  // Cambié el tipo a 'success' porque el mensaje era de error
+                    'titulo' => 'Error',
+                    'mensaje' => "Hubo un error al eliminar el producto."
+                ];
+                echo json_encode($respuesta);
+                exit;
+            }
+        }
+    }
 }
 
 ?>

@@ -126,7 +126,7 @@ if(window.location.pathname === '/admin/puntodeventa/catalogo'){
         }
     });
 
-    // ---------------    ACTUALIZAR USUARIO     - ----------------
+    // ---------------    ACTUALIZAR PRODUCTO     -----------------
     document.getElementById('formEditarProducto').addEventListener('submit', async function (e) {
         e.preventDefault();
     
@@ -173,4 +173,38 @@ if(window.location.pathname === '/admin/puntodeventa/catalogo'){
         }
     });
 
+    // Delegación de eventos para eliminación de niveles
+    document.getElementById('tableBody_productos').addEventListener('click', async function (event) {
+        if (event.target.closest('.btn-eliminarProducto')) {
+            const productoId = event.target.closest('.btn-eliminarProducto').getAttribute('data-id');
+            const result = await Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    const url = `/api/productos/${productoId}`;
+                    const respuesta = await fetch(url, {
+                        method: 'DELETE',
+                    });
+
+                    const resultado = await respuesta.json();
+                    mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+
+                    if (resultado.tipo === 'success') {
+                        await initDataTable();
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        }
+    });
 }
