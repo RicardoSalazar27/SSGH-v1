@@ -110,13 +110,11 @@ class CatalogoProductosController{
             if (!is_dir($carpeta_imagenes)) {
                 mkdir($carpeta_imagenes, 0755, true);
             }
-    
-            //debuguear($_FILES);
             // Manejo de la imagen (solo si se sube una nueva)
             if (!empty($_FILES['foto']['tmp_name'])) {
                 $rutaDocumentoAnterior = "$carpeta_imagenes/{$producto->foto}.png";
     
-                // Eliminar la imagen anterior si existe
+                //Eliminar la imagen anterior si existe
                 if (!empty($producto->foto) && file_exists($rutaDocumentoAnterior)) {
                     if (!unlink($rutaDocumentoAnterior)) {
                         $respuesta = [
@@ -135,7 +133,9 @@ class CatalogoProductosController{
     
                 // Mover el archivo a la carpeta de imágenes
                 if (move_uploaded_file($_FILES['foto']['tmp_name'], $rutaDocumento)) {
+                    
                     $producto->foto = pathinfo($nombreDocumento, PATHINFO_FILENAME); // Guardar solo el nombre sin extensión
+                    
                 } else {
                     $respuesta = [
                         'tipo' => 'error',
@@ -145,17 +145,19 @@ class CatalogoProductosController{
                     echo json_encode($respuesta);
                     exit;
                 }
+                
             }
     
-            // Sincronizar datos EXCLUYENDO 'img' si no se subió una nueva imagen
             $datosActualizar = $_POST;
-    
-            // Si la imagen, no la actualizamos
-            if (empty($_FILES['foto']['tmp_name'])) {
-                unset($datosActualizar['foto']); // Elimina la clave 'img' para no modificar el campo en la BD
+
+            // Si se subió una nueva imagen, aseguramos que se guarde en los datos a actualizar
+            if (!empty($_FILES['foto']['tmp_name'])) {
+                $datosActualizar['foto'] = pathinfo($nombreDocumento, PATHINFO_FILENAME);
             }
-    
+
+            // Sincronizar datos con el producto
             $producto->sincronizar($datosActualizar);
+
             $resultado = $producto->guardar();
     
             if( $resultado ){
@@ -233,6 +235,112 @@ class CatalogoProductosController{
                 echo json_encode($respuesta);
                 exit;
             }
+        }
+    }
+
+    public static function crear(){
+        is_auth();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+            // Validar que el email esté presente
+            if (empty($_POST['codigo_barras'])) {
+                http_response_code(400);
+                $respuesta = [
+                    'tipo' => 'error',
+                    'titulo' => 'Error',
+                    'mensaje' => 'El codigo es obligatorio'
+                ];
+                echo json_encode($respuesta);
+                exit;
+            }
+    
+            // Verificar si el email ya existe
+            $existeProducto = Producto::where('codigo_barras', $_POST['codigo_barras']);
+            if ($existeProducto) {
+                http_response_code(400);
+                $respuesta = [
+                    'tipo' => 'error',
+                    'titulo' => 'Ooops...',
+                    'mensaje' => 'Producto existente'
+                ];
+                echo json_encode($respuesta);
+                exit;
+            }
+    
+            // Crear nuevo producto
+            $producto = new Producto();
+            $producto->sincronizar($_POST);
+    
+            // Carpeta donde se guardarán las imágenes
+            $carpeta_imagenes = '../public/build/img';
+            if (!is_dir($carpeta_imagenes)) {
+                mkdir($carpeta_imagenes, 0755, true); // Crear la carpeta si no existe
+            }
+    
+            //debuguear($_FILES);
+            // Manejo de la imagen (solo si se sube una nueva)
+            if (!empty($_FILES['foto']['tmp_name'])) {
+                // Ruta de la imagen anterior (si existe)
+                $rutaDocumentoAnterior = "$carpeta_imagenes/{$producto->foto}.png";
+    
+                // Eliminar la imagen anterior si existe
+                if (!empty($producto->foto) && file_exists($rutaDocumentoAnterior)) {
+                    if (!unlink($rutaDocumentoAnterior)) {
+                        $respuesta = [
+                            'tipo' => 'error',
+                            'titulo' => 'Error',
+                            'mensaje' => 'No se pudo eliminar la imagen anterior.'
+                        ];
+                        echo json_encode($respuesta);
+                        exit;
+                    }
+                }
+    
+                // Crear un nuevo nombre para la imagen sin extensión
+                $nombreDocumento = md5(uniqid(rand(), true)); // Eliminar la extensión en este punto
+                //debuguear($nombreDocumento);
+    
+                // Ruta final para guardar la imagen
+                $rutaDocumento = "$carpeta_imagenes/$nombreDocumento.png"; // Añadir la extensión al guardar
+                //debuguear($rutaDocumento);
+    
+                // Mover el archivo a la carpeta de imágenes
+                if (move_uploaded_file($_FILES['foto']['tmp_name'], $rutaDocumento)) {
+                    // Guardar solo el nombre sin la extensión en la base de datos
+                    $producto->foto = $nombreDocumento;
+                } else {
+                    $respuesta = [
+                        'tipo' => 'error',
+                        'titulo' => 'Error',
+                        'mensaje' => 'No se pudo guardar la nueva imagen.'
+                    ];
+                    echo json_encode($respuesta);
+                    exit;
+                }
+            }
+            //debuguear($producto);
+    
+            // Guardar el producto en la base de datos
+            $resultado = $producto->guardar();
+    
+            // Responder según el resultado de la creación del producto
+            if ($resultado) {
+                $respuesta = [
+                    'tipo' => 'success',
+                    'titulo' => 'Creado',
+                    'mensaje' => 'Producto creado correctamente'
+                ];
+            } else {
+                http_response_code(500);
+                $respuesta = [
+                    'tipo' => 'error',
+                    'titulo' => 'Error',
+                    'mensaje' => 'Hubo un problema al crear el producto'
+                ];
+            }
+    
+            echo json_encode($respuesta);
+            exit;
         }
     }
 }

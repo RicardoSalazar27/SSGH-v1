@@ -142,7 +142,7 @@ if(window.location.pathname === '/admin/puntodeventa/catalogo'){
             foto: document.getElementById('fotoP').files[0]
         };
 
-        //  console.log(productoActualizado);
+        //console.log(productoActualizado);
         //  return;
     
         if (!productoActualizado.nombre || !productoActualizado.precio || !productoActualizado.categoria_producto_id) {
@@ -205,6 +205,53 @@ if(window.location.pathname === '/admin/puntodeventa/catalogo'){
                     console.error(error);
                 }
             }
+        }
+    });
+
+    //  --------------    CREAR NUEVO PRODUCTO     ----------------
+    const botonSubirUsuario = document.querySelector('.btnSubirProducto');
+    botonSubirUsuario.addEventListener('click', async function (e) {
+        e.preventDefault();
+        // alert('click');
+        // return;
+
+        const productoNuevo = {
+            nombre: document.getElementById('nombre').value.trim(),
+            precio: document.getElementById('precio').value.trim(),
+            stock: document.getElementById('stock').value.trim(),
+            categoria_producto_id: document.getElementById('categoria_id').value.trim(),
+            codigo_barras: document.getElementById('codigo_barras').value.trim(),
+            proveedor: document.getElementById('proveedor').value.trim(),
+            foto: document.getElementById('fotoPN').files[0]
+        };
+
+        // console.log(productoNuevo);
+        // return;
+
+        if (productoNuevo.nombre === "" || productoNuevo.precio === "" || productoNuevo.stock === "" || productoNuevo.categoria_producto_id === "" || productoNuevo.codigo_barras === "") {
+            mostrarAlerta2('Todos los campos son necesarios', 'error');
+            return;
+        }
+
+        if (productoNuevo.codigo_barras.length != 12) {
+            mostrarAlerta2('Codigo UPC INvalido', 'error');
+            return;
+        }
+
+        try {
+            const datos = new FormData();
+            Object.entries(productoNuevo).forEach(([key, value]) => datos.append(key, value));
+            const respuesta = await fetch('/api/productos', {
+                method: 'POST',
+                body: datos
+            });
+
+            const resultado = await respuesta.json();
+            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+            initDataTable();
+
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
         }
     });
 }

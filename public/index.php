@@ -91,5 +91,6 @@ $router->get('/api/productos', [CatalogoProductosController::class, 'listar']);
 $router->get('/api/productos/{id}', [CatalogoProductosController::class, 'obtener']);
 $router->post('/api/productos/{id}', [CatalogoProductosController::class, 'actualizar']);
 $router->delete('/api/productos/{id}', [CatalogoProductosController::class, 'eliminar']);
+$router->post('/api/productos', [CatalogoProductosController::class, 'crear']);
 
 $router->comprobarRutas();
