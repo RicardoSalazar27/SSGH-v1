@@ -19,6 +19,9 @@
     
     <!-- DataTables Bootstrap 4 CSS (Local) -->
     <link rel="stylesheet" href="/build/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+
+    <!-- FullCalendar CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.css" rel="stylesheet">
     
     <!-- Bootstrap 4 (Local) -->
     <link rel="stylesheet" href="/build/adminlte/plugins/bootstrap/css/bootstrap.min.css">
@@ -73,7 +76,7 @@
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 
     <!-- Full Calendar (CDN, no está en AdminLTE) -->
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 
     <!-- SweetAlert2 (Local) -->
     <script src="/build/adminlte/plugins/sweetalert2/sweetalert2.all.min.js"></script>
