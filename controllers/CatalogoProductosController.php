@@ -15,11 +15,13 @@ class CatalogoProductosController{
 
         $usuario = Usuario::where('email', $_SESSION['email']);
         $hotel = Hotel::get(1);
+        $categoriasProductos = Categoria_Producto::all();
         
         // Render a la vista 
         $router->render('admin/punto_de_venta/catalogo_de_productos/index', [
             'titulo' => 'Productos/Servicios',
             'usuario' => $usuario,
+            'categoriasProductos' => $categoriasProductos,
             'hotel' => $hotel
         ]);
     }
@@ -54,6 +56,125 @@ class CatalogoProductosController{
         } else {
             http_response_code(200); // 200 OK
             echo json_encode($productos);
+        }
+    }
+
+    public static function obtener($id) {
+        is_auth();
+    
+        // Establecer los headers al inicio
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            // Buscar el nivel
+            $producto = Producto::find($id);
+    
+            // Verificar si se encontró el producto
+            if (!$producto) {
+                http_response_code(404);
+                $respuesta = [
+                    'tipo' => 'error',
+                    'titulo' => 'No encontrado',
+                    'mensaje' => 'El producto no existe'
+                ];
+                echo json_encode($respuesta);
+                exit;
+            }
+    
+            // Responder con el objeto encontrado
+            http_response_code(200);
+            echo json_encode($producto);
+        }
+    }
+
+    public static function actualizar($id){
+
+        is_auth();
+        $producto = Producto::find($id);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+            if( !$producto ){
+                $respuesta = [
+                    'tipo' => 'error',
+                    'titulo' => 'Error',
+                    'mensaje' => "El producto no existe."
+                ];
+                echo json_encode($respuesta);
+                exit;
+            }
+    
+            // Carpeta donde se guardarán las imágenes
+            $carpeta_imagenes = '../public/build/img';
+            if (!is_dir($carpeta_imagenes)) {
+                mkdir($carpeta_imagenes, 0755, true);
+            }
+    
+            //debuguear($_FILES);
+            // Manejo de la imagen (solo si se sube una nueva)
+            if (!empty($_FILES['foto']['tmp_name'])) {
+                $rutaDocumentoAnterior = "$carpeta_imagenes/{$producto->foto}.png";
+    
+                // Eliminar la imagen anterior si existe
+                if (!empty($producto->foto) && file_exists($rutaDocumentoAnterior)) {
+                    if (!unlink($rutaDocumentoAnterior)) {
+                        $respuesta = [
+                            'tipo' => 'error',
+                            'titulo' => 'Error',
+                            'mensaje' => 'No se pudo eliminar la imagen anterior.'
+                        ];
+                        echo json_encode($respuesta);
+                        exit;
+                    }
+                }
+    
+                // Crear un nuevo nombre para la imagen
+                $nombreDocumento = md5(uniqid(rand(), true)) . '.png';
+                $rutaDocumento = "$carpeta_imagenes/$nombreDocumento";
+    
+                // Mover el archivo a la carpeta de imágenes
+                if (move_uploaded_file($_FILES['foto']['tmp_name'], $rutaDocumento)) {
+                    $producto->foto = pathinfo($nombreDocumento, PATHINFO_FILENAME); // Guardar solo el nombre sin extensión
+                } else {
+                    $respuesta = [
+                        'tipo' => 'error',
+                        'titulo' => 'Error',
+                        'mensaje' => 'No se pudo guardar la nueva imagen.'
+                    ];
+                    echo json_encode($respuesta);
+                    exit;
+                }
+            }
+    
+            // Sincronizar datos EXCLUYENDO 'img' si no se subió una nueva imagen
+            $datosActualizar = $_POST;
+    
+            // Si la imagen, no la actualizamos
+            if (empty($_FILES['foto']['tmp_name'])) {
+                unset($datosActualizar['foto']); // Elimina la clave 'img' para no modificar el campo en la BD
+            }
+    
+            $producto->sincronizar($datosActualizar);
+            $resultado = $producto->guardar();
+    
+            if( $resultado ){
+                $respuesta = [
+                    'tipo' => 'success',
+                    'titulo' => 'Actualizado',
+                    'mensaje' => "El producto ha sido actualizado correctamente."
+                ];
+                echo json_encode($respuesta);
+                exit;
+            } else {
+                $respuesta = [
+                    'tipo' => 'error',
+                    'titulo' => 'Error',
+                    'mensaje' => "Hubo un error al actualizar el producto."
+                ];
+                echo json_encode($respuesta);
+                exit;
+            }
         }
     }
 }

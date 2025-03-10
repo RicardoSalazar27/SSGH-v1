@@ -88,5 +88,7 @@ $router->patch('/api/clientes/{id}', [ClientesController::class, 'actualizar']);
 $router->delete('/api/clientes/{id}', [ClientesController::class, 'eliminar']);
 
 $router->get('/api/productos', [CatalogoProductosController::class, 'listar']);
+$router->get('/api/productos/{id}', [CatalogoProductosController::class, 'obtener']);
+$router->post('/api/productos/{id}', [CatalogoProductosController::class, 'actualizar']);
 
 $router->comprobarRutas();
