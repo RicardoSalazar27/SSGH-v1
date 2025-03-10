@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Model\Auditoria;
 use Model\Categoria_Producto;
 use Model\Hotel;
 use Model\Producto;
@@ -110,11 +111,12 @@ class CatalogoProductosController{
             if (!is_dir($carpeta_imagenes)) {
                 mkdir($carpeta_imagenes, 0755, true);
             }
+    
             // Manejo de la imagen (solo si se sube una nueva)
             if (!empty($_FILES['foto']['tmp_name'])) {
                 $rutaDocumentoAnterior = "$carpeta_imagenes/{$producto->foto}.png";
     
-                //Eliminar la imagen anterior si existe
+                // Eliminar la imagen anterior si existe
                 if (!empty($producto->foto) && file_exists($rutaDocumentoAnterior)) {
                     if (!unlink($rutaDocumentoAnterior)) {
                         $respuesta = [
@@ -133,9 +135,7 @@ class CatalogoProductosController{
     
                 // Mover el archivo a la carpeta de imágenes
                 if (move_uploaded_file($_FILES['foto']['tmp_name'], $rutaDocumento)) {
-                    
                     $producto->foto = pathinfo($nombreDocumento, PATHINFO_FILENAME); // Guardar solo el nombre sin extensión
-                    
                 } else {
                     $respuesta = [
                         'tipo' => 'error',
@@ -145,22 +145,37 @@ class CatalogoProductosController{
                     echo json_encode($respuesta);
                     exit;
                 }
-                
             }
     
+            // Sincronizar datos EXCLUYENDO 'img' si no se subió una nueva imagen
             $datosActualizar = $_POST;
 
             // Si se subió una nueva imagen, aseguramos que se guarde en los datos a actualizar
-            if (!empty($_FILES['foto']['tmp_name'])) {
-                $datosActualizar['foto'] = pathinfo($nombreDocumento, PATHINFO_FILENAME);
+            if (empty($_FILES['foto']['tmp_name'])) {
+                unset($datosActualizar['foto']); // Elimina la clave 'img' para no modificar el campo en la BD
             }
-
-            // Sincronizar datos con el producto
+    
             $producto->sincronizar($datosActualizar);
-
             $resultado = $producto->guardar();
     
             if( $resultado ){
+                // Ahora puedes usar el $id que viene de la URL
+                $usuarioId = $_SESSION['id'];  // Asegúrate que $_SESSION['id'] tenga un valor válido
+                $auditoria = new Auditoria();
+                $registro = $id;  // Si id_registro_afectado es NULL, esto está bien
+                date_default_timezone_set("America/Mexico_City");
+                $fechaHora = date('Y-m-d H:i:s');  // Esto devuelve la fecha y hora actuales en formato "YYYY-MM-DD HH:MM:SS"
+                $datos = [
+                    'id_usuario' => $usuarioId,
+                    'accion' => 'Editar',
+                    'tabla_afectada' => 'Productos',
+                    'id_registro_afectado' => $registro,
+                    'detalle' => "Edito Producto $registro",
+                    'fecha_hora' => $fechaHora 
+                ];
+                
+                $auditoria->sincronizar($datos);
+                $auditoria->guardar();
                 $respuesta = [
                     'tipo' => 'success',
                     'titulo' => 'Actualizado',
@@ -217,8 +232,25 @@ class CatalogoProductosController{
             }
 
             $resultado = $producto->eliminar();
+
             if( $resultado ){
                 // Ahora puedes usar el $id que viene de la URL
+                $usuarioId = $_SESSION['id'];  // Asegúrate que $_SESSION['id'] tenga un valor válido
+                $auditoria = new Auditoria();
+                $registro = $id;  // Si id_registro_afectado es NULL, esto está bien
+                date_default_timezone_set("America/Mexico_City");
+                $fechaHora = date('Y-m-d H:i:s');  // Esto devuelve la fecha y hora actuales en formato "YYYY-MM-DD HH:MM:SS"
+                $datos = [
+                    'id_usuario' => $usuarioId,
+                    'accion' => 'Eliminar',
+                    'tabla_afectada' => 'Productos',
+                    'id_registro_afectado' => $registro,
+                    'detalle' => "Elimino Producto $registro",
+                    'fecha_hora' => $fechaHora 
+                ];
+                
+                $auditoria->sincronizar($datos);
+                $auditoria->guardar();
                 $respuesta = [
                     'tipo' => 'success',  // Cambié el tipo a 'success' porque el mensaje era de error
                     'titulo' => 'Eliminado',
@@ -322,9 +354,27 @@ class CatalogoProductosController{
     
             // Guardar el producto en la base de datos
             $resultado = $producto->guardar();
+            $productoA = Producto::where('codigo_barras', $producto->codigo_barras);
     
             // Responder según el resultado de la creación del producto
             if ($resultado) {
+                $usuarioId = $_SESSION['id'];  // Asegúrate que $_SESSION['id'] tenga un valor válido
+                $auditoria = new Auditoria();
+                $registro = $productoA->id;  // Si id_registro_afectado es NULL, esto está bien
+                date_default_timezone_set("America/Mexico_City");
+                $fechaHora = date('Y-m-d H:i:s');  // Esto devuelve la fecha y hora actuales en formato "YYYY-MM-DD HH:MM:SS"
+                $datos = [
+                    'id_usuario' => $usuarioId,
+                    'accion' => 'CREAR',
+                    'tabla_afectada' => 'Productos',
+                    'id_registro_afectado' => $registro,
+                    'detalle' => "Creo Producto $registro",
+                    'fecha_hora' => $fechaHora 
+                ];
+                
+                $auditoria->sincronizar($datos);
+                $auditoria->guardar();
+
                 $respuesta = [
                     'tipo' => 'success',
                     'titulo' => 'Creado',
