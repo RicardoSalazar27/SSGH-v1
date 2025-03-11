@@ -129,6 +129,34 @@ class HabitacionController{
         }
     }
 
+    public static function disponibles($fechainicio, $fechafin) {
+        is_auth();
+    
+        // Establecer los headers al inicio
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            // Validar que las fechas no estén vacías
+            if (empty($fechainicio) || empty($fechafin)) {
+                echo json_encode([
+                    'error' => 'Las fechas de inicio y fin son obligatorias'
+                ]);
+                http_response_code(400); // Bad Request
+                exit;
+            }
+    
+            // Obtener habitaciones disponibles
+             $habitaciones = Habitacion::habitacionesDisponibles($fechainicio, $fechafin);
+    
+            // Responder en JSON
+            http_response_code(200);
+            echo json_encode($habitaciones);
+        }
+    }
+
     public static function actualizar($id) {
 
         is_auth();
