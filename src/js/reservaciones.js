@@ -169,6 +169,50 @@ if (window.location.pathname === '/admin/reservaciones') {
         document.getElementById('btnConfirmar').classList.remove('d-none');
     });
 
+
+    const fechaEntrada = document.getElementById("fechaEntrada");
+    const fechaSalida = document.getElementById("fechaSalida");
+    const selectHabitacion = document.getElementById("habitacion");
+
+    async function cargarHabitaciones() {
+        const inicio = fechaEntrada.value;
+        const fin = fechaSalida.value;
+
+        // Validar que ambas fechas estén seleccionadas
+        if (!inicio || !fin) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/habitaciones/disponibles/${inicio}/${fin}`);
+            const habitaciones = await response.json();
+
+            // Limpiar opciones previas
+            selectHabitacion.innerHTML = '<option value="">Seleccione una habitación</option>';
+
+            // Verificar si hay habitaciones disponibles
+            if (habitaciones.length === 0) {
+                selectHabitacion.innerHTML = '<option value="">No hay habitaciones disponibles</option>';
+                return;
+            }
+
+            // Llenar el select con las habitaciones disponibles
+            habitaciones.forEach(habitacion => {
+                const option = document.createElement("option");
+                option.value = habitacion.id; // ID de la habitación
+                option.textContent = `Habitación ${habitacion.numero}`; // Número visible
+                selectHabitacion.appendChild(option);
+            });
+
+        } catch (error) {
+            console.error("Error al obtener habitaciones:", error);
+        }
+    }
+
+    // Escuchar cambios en las fechas
+    fechaEntrada.addEventListener("change", cargarHabitaciones);
+    fechaSalida.addEventListener("change", cargarHabitaciones);
+
     // Ocultar sugerencias si se hace clic fuera
     document.addEventListener('click', function (e) {
         if (!inputCorreo.contains(e.target) && !listaSugerencias.contains(e.target)) {
