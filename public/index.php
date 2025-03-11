@@ -83,6 +83,7 @@ $router->patch('/api/habitaciones/{id}', [HabitacionController::class, 'actualiz
 
 $router->get('/api/clientes', [ClientesController::class, 'listar']);
 $router->get('/api/clientes/{id}', [ClientesController::class, 'obtener']);
+$router->get('/api/clientes/correo/{correo}', [ClientesController::class, 'obtenercorreo']);
 $router->put('/api/clientes/{id}', [ClientesController::class, 'actualizar']);
 $router->patch('/api/clientes/{id}', [ClientesController::class, 'actualizar']);
 $router->delete('/api/clientes/{id}', [ClientesController::class, 'eliminar']);
@@ -92,5 +93,6 @@ $router->get('/api/productos/{id}', [CatalogoProductosController::class, 'obtene
 $router->post('/api/productos/{id}', [CatalogoProductosController::class, 'actualizar']);
 $router->delete('/api/productos/{id}', [CatalogoProductosController::class, 'eliminar']);
 $router->post('/api/productos', [CatalogoProductosController::class, 'crear']);
+
 
 $router->comprobarRutas();

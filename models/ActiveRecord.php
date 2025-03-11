@@ -114,14 +114,14 @@ class ActiveRecord {
     
     // Obtener todos los registros con opción de orden ascendente o descendente
     public static function all($orden = 'DESC') {
-    // Validar que solo acepte 'ASC' o 'DESC'
-    if ($orden !== 'ASC' && $orden !== 'DESC') {
-        $orden = 'DESC'; // Si el valor no es válido, se usa DESC por defecto
-    }
+        // Validar que solo acepte 'ASC' o 'DESC'
+        if ($orden !== 'ASC' && $orden !== 'DESC') {
+            $orden = 'DESC'; // Si el valor no es válido, se usa DESC por defecto
+        }
 
-    $query = "SELECT * FROM " . static::$tabla . " ORDER BY id $orden";
-    return self::consultarSQL($query);
-}
+        $query = "SELECT * FROM " . static::$tabla . " ORDER BY id $orden";
+        return self::consultarSQL($query);
+    }
 
 
     // Busca un registro por su id
@@ -143,6 +143,15 @@ class ActiveRecord {
         $query = "SELECT * FROM " . static::$tabla . " WHERE $columna = '$valor'";
         $resultado = self::consultarSQL($query);
         return array_shift( $resultado ) ;
+    }
+
+    // Búsqueda parcial LIKE con Columna
+    public static function like($columna, $valor) {
+        $valor = "%" . $valor . "%";  // Agregar los comodines para búsqueda parcial
+        $query = "SELECT * FROM " . static::$tabla . " WHERE $columna LIKE '$valor'";
+        //debuguear($query);
+        $resultado = self::consultarSQL($query);
+        return ($resultado);
     }
 
     // crea un nuevo registro
