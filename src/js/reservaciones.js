@@ -1,146 +1,68 @@
-if (window.location.pathname === '/admin/reservaciones') {
-    document.addEventListener('DOMContentLoaded', function () {
-        // Verificar que FullCalendar esté disponible
-        var calendarEl = document.getElementById('calendar');
-        
-        // Inicializar Modal de Bootstrap
-        var modalElement = document.getElementById('modalReservacion');
-        var MyModal = new bootstrap.Modal(modalElement);
-
-        // Inicializar FullCalendar
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            locale: 'es',  // Establece el idioma a español
-            initialView: 'dayGridMonth',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-            },
-            buttonText: {
-                today: 'Hoy',
-                prev: 'Anterior',
-                next: 'Siguiente',
-                month: 'Mes',
-                week: 'Semana',
-                day: 'Día',
-                list: 'Lista',
-            },
-            allDayText: 'Todo el día',
-             // **Aquí agregamos los eventos**
-             events: [
-            ],
-            dateClick: function (info) {
-                var startInput = document.getElementById('start');
-                if (startInput) {
-                    startInput.value = info.dateStr; // Asignar la fecha seleccionada al input
-                } else {
-                    console.error("El input con ID 'start' no se encontró.");
-                }
-                MyModal.show(); // Mostrar el modal
-            }
-        });
-
-        // Renderizar el calendario
-        calendar.render();
-
-        // Funcionalidad para cerrar el modal mediante los botones
-        var closeModalButtons = document.querySelectorAll('[data-close="modal"]'); // Seleccionar botones de cierre
-        closeModalButtons.forEach(function (button) {
-            button.addEventListener('click', function () {
-                MyModal.hide(); // Ocultar el modal
-            });
-        });
-
-        // Cuando en vez de seleccionar por fecha, usas el boton para crear una nueva reservacion
-        let btnNuevaReservacion = document.querySelector('#btnAgregarReservacion');
-        btnNuevaReservacion.addEventListener('click', function() {
-            MyModal.show(); // Mostrar el modal al hacer clic en el botón
-        });
-    });
-
-    // Referencias a elementos del DOM
+if(window.location.pathname === '/admin/reservaciones'){
+    // Elementos del DOM
     const inputCorreo = document.getElementById('searchEmail');
     const listaSugerencias = document.getElementById('sugerenciasCorreo');
     const fechaEntrada = document.getElementById("fechaEntrada");
     const fechaSalida = document.getElementById("fechaSalida");
     const selectHabitacion = document.getElementById("habitacion");
-    const btnSiguiente = document.getElementById('btnSiguiente'); // Botón Siguiente (cambia a Confirmar en el paso 3)
-    const btnAtras = document.getElementById('btnAtras'); // Botón Atrás
+    const btnSiguiente = document.getElementById('btnSiguiente');
+    const btnAtras = document.getElementById('btnAtras');
+    const btnConfirmar = document.getElementById('btnConfirmar'); // Asegúrate de tener este botón en el modal
+    const totalPagarInput = document.getElementById("totalPagar");
+    const descuentoInput = document.getElementById("descuento");
+    const cobroExtraInput = document.getElementById("cobroExtra");
 
+    // Variables de control
     let timeoutBusqueda;
     let clienteNuevo = {};  
-    let pasoActual = 1;  // Controla el paso en el que estamos
+    let pasoActual = 1;
+    let habitacionesDisponibles = []; // Definir la variable global para las habitaciones
+    let habitacionesSeleccionadas = [];
 
-    // Inicializar Choices.js para el select de habitaciones
+    // Inicializar Choices.js para la selección de habitaciones
     const choices = new Choices(selectHabitacion, {
         removeItemButton: true,
         placeholder: true,
         placeholderValue: "Seleccione una o más habitaciones",
-        searchEnabled: false, 
+        searchEnabled: false,
     });
 
-    // Buscar clientes por correo en la API
+    /**
+     * Busca clientes por correo en la API
+     */
     async function buscarClientes(correo) {
         try {
             const response = await fetch(`/api/clientes/correo/${encodeURIComponent(correo)}`);
-            
-            if (!response.ok) {
-                return []; // Si el cliente no existe (404), retorna un array vacío
-            }
-
-            const clientes = await response.json();
-            return clientes.length ? clientes : [];
+            return await response.json();
         } catch (error) {
             console.error("Error al obtener clientes:", error);
             return [];
         }
     }
 
-    // Evento al escribir en el input de correo
-    inputCorreo.addEventListener('input', function () {
-        clearTimeout(timeoutBusqueda);
-        const valor = inputCorreo.value.trim();
-
-        if (valor.length < 3) {
-            listaSugerencias.classList.add('d-none');
-            return;
-        }
-
-        timeoutBusqueda = setTimeout(async () => {
-            const clientes = await buscarClientes(valor);
-            if (clientes.length === 0) {
-                clienteNuevo = {}; // Limpiar datos previos si no hay coincidencias
-            }
-            mostrarSugerencias(clientes);
-        }, 300);
-    });
-
-    // Mostrar sugerencias de clientes
+    /**
+     * Muestra sugerencias de clientes en la lista desplegable
+     */
     function mostrarSugerencias(clientes) {
         listaSugerencias.innerHTML = '';
-
         if (clientes.length === 0) {
             listaSugerencias.classList.add('d-none');
             return;
         }
-
-        listaSugerencias.classList.remove('d-none');  
-
+        listaSugerencias.classList.remove('d-none');
         clientes.forEach(cliente => {
             const item = document.createElement('li');
             item.classList.add('list-group-item', 'list-group-item-action');
             item.textContent = cliente.correo;
             item.dataset.id = cliente.id;
-
-            item.addEventListener('click', function () {
-                seleccionarCliente(cliente);
-            });
-
+            item.addEventListener('click', () => seleccionarCliente(cliente));
             listaSugerencias.appendChild(item);
         });
     }
 
-    // Llenar los campos cuando se selecciona un cliente existente
+    /**
+     * Llena los campos con la información del cliente seleccionado
+     */
     function seleccionarCliente(cliente) {
         inputCorreo.value = cliente.correo;
         document.getElementById('nombre').value = cliente.nombre;
@@ -148,11 +70,12 @@ if (window.location.pathname === '/admin/reservaciones') {
         document.getElementById('documento_identidad').value = cliente.documento_identidad;
         document.getElementById('telefono').value = cliente.telefono;
         document.getElementById('direccion').value = cliente.direccion;
-
         listaSugerencias.classList.add('d-none');
     }
 
-    // Guardar los datos de un cliente nuevo
+    /**
+     * Guarda los datos de un nuevo cliente ingresado
+     */
     function guardarClienteNuevo() {
         clienteNuevo = {
             correo: inputCorreo.value.trim(),
@@ -164,107 +87,242 @@ if (window.location.pathname === '/admin/reservaciones') {
         };
     }
 
-    // Avanzar de paso en el wizard
-    btnSiguiente.addEventListener('click', function() {
-        if (pasoActual === 1) {
-            if (!inputCorreo.value.trim()) {
-                alert("Por favor, ingrese un correo.");
-                return;
-            }
-
-            const clienteYaSeleccionado = document.getElementById('nombre').value.trim();
-            if (!clienteYaSeleccionado) {
-                guardarClienteNuevo();
-                console.log("Nuevo cliente guardado:", clienteNuevo);
-            }
-
-            document.getElementById('step1').classList.add('d-none');
-            document.getElementById('step2').classList.remove('d-none');
-            document.getElementById('btnAtras').classList.remove('d-none'); 
-            pasoActual = 2;
-            btnSiguiente.textContent = "Siguiente";
-        } else if (pasoActual === 2) {
-            const habitacionesSeleccionadas = choices.getValue(true);
-            if (habitacionesSeleccionadas.length === 0) {
-                alert("Por favor, seleccione una habitación.");
-                return;
-            }
-
-            document.getElementById('step2').classList.add('d-none');
-            document.getElementById('step3').classList.remove('d-none');
-            btnSiguiente.textContent = "Confirmar";
-            pasoActual = 3;
-        } else if (pasoActual === 3) {
-            const datosReserva = {
-                cliente: clienteNuevo.correo ? clienteNuevo : {
-                    correo: inputCorreo.value,
-                    nombre: document.getElementById('nombre').value,
-                    apellidos: document.getElementById('apellidos').value,
-                    documento_identidad: document.getElementById('documento_identidad').value,
-                    telefono: document.getElementById('telefono').value,
-                    direccion: document.getElementById('direccion').value,
-                },
-                fechaEntrada: fechaEntrada.value,
-                fechaSalida: fechaSalida.value,
-                habitaciones: choices.getValue(true)
-            };
-
-            console.log("Datos de la reserva:", datosReserva);
-            alert("Reserva confirmada!");
+    /**
+     * Maneja el cambio de pasos en el modal
+     */
+    btnSiguiente.addEventListener('click', () => {
+        switch (pasoActual) {
+            case 1:
+                if (!inputCorreo.value.trim()) {
+                    alert("Por favor, ingrese un correo.");
+                    return;
+                }
+                if (!document.getElementById('nombre').value.trim()) {
+                    guardarClienteNuevo();
+                }
+                cambiarPaso(2);
+                break;
+            case 2:
+                habitacionesSeleccionadas = choices.getValue(true);
+                if (habitacionesSeleccionadas.length === 0) {
+                    alert("Por favor, seleccione una habitación.");
+                    return;
+                }
+                cambiarPaso(3);
+                btnSiguiente.classList.add('d-none'); // Ocultar el botón de Siguiente en el paso 3
+                btnConfirmar.classList.remove('d-none'); // Mostrar el botón de Confirmar en el paso 3
+                calcularTotalPagar(); // Calcular total cuando lleguemos al paso 3
+                break;
+            case 3:
+                alert("Reserva confirmada!");
+                break;
         }
     });
 
-    // Cargar habitaciones disponibles al cambiar las fechas
+    /**
+     * Cambia entre los pasos del modal
+     */
+    function cambiarPaso(nuevoPaso) {
+        document.getElementById(`step${pasoActual}`).classList.add('d-none');
+        document.getElementById(`step${nuevoPaso}`).classList.remove('d-none');
+        pasoActual = nuevoPaso;
+        btnAtras.classList.toggle('d-none', pasoActual === 1);
+        btnSiguiente.textContent = "Siguiente";
+    }
+
+    /**
+     * Carga habitaciones disponibles según las fechas seleccionadas
+     */
     async function cargarHabitaciones() {
-        const inicio = fechaEntrada.value;
-        const fin = fechaSalida.value;
-
-        if (!inicio || !fin) return;
-
+        if (!fechaEntrada.value || !fechaSalida.value) return;
         try {
-            const response = await fetch(`/api/habitaciones/disponibles/${inicio}/${fin}`);
-            const habitaciones = await response.json();
-
+            const response = await fetch(`/api/habitaciones/disponibles/${fechaEntrada.value}/${fechaSalida.value}`);
+            habitacionesDisponibles = await response.json();  // Guardar habitaciones disponibles
             choices.clearChoices();
-
-            if (habitaciones.length === 0) {
+            if (habitacionesDisponibles.length === 0) {
                 choices.setChoices([{ value: "", label: "No hay habitaciones disponibles", disabled: true }]);
                 return;
             }
-
-            const opciones = habitaciones.map(habitacion => ({
+            choices.setChoices(habitacionesDisponibles.map(habitacion => ({
                 value: habitacion.id,
                 label: `Habitación ${habitacion.numero} | ${habitacion.id_categoria.nombre} | Capacidad max. ${habitacion.id_categoria.capacidad_maxima} personas | $${habitacion.id_categoria.precio_base} MXN`
-            }));
-            choices.setChoices(opciones);
+            })));
         } catch (error) {
             console.error("Error al obtener habitaciones:", error);
         }
     }
 
-    // Eventos para actualizar habitaciones al cambiar fechas
+    /**
+     * Evento para detectar cambios en las fechas y cargar habitaciones
+     */
     fechaEntrada.addEventListener("change", cargarHabitaciones);
     fechaSalida.addEventListener("change", cargarHabitaciones);
 
-    // Cerrar sugerencias al hacer clic fuera del input
-    document.addEventListener('click', function (e) {
+    /**
+     * Maneja el retroceso de pasos en el modal
+     */
+    btnAtras.addEventListener('click', () => {
+        if (pasoActual > 1) {
+            cambiarPaso(pasoActual - 1);
+        }
+    });
+
+    /**
+     * Maneja la búsqueda de clientes por correo con retraso
+     */
+    inputCorreo.addEventListener('input', () => {
+        clearTimeout(timeoutBusqueda);
+        const valor = inputCorreo.value.trim();
+        if (valor.length < 3) {
+            listaSugerencias.classList.add('d-none');
+            return;
+        }
+        timeoutBusqueda = setTimeout(async () => {
+            mostrarSugerencias(await buscarClientes(valor));
+        }, 300);
+    });
+
+    /**
+     * Oculta las sugerencias si se hace clic fuera del input
+     */
+    document.addEventListener('click', (e) => {
         if (!inputCorreo.contains(e.target) && !listaSugerencias.contains(e.target)) {
             listaSugerencias.classList.add('d-none');
         }
     });
 
-    // Retroceder en el wizard
-    btnAtras.addEventListener('click', function() {
-        if (pasoActual === 2) {
-            document.getElementById('step2').classList.add('d-none');
-            document.getElementById('step1').classList.remove('d-none');
-            document.getElementById('btnAtras').classList.add('d-none');
-            pasoActual = 1;
-        } else if (pasoActual === 3) {
-            document.getElementById('step3').classList.add('d-none');
-            document.getElementById('step2').classList.remove('d-none');
-            btnSiguiente.textContent = "Siguiente";
-            pasoActual = 2;
+    /**
+     * Calcular el total a pagar en el paso 3
+     */
+    // Código actualizado para el paso 3 del modal:
+
+function calcularTotalPagar() {
+    let total = 0;
+    habitacionesSeleccionadas.forEach(habitacionId => {
+        const habitacion = habitacionesDisponibles.find(h => h.id === habitacionId);  // Buscar en habitacionesDisponibles
+        if (habitacion) {
+            total += parseFloat(habitacion.id_categoria.precio_base);
         }
     });
+
+    // Aplicar descuento
+    const descuento = parseFloat(descuentoInput.value) || 0;
+    const tipoDescuento = document.querySelector('input[name="tipoDescuento"]:checked').value;
+    if (tipoDescuento === 'porcentaje') {
+        total -= (total * descuento) / 100;
+    } else {
+        total -= descuento;
+    }
+
+    // Aplicar cobro extra
+    const cobroExtra = parseFloat(cobroExtraInput.value) || 0;
+    total += cobroExtra;
+
+    // Actualizar el total en el campo correspondiente
+    totalPagarInput.value = total.toFixed(2);
+
+    // Obtener el cliente
+    let clienteFinal = {};
+
+    if (clienteNuevo.correo) {
+        // Si el cliente es nuevo, usamos los datos que se ingresaron
+        clienteFinal = clienteNuevo;
+    } else {
+        // Si el cliente ya existía y fue seleccionado, usamos sus datos
+        clienteFinal = {
+            correo: inputCorreo.value,
+            nombre: document.getElementById('nombre').value,
+            apellidos: document.getElementById('apellidos').value,
+            documento_identidad: document.getElementById('documento_identidad').value,
+            telefono: document.getElementById('telefono').value,
+            direccion: document.getElementById('direccion').value
+        };
+    }
+
+    // Mostrar los datos del cliente y la reserva en consola para depuración
+    // console.log({
+    //     cliente: clienteFinal,  // Muestra los datos del cliente (nuevo o existente)
+    //     fechas: {
+    //         entrada: fechaEntrada.value,
+    //         salida: fechaSalida.value
+    //     },
+    //     habitaciones: habitacionesSeleccionadas,
+    //     totalPagar: total,
+    //     descuento: descuento,
+    //     cobroExtra: cobroExtra
+    // });
+}
+
+    // Evento de Confirmar en el paso 3 del modal:
+    btnConfirmar.addEventListener('click', () => {
+        // Primero, obtendremos todos los valores actualizados
+        let total = 0;
+        habitacionesSeleccionadas.forEach(habitacionId => {
+            const habitacion = habitacionesDisponibles.find(h => h.id === habitacionId);  // Buscar en habitacionesDisponibles
+            if (habitacion) {
+                total += parseFloat(habitacion.id_categoria.precio_base);
+            }
+        });
+
+        // Obtener el descuento
+        const descuento = parseFloat(descuentoInput.value) || 0;
+        const tipoDescuento = document.querySelector('input[name="tipoDescuento"]:checked').value;
+        if (tipoDescuento === 'porcentaje') {
+            // Si el descuento es porcentaje, lo convertimos a cantidad en pesos
+            total -= (total * descuento) / 100; // Se resta el porcentaje del total
+        } else {
+            // Si es un monto, simplemente lo restamos
+            total -= descuento;
+        }
+
+        // Aplicar cobro extra
+        const cobroExtra = parseFloat(cobroExtraInput.value) || 0;
+        total += cobroExtra;
+
+        // Obtener observaciones y tipo de pago
+        const observaciones = document.getElementById('observaciones').value.trim();
+        const metodoPago = document.getElementById('metodoPago').value;
+
+        // Actualizar el total en el campo correspondiente
+        totalPagarInput.value = total.toFixed(2);
+
+        // Obtener el cliente
+        let clienteFinal = {};
+
+        if (clienteNuevo.correo) {
+            // Si el cliente es nuevo, usamos los datos que se ingresaron
+            clienteFinal = clienteNuevo;
+        } else {
+            // Si el cliente ya existía y fue seleccionado, usamos sus datos
+            clienteFinal = {
+                correo: inputCorreo.value,
+                nombre: document.getElementById('nombre').value,
+                apellidos: document.getElementById('apellidos').value,
+                documento_identidad: document.getElementById('documento_identidad').value,
+                telefono: document.getElementById('telefono').value,
+                direccion: document.getElementById('direccion').value
+            };
+        }
+
+        // Mostrar los datos finales en el console.log
+        console.log({
+            cliente: clienteFinal,  // Datos del cliente (nuevo o existente)
+            fechas: {
+                entrada: fechaEntrada.value,
+                salida: fechaSalida.value
+            },
+            habitaciones: habitacionesSeleccionadas,
+            totalPagar: total.toFixed(2),  // Total a pagar con descuento y cobro extra
+            descuento: tipoDescuento === 'porcentaje' ? (total * descuento) / 100 : descuento,  // Si es porcentaje, mostramos en pesos
+            cobroExtra: cobroExtra,
+            observaciones: observaciones,  // Observaciones ingresadas
+            metodoPago: metodoPago  // Método de pago seleccionado
+        });
+
+        // Aquí puedes agregar más lógica para enviar los datos a la API o hacer el registro
+    });
+
+    // Agregar listeners para actualizar en tiempo real el total cuando haya cambios
+    descuentoInput.addEventListener('input', calcularTotalPagar);
+    cobroExtraInput.addEventListener('input', calcularTotalPagar);
 }
