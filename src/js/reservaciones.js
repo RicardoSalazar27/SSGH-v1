@@ -58,49 +58,64 @@ if (window.location.pathname === '/admin/reservaciones') {
         });
     });
 
+    // Referencias a elementos del DOM
     const inputCorreo = document.getElementById('searchEmail');
     const listaSugerencias = document.getElementById('sugerenciasCorreo');
+    const fechaEntrada = document.getElementById("fechaEntrada");
+    const fechaSalida = document.getElementById("fechaSalida");
+    const selectHabitacion = document.getElementById("habitacion");
+    const btnSiguiente = document.getElementById('btnSiguiente'); // Botón Siguiente (cambia a Confirmar en el paso 3)
+    const btnAtras = document.getElementById('btnAtras'); // Botón Atrás
 
-    let timeoutBusqueda; // Para evitar hacer demasiadas peticiones seguidas
+    let timeoutBusqueda;
+    let clienteNuevo = {};  
+    let pasoActual = 1;  // Controla el paso en el que estamos
 
-    let clienteNuevo = {};  // Variable para almacenar los datos del nuevo cliente
+    // Inicializar Choices.js para el select de habitaciones
+    const choices = new Choices(selectHabitacion, {
+        removeItemButton: true,
+        placeholder: true,
+        placeholderValue: "Seleccione una o más habitaciones",
+        searchEnabled: false, 
+    });
 
     // Buscar clientes por correo en la API
     async function buscarClientes(correo) {
         try {
-            // Modificar la URL para que coincida con el formato del endpoint
             const response = await fetch(`/api/clientes/correo/${encodeURIComponent(correo)}`);
-            const clientes = await response.json();
             
-            // Si no se encuentra ningún cliente, devolver un array vacío
-            if (clientes.length === 0) {
-                return []; // No hay clientes
+            if (!response.ok) {
+                return []; // Si el cliente no existe (404), retorna un array vacío
             }
-            console.log(clientes);
-            return clientes; // Si hay clientes, devolver el array
+
+            const clientes = await response.json();
+            return clientes.length ? clientes : [];
         } catch (error) {
             console.error("Error al obtener clientes:", error);
             return [];
         }
     }
 
-    // Evento al escribir en el input
+    // Evento al escribir en el input de correo
     inputCorreo.addEventListener('input', function () {
-        clearTimeout(timeoutBusqueda); // Limpiar timeout anterior
-
+        clearTimeout(timeoutBusqueda);
         const valor = inputCorreo.value.trim();
-        if (valor.length < 3) { // No buscar si hay menos de 3 caracteres
+
+        if (valor.length < 3) {
             listaSugerencias.classList.add('d-none');
             return;
         }
 
-        timeoutBusqueda = setTimeout(async () => { // Esperar antes de hacer la petición
+        timeoutBusqueda = setTimeout(async () => {
             const clientes = await buscarClientes(valor);
+            if (clientes.length === 0) {
+                clienteNuevo = {}; // Limpiar datos previos si no hay coincidencias
+            }
             mostrarSugerencias(clientes);
-        }, 300); // Retraso de 300ms para evitar sobrecarga en la API
+        }, 300);
     });
 
-    // Función para mostrar sugerencias
+    // Mostrar sugerencias de clientes
     function mostrarSugerencias(clientes) {
         listaSugerencias.innerHTML = '';
 
@@ -109,7 +124,7 @@ if (window.location.pathname === '/admin/reservaciones') {
             return;
         }
 
-        listaSugerencias.classList.remove('d-none');  // Asegurarse de que la lista esté visible
+        listaSugerencias.classList.remove('d-none');  
 
         clientes.forEach(cliente => {
             const item = document.createElement('li');
@@ -125,7 +140,7 @@ if (window.location.pathname === '/admin/reservaciones') {
         });
     }
 
-    // Función para llenar los campos cuando se selecciona un cliente
+    // Llenar los campos cuando se selecciona un cliente existente
     function seleccionarCliente(cliente) {
         inputCorreo.value = cliente.correo;
         document.getElementById('nombre').value = cliente.nombre;
@@ -137,9 +152,8 @@ if (window.location.pathname === '/admin/reservaciones') {
         listaSugerencias.classList.add('d-none');
     }
 
-    // Función para almacenar los datos de un nuevo cliente si no se encontró
+    // Guardar los datos de un cliente nuevo
     function guardarClienteNuevo() {
-        // Obtener los valores de los inputs
         clienteNuevo = {
             correo: inputCorreo.value.trim(),
             nombre: document.getElementById('nombre').value.trim(),
@@ -150,74 +164,107 @@ if (window.location.pathname === '/admin/reservaciones') {
         };
     }
 
-   // Evento para el botón "Siguiente"
-    const btnSiguiente = document.getElementById('btnSiguiente'); // Asegúrate de que este botón existe en tu HTML
+    // Avanzar de paso en el wizard
     btnSiguiente.addEventListener('click', function() {
-        // Si no se encontraron clientes, guardar los datos como cliente nuevo
-        if (!inputCorreo.value.trim() || listaSugerencias.classList.contains('d-none')) {
-            guardarClienteNuevo();
-            console.log(clienteNuevo); // Aquí puedes hacer lo que necesites con el cliente nuevo
+        if (pasoActual === 1) {
+            if (!inputCorreo.value.trim()) {
+                alert("Por favor, ingrese un correo.");
+                return;
+            }
+
+            const clienteYaSeleccionado = document.getElementById('nombre').value.trim();
+            if (!clienteYaSeleccionado) {
+                guardarClienteNuevo();
+                console.log("Nuevo cliente guardado:", clienteNuevo);
+            }
+
+            document.getElementById('step1').classList.add('d-none');
+            document.getElementById('step2').classList.remove('d-none');
+            document.getElementById('btnAtras').classList.remove('d-none'); 
+            pasoActual = 2;
+            btnSiguiente.textContent = "Siguiente";
+        } else if (pasoActual === 2) {
+            const habitacionesSeleccionadas = choices.getValue(true);
+            if (habitacionesSeleccionadas.length === 0) {
+                alert("Por favor, seleccione una habitación.");
+                return;
+            }
+
+            document.getElementById('step2').classList.add('d-none');
+            document.getElementById('step3').classList.remove('d-none');
+            btnSiguiente.textContent = "Confirmar";
+            pasoActual = 3;
+        } else if (pasoActual === 3) {
+            const datosReserva = {
+                cliente: clienteNuevo.correo ? clienteNuevo : {
+                    correo: inputCorreo.value,
+                    nombre: document.getElementById('nombre').value,
+                    apellidos: document.getElementById('apellidos').value,
+                    documento_identidad: document.getElementById('documento_identidad').value,
+                    telefono: document.getElementById('telefono').value,
+                    direccion: document.getElementById('direccion').value,
+                },
+                fechaEntrada: fechaEntrada.value,
+                fechaSalida: fechaSalida.value,
+                habitaciones: choices.getValue(true)
+            };
+
+            console.log("Datos de la reserva:", datosReserva);
+            alert("Reserva confirmada!");
         }
-
-        // Cambiar al paso 2
-        document.getElementById('step1').classList.add('d-none');  // Ocultar el paso 1
-        document.getElementById('step2').classList.remove('d-none');  // Mostrar el paso 2
-
-        // Mostrar el botón "Atrás" y cambiar "Siguiente" a "Confirmar"
-        document.getElementById('btnAtras').classList.remove('d-none');
-        document.getElementById('btnSiguiente').classList.add('d-none');
-        document.getElementById('btnConfirmar').classList.remove('d-none');
     });
 
-
-    const fechaEntrada = document.getElementById("fechaEntrada");
-    const fechaSalida = document.getElementById("fechaSalida");
-    const selectHabitacion = document.getElementById("habitacion");
-
+    // Cargar habitaciones disponibles al cambiar las fechas
     async function cargarHabitaciones() {
         const inicio = fechaEntrada.value;
         const fin = fechaSalida.value;
 
-        // Validar que ambas fechas estén seleccionadas
-        if (!inicio || !fin) {
-            return;
-        }
+        if (!inicio || !fin) return;
 
         try {
             const response = await fetch(`/api/habitaciones/disponibles/${inicio}/${fin}`);
             const habitaciones = await response.json();
 
-            // Limpiar opciones previas
-            selectHabitacion.innerHTML = '<option value="">Seleccione una habitación</option>';
+            choices.clearChoices();
 
-            // Verificar si hay habitaciones disponibles
             if (habitaciones.length === 0) {
-                selectHabitacion.innerHTML = '<option value="">No hay habitaciones disponibles</option>';
+                choices.setChoices([{ value: "", label: "No hay habitaciones disponibles", disabled: true }]);
                 return;
             }
 
-            // Llenar el select con las habitaciones disponibles
-            habitaciones.forEach(habitacion => {
-                const option = document.createElement("option");
-                option.value = habitacion.id; // ID de la habitación
-                option.textContent = `Habitación ${habitacion.numero}`; // Número visible
-                selectHabitacion.appendChild(option);
-            });
-
+            const opciones = habitaciones.map(habitacion => ({
+                value: habitacion.id,
+                label: `Habitación ${habitacion.numero} | ${habitacion.id_categoria.nombre} | Capacidad max. ${habitacion.id_categoria.capacidad_maxima} personas | $${habitacion.id_categoria.precio_base} MXN`
+            }));
+            choices.setChoices(opciones);
         } catch (error) {
             console.error("Error al obtener habitaciones:", error);
         }
     }
 
-    // Escuchar cambios en las fechas
+    // Eventos para actualizar habitaciones al cambiar fechas
     fechaEntrada.addEventListener("change", cargarHabitaciones);
     fechaSalida.addEventListener("change", cargarHabitaciones);
 
-    // Ocultar sugerencias si se hace clic fuera
+    // Cerrar sugerencias al hacer clic fuera del input
     document.addEventListener('click', function (e) {
         if (!inputCorreo.contains(e.target) && !listaSugerencias.contains(e.target)) {
             listaSugerencias.classList.add('d-none');
         }
     });
 
+    // Retroceder en el wizard
+    btnAtras.addEventListener('click', function() {
+        if (pasoActual === 2) {
+            document.getElementById('step2').classList.add('d-none');
+            document.getElementById('step1').classList.remove('d-none');
+            document.getElementById('btnAtras').classList.add('d-none');
+            pasoActual = 1;
+        } else if (pasoActual === 3) {
+            document.getElementById('step3').classList.add('d-none');
+            document.getElementById('step2').classList.remove('d-none');
+            btnSiguiente.textContent = "Siguiente";
+            pasoActual = 2;
+        }
+    });
 }

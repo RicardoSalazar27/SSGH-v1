@@ -25,6 +25,8 @@
     
     <!-- Bootstrap 4 (Local) -->
     <link rel="stylesheet" href="/build/adminlte/plugins/bootstrap/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -80,6 +82,8 @@
 
     <!-- SweetAlert2 (Local) -->
     <script src="/build/adminlte/plugins/sweetalert2/sweetalert2.all.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
     <!-- Personalizados -->
     <script src="/build/js/bundle.min.js"></script>

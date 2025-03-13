@@ -150,6 +150,9 @@ class HabitacionController{
     
             // Obtener habitaciones disponibles
              $habitaciones = Habitacion::habitacionesDisponibles($fechainicio, $fechafin);
+             foreach($habitaciones as $habitacion){
+                $habitacion->id_categoria = Categoria::find($habitacion->id_categoria); 
+             }
     
             // Responder en JSON
             http_response_code(200);
