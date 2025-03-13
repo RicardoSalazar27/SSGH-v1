@@ -35,4 +35,22 @@ class ReservacionesController {
         ]);
     }
 
+    public static function crear(){
+        is_auth();
+    
+        // Establecer los headers al inicio
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            echo json_encode([
+                'tipo' => 'error',
+                'titulo' => 'Ooops...',
+                'mensaje' => 'nos comunicamos perro'
+            ]);
+        }
+    }
+
 }

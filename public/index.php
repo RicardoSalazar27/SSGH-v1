@@ -95,5 +95,6 @@ $router->post('/api/productos/{id}', [CatalogoProductosController::class, 'actua
 $router->delete('/api/productos/{id}', [CatalogoProductosController::class, 'eliminar']);
 $router->post('/api/productos', [CatalogoProductosController::class, 'crear']);
 
+$router->post('/api/reservaciones', [ReservacionesController::class, 'crear']);
 
 $router->comprobarRutas();

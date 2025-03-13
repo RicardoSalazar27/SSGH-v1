@@ -254,7 +254,7 @@ function calcularTotalPagar() {
 }
 
     // Evento de Confirmar en el paso 3 del modal:
-    btnConfirmar.addEventListener('click', () => {
+    btnConfirmar.addEventListener('click', async () => {
         // Primero, obtendremos todos los valores actualizados
         let total = 0;
         habitacionesSeleccionadas.forEach(habitacionId => {
@@ -282,6 +282,9 @@ function calcularTotalPagar() {
         // Obtener observaciones y tipo de pago
         const observaciones = document.getElementById('observaciones').value.trim();
         const metodoPago = document.getElementById('metodoPago').value;
+        // Obtener el adelanto ingresado en el formulario
+        const adelanto = parseFloat(document.getElementById('adelanto').value) || 0;  // Si no se ingresa un valor, por defecto será 0
+
 
         // Actualizar el total en el campo correspondiente
         totalPagarInput.value = total.toFixed(2);
@@ -319,10 +322,91 @@ function calcularTotalPagar() {
             metodoPago: metodoPago  // Método de pago seleccionado
         });
 
-        // Aquí puedes agregar más lógica para enviar los datos a la API o hacer el registro
+        // Enviar los datos al servidor
+        const url = '/api/reservaciones';  // URL de la API de reservaciones
+        const datos = new FormData();
+
+        // Añadir los datos al FormData
+        datos.append('cliente', JSON.stringify(clienteFinal));
+        datos.append('fechas', JSON.stringify({ entrada: fechaEntrada.value, salida: fechaSalida.value }));
+        datos.append('habitaciones', JSON.stringify(habitacionesSeleccionadas));
+        datos.append('totalPagar', total.toFixed(2));
+        datos.append('descuento', tipoDescuento === 'porcentaje' ? (total * descuento) / 100 : descuento);  // Descuento calculado
+        datos.append('cobroExtra', cobroExtra);
+        datos.append('observaciones', observaciones);
+        datos.append('metodoPago', metodoPago);
+        datos.append('adelanto', adelanto.toFixed(2));  // Añadir el adelanto al FormData
+
+        try {
+            const respuesta = await fetch(url, {
+                method: 'POST',
+                body: datos
+            });
+
+            const resultado = await respuesta.json();
+            // Mostrar alerta
+            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+
+            // Resetear el modal para una nueva reservación
+            resetearModal();
+
+            var modalElement = document.getElementById('modalReservacion');
+            var MyModal = new bootstrap.Modal(modalElement);
+            MyModal.hide();
+
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
+        }
     });
 
     // Agregar listeners para actualizar en tiempo real el total cuando haya cambios
     descuentoInput.addEventListener('input', calcularTotalPagar);
     cobroExtraInput.addEventListener('input', calcularTotalPagar);
+
+    function resetearModal() {
+        // Limpiar todos los campos del formulario en el modal
+        document.getElementById('nombre').value = '';
+        document.getElementById('apellidos').value = '';
+        document.getElementById('documento_identidad').value = '';
+        document.getElementById('telefono').value = '';
+        document.getElementById('direccion').value = '';
+        document.getElementById('observaciones').value = '';
+        selectHabitacion.value = '';  // Limpiar la selección de habitación
+        fechaEntrada.value = '';  // Limpiar la fecha de entrada
+        fechaSalida.value = '';  // Limpiar la fecha de salida
+        totalPagarInput.value = '';  // Limpiar el total a pagar
+        adelanto.value = ''; // Limpiar el adelanto
+        
+        // Limpiar los campos específicos de descuento y cobro extra
+        descuentoInput.value = '';  // Limpiar descuento
+        cobroExtraInput.value = '';  // Limpiar cobro extra
+        
+        // Limpiar las habitaciones seleccionadas
+        choices.clearChoices();  // Esto debería limpiar las opciones seleccionadas del selector de habitaciones
+        
+        // Limpiar la selección de las habitaciones en el select (si existe el elemento selectHabitacion)
+        const habitacionesSelect = document.getElementById('selectHabitacion');
+        if (habitacionesSelect) {
+            for (let option of habitacionesSelect.options) {
+                option.selected = false;  // Deseleccionar todas las opciones
+            }
+        }
+    
+        // Limpiar el campo de correo
+        inputCorreo.value = '';  // Limpiar correo
+        
+        // Resetear el paso actual al step 1
+        pasoActual = 1;
+        
+        // Mostrar solo el paso 1, ocultando los demás
+        document.getElementById('step1').classList.remove('d-none');
+        document.getElementById('step2').classList.add('d-none');
+        document.getElementById('step3').classList.add('d-none');
+        document.getElementById('btnConfirmar').classList.add('d-none');
+        
+        // Resetear la visibilidad de los botones
+        btnAtras.classList.add('d-none');  // Ocultar el botón "Previo"
+        btnSiguiente.classList.remove('d-none');  // Mostrar el botón "Siguiente"
+    }
+            
 }
