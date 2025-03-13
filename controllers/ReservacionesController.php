@@ -45,11 +45,12 @@ class ReservacionesController {
         header('Access-Control-Allow-Headers: Content-Type, Authorization');
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            echo json_encode([
-                'tipo' => 'error',
-                'titulo' => 'Ooops...',
-                'mensaje' => 'nos comunicamos perro'
-            ]);
+            // echo json_encode([
+            //     'tipo' => 'error',
+            //     'titulo' => 'Ooops...',
+            //     'mensaje' => 'nos comunicamos perro'
+            // ]);
+            debuguear($_POST);
         }
     }
 

@@ -26,9 +26,7 @@ if (window.location.pathname === '/admin/reservaciones') {
                 list: 'Lista',
             },
             allDayText: 'Todo el día',
-             // **Aquí agregamos los eventos**
-             events: [
-            ],
+            events: [],  // Aquí agregas tus eventos
             dateClick: function (info) {
                 var startInput = document.getElementById('start');
                 if (startInput) {
@@ -56,5 +54,13 @@ if (window.location.pathname === '/admin/reservaciones') {
         btnNuevaReservacion.addEventListener('click', function() {
             MyModal.show(); // Mostrar el modal al hacer clic en el botón
         });
+
+        // Cerrar modal manualmente si el botón de cerrar no funciona
+        var closeButton = document.querySelector('.btn-close');
+        if (closeButton) {
+            closeButton.addEventListener('click', function () {
+                MyModal.hide(); // Esto se asegura de cerrar el modal si el atributo `data-bs-dismiss` no funciona.
+            });
+        }
     });
 }
