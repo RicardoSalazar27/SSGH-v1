@@ -6,6 +6,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+            <div class="progress mb-3">
+                <div id="progressBar" class="progress-bar bg-primary" role="progressbar" style="width: 33%;" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">
+                    33%
+                </div>
+            </div>
+
                 <div id="wizardSteps">
                     <!-- Paso 1: Datos del Cliente -->
                     <div class="step" id="step1">
@@ -59,11 +65,6 @@
                     <!-- Paso 3: Costos y Confirmación -->
                     <div class="step d-none" id="step3">
                         <h5>Paso 3: COSTO</h5>
-
-                        <div class="progress mb-3">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-
                         <div class="row">
                             <div class="col-md-6">
                                 <label class="form-label">Descuento:</label>

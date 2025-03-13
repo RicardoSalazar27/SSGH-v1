@@ -87,48 +87,72 @@ if(window.location.pathname === '/admin/reservaciones'){
         };
     }
 
-    /**
-     * Maneja el cambio de pasos en el modal
-     */
-    btnSiguiente.addEventListener('click', () => {
-        switch (pasoActual) {
-            case 1:
-                if (!inputCorreo.value.trim()) {
-                    alert("Por favor, ingrese un correo.");
-                    return;
-                }
-                if (!document.getElementById('nombre').value.trim()) {
-                    guardarClienteNuevo();
-                }
-                cambiarPaso(2);
-                break;
-            case 2:
-                habitacionesSeleccionadas = choices.getValue(true);
-                if (habitacionesSeleccionadas.length === 0) {
-                    alert("Por favor, seleccione una habitación.");
-                    return;
-                }
-                cambiarPaso(3);
-                btnSiguiente.classList.add('d-none'); // Ocultar el botón de Siguiente en el paso 3
-                btnConfirmar.classList.remove('d-none'); // Mostrar el botón de Confirmar en el paso 3
-                calcularTotalPagar(); // Calcular total cuando lleguemos al paso 3
-                break;
-            case 3:
-                alert("Reserva confirmada!");
-                break;
-        }
-    });
+    // Variables para la barra de progreso
+const progressBar = document.getElementById('progressBar');
 
-    /**
-     * Cambia entre los pasos del modal
-     */
-    function cambiarPaso(nuevoPaso) {
-        document.getElementById(`step${pasoActual}`).classList.add('d-none');
-        document.getElementById(`step${nuevoPaso}`).classList.remove('d-none');
-        pasoActual = nuevoPaso;
-        btnAtras.classList.toggle('d-none', pasoActual === 1);
-        btnSiguiente.textContent = "Siguiente";
+// Función para actualizar la barra de progreso
+function actualizarBarraProgreso(porcentaje) {
+    // Actualizamos el estilo de la barra y el texto dentro de ella
+    progressBar.style.width = `${porcentaje}%`;
+    progressBar.setAttribute('aria-valuenow', porcentaje);
+    progressBar.textContent = `${porcentaje}%`;
+}
+
+// Modificar la lógica de los pasos
+btnSiguiente.addEventListener('click', () => {
+    switch (pasoActual) {
+        case 1:
+            if (!inputCorreo.value.trim()) {
+                alert("Por favor, ingrese un correo.");
+                return;
+            }
+            if (!document.getElementById('nombre').value.trim()) {
+                guardarClienteNuevo();
+            }
+            cambiarPaso(2);
+            actualizarBarraProgreso(66);  // Actualizar barra a 66% en el paso 2
+            break;
+        case 2:
+            habitacionesSeleccionadas = choices.getValue(true);
+            if (habitacionesSeleccionadas.length === 0) {
+                alert("Por favor, seleccione una habitación.");
+                return;
+            }
+            cambiarPaso(3);
+            // Calcular el total cuando llegues al paso 3
+            calcularTotalPagar();  // Llamada aquí para calcular el total automáticamente
+            btnSiguiente.classList.add('d-none'); // Ocultar el botón de Siguiente en el paso 3
+            btnConfirmar.classList.remove('d-none'); // Mostrar el botón de Confirmar en el paso 3
+            actualizarBarraProgreso(100);  // Actualizar barra a 100% en el paso 3
+            break;
+        case 3:
+            alert("Reserva confirmada!");
+            break;
     }
+});
+
+
+function cambiarPaso(nuevoPaso) {
+    // Ocultar el paso actual y mostrar el nuevo paso
+    document.getElementById(`step${pasoActual}`).classList.add('d-none');
+    document.getElementById(`step${nuevoPaso}`).classList.remove('d-none');
+    
+    pasoActual = nuevoPaso;
+    
+    // Mostrar u ocultar el botón de "Atras" dependiendo del paso actual
+    btnAtras.classList.toggle('d-none', pasoActual === 1);
+    
+    // Actualizar el texto y la visibilidad de los botones
+    if (pasoActual === 3) {
+        btnSiguiente.textContent = "Registrar";  // En el paso 3 se muestra "Registrar"
+        btnConfirmar.classList.remove('d-none');
+        btnSiguiente.classList.add('d-none');
+    } else {
+        btnSiguiente.textContent = "Siguiente";  // En los otros pasos se muestra "Siguiente"
+        btnConfirmar.classList.add('d-none');
+        btnSiguiente.classList.remove('d-none');
+    }
+}
 
     /**
      * Carga habitaciones disponibles según las fechas seleccionadas
@@ -196,62 +220,70 @@ if(window.location.pathname === '/admin/reservaciones'){
      */
     // Código actualizado para el paso 3 del modal:
 
-function calcularTotalPagar() {
-    let total = 0;
-    habitacionesSeleccionadas.forEach(habitacionId => {
-        const habitacion = habitacionesDisponibles.find(h => h.id === habitacionId);  // Buscar en habitacionesDisponibles
-        if (habitacion) {
-            total += parseFloat(habitacion.id_categoria.precio_base);
+    function calcularTotalPagar() {
+        let total = 0;
+    
+        // Asegurarnos de que haya habitaciones seleccionadas
+        if (habitacionesSeleccionadas.length === 0) {
+            console.error("No se han seleccionado habitaciones.");
+            return; // Si no hay habitaciones seleccionadas, terminamos la función
         }
-    });
-
-    // Aplicar descuento
-    const descuento = parseFloat(descuentoInput.value) || 0;
-    const tipoDescuento = document.querySelector('input[name="tipoDescuento"]:checked').value;
-    if (tipoDescuento === 'porcentaje') {
-        total -= (total * descuento) / 100;
-    } else {
-        total -= descuento;
+    
+        // Sumar los precios base de las habitaciones seleccionadas
+        habitacionesSeleccionadas.forEach(habitacionId => {
+            const habitacion = habitacionesDisponibles.find(h => h.id === habitacionId);  // Buscar la habitación en las disponibles
+            if (habitacion) {
+                total += parseFloat(habitacion.id_categoria.precio_base);  // Sumar el precio base de cada habitación
+            }
+        });
+    
+        // Verificar que el total no sea 0 después de sumar las habitaciones
+        if (total === 0) {
+            console.error("El total es 0, no se han encontrado habitaciones válidas.");
+            return;
+        }
+    
+        // Obtener el descuento ingresado
+        const descuento = parseFloat(descuentoInput.value) || 0;  // Si no se ingresa un valor, el descuento será 0
+    
+        // Obtener el tipo de descuento (porcentaje o monto fijo)
+        const tipoDescuento = document.querySelector('input[name="tipoDescuento"]:checked') ? document.querySelector('input[name="tipoDescuento"]:checked').value : 'monto';  // Si no está seleccionado, por defecto es 'monto'
+    
+        // Aplicar el descuento
+        if (tipoDescuento === 'porcentaje') {
+            total -= (total * descuento) / 100;  // Descuento en porcentaje
+        } else {
+            total -= descuento;  // Descuento en monto fijo
+        }
+    
+        // Aplicar cobro extra
+        const cobroExtra = parseFloat(cobroExtraInput.value) || 0;  // Si no se ingresa un valor, el cobro extra será 0
+        total += cobroExtra;  // Sumar el cobro extra
+    
+        // Asegurarse de que el total no sea negativo (si se aplica un descuento mayor al total)
+        total = total < 0 ? 0 : total;
+    
+        // Actualizar el total en el campo correspondiente
+        totalPagarInput.value = total.toFixed(2);  // Mostramos el total con 2 decimales
+    
+        // Obtener los datos del cliente
+        let clienteFinal = {};
+        if (clienteNuevo.correo) {
+            // Si el cliente es nuevo, usamos los datos que se ingresaron
+            clienteFinal = clienteNuevo;
+        } else {
+            // Si el cliente ya existía y fue seleccionado, usamos sus datos
+            clienteFinal = {
+                correo: inputCorreo.value,
+                nombre: document.getElementById('nombre').value,
+                apellidos: document.getElementById('apellidos').value,
+                documento_identidad: document.getElementById('documento_identidad').value,
+                telefono: document.getElementById('telefono').value,
+                direccion: document.getElementById('direccion').value
+            };
+        }
     }
-
-    // Aplicar cobro extra
-    const cobroExtra = parseFloat(cobroExtraInput.value) || 0;
-    total += cobroExtra;
-
-    // Actualizar el total en el campo correspondiente
-    totalPagarInput.value = total.toFixed(2);
-
-    // Obtener el cliente
-    let clienteFinal = {};
-
-    if (clienteNuevo.correo) {
-        // Si el cliente es nuevo, usamos los datos que se ingresaron
-        clienteFinal = clienteNuevo;
-    } else {
-        // Si el cliente ya existía y fue seleccionado, usamos sus datos
-        clienteFinal = {
-            correo: inputCorreo.value,
-            nombre: document.getElementById('nombre').value,
-            apellidos: document.getElementById('apellidos').value,
-            documento_identidad: document.getElementById('documento_identidad').value,
-            telefono: document.getElementById('telefono').value,
-            direccion: document.getElementById('direccion').value
-        };
-    }
-
-    // Mostrar los datos del cliente y la reserva en consola para depuración
-    // console.log({
-    //     cliente: clienteFinal,  // Muestra los datos del cliente (nuevo o existente)
-    //     fechas: {
-    //         entrada: fechaEntrada.value,
-    //         salida: fechaSalida.value
-    //     },
-    //     habitaciones: habitacionesSeleccionadas,
-    //     totalPagar: total,
-    //     descuento: descuento,
-    //     cobroExtra: cobroExtra
-    // });
-}
+    
 
     // Evento de Confirmar en el paso 3 del modal:
     btnConfirmar.addEventListener('click', async () => {
