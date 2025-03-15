@@ -1,5 +1,5 @@
 <div id="modalReservacion" class="modal fade" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Nueva Reservación</h5>
@@ -15,7 +15,7 @@
                 <div id="wizardSteps">
                     <!-- Paso 1: Datos del Cliente -->
                     <div class="step" id="step1">
-                        <h5>Paso 1: Datos del Cliente</h5>
+                        <h5 class="font-weight-bold text-center">Paso 1: DATOS DEL CLIENTE</h5>
                         <div class="mb-3 position-relative">
                             <label for="searchEmail" class="form-label">Buscar por Correo</label>
                             <input type="email" id="searchEmail" class="form-control" placeholder="Ingrese el correo" autocomplete="off">
@@ -47,7 +47,7 @@
 
                     <!-- Paso 2: Selección de habitación y fechas -->
                     <div class="step d-none" id="step2">
-                        <h5>Paso 2: Seleccionar Habitación y Fechas</h5>
+                        <h5 class="font-weight-bold text-center">Paso 2: SELECIONAR HABITACION Y FECHAS</h5>
                         <div class="mb-3">
                             <label for="fechaEntrada" class="form-label">Fecha de Entrada</label>
                             <input type="date" id="fechaEntrada" class="form-control">
@@ -64,7 +64,7 @@
 
                     <!-- Paso 3: Costos y Confirmación -->
                     <div class="step d-none" id="step3">
-                        <h5>Paso 3: COSTO</h5>
+                        <h5 class="font-weight-bold text-center">Paso 3: COSTO</h5>
                         <div class="row">
                             <div class="col-md-6">
                                 <label class="form-label">Descuento:</label>
