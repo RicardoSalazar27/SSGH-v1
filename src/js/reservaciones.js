@@ -219,7 +219,6 @@ function cambiarPaso(nuevoPaso) {
     let totalPagarOriginal = 0;  // Definir fuera para que sea accesible globalmente
 
 // Función para calcular el total a pagar
-// Función para calcular el total a pagar
 function calcularTotalPagar() {
     let total = 0;
     
@@ -259,7 +258,7 @@ function calcularTotalPagar() {
     const cobroExtra = parseFloat(cobroExtraInput.value) || 0;  // Si no se ingresa un valor, el cobro extra será 0
     total += cobroExtra;  // Sumar el cobro extra
 
-    // Asegurarse de que el total no sea negativo
+    // Asegurarse de que el total no sea negativo después de aplicar el descuento y el cobro extra
     total = total < 0 ? 0 : total;
 
     // Obtener el adelanto
@@ -273,154 +272,156 @@ function calcularTotalPagar() {
 
     // Actualizar el total en el campo correspondiente
     totalPagarInput.value = total.toFixed(2);  // Mostrar el total con 2 decimales
-
-    // // (Si lo necesitas, puedes guardar `totalPagarOriginal` en algún lado o enviarlo a algún lugar, dependiendo de cómo vayas a usarlo)
-    // console.log("Total original de las habitaciones: ", totalPagarOriginal);
 }
    
+// Evento de Confirmar en el paso 3 del modal:
+btnConfirmar.addEventListener('click', async () => {
+    // Primero, obtendremos todos los valores actualizados
+    let total = 0;
+    habitacionesSeleccionadas.forEach(habitacionId => {
+        const habitacion = habitacionesDisponibles.find(h => h.id === habitacionId);  // Buscar en habitacionesDisponibles
+        if (habitacion) {
+            total += parseFloat(habitacion.id_categoria.precio_base);
+        }
+    });
 
-    // Evento de Confirmar en el paso 3 del modal:
-    btnConfirmar.addEventListener('click', async () => {
-        // Primero, obtendremos todos los valores actualizados
-        let total = 0;
-        habitacionesSeleccionadas.forEach(habitacionId => {
-            const habitacion = habitacionesDisponibles.find(h => h.id === habitacionId);  // Buscar en habitacionesDisponibles
-            if (habitacion) {
-                total += parseFloat(habitacion.id_categoria.precio_base);
-            }
-        });
-    
-        // Obtener el descuento
-        const descuento = parseFloat(descuentoInput.value) || 0;
-        const tipoDescuento = document.querySelector('input[name="tipoDescuento"]:checked').value;
-        if (tipoDescuento === 'porcentaje') {
-            // Si el descuento es porcentaje, lo convertimos a cantidad en pesos
-            total -= (total * descuento) / 100; // Se resta el porcentaje del total
-        } else {
-            // Si es un monto, simplemente lo restamos
-            total -= descuento;
-        }
-    
-        // Aplicar cobro extra
-        const cobroExtra = parseFloat(cobroExtraInput.value) || 0;
-        total += cobroExtra;
-    
-        // Obtener observaciones y tipo de pago
-        const observaciones = document.getElementById('observaciones').value.trim();
-        const metodoPago = document.getElementById('metodoPago').value;
-        // Obtener el adelanto ingresado en el formulario
-        const adelanto = parseFloat(document.getElementById('adelanto').value) || 0;  // Si no se ingresa un valor, por defecto será 0
-    
-        // Actualizar el total en el campo correspondiente
-        totalPagarInput.value = total.toFixed(2);
-    
-        // Obtener el cliente
-        let clienteFinal = {};
-    
-        if (clienteNuevo.correo) {
-            // Si el cliente es nuevo, usamos los datos que se ingresaron
-            clienteFinal = clienteNuevo;
-        } else {
-            // Si el cliente ya existía y fue seleccionado, usamos sus datos
-            clienteFinal = {
-                correo: inputCorreo.value,
-                nombre: document.getElementById('nombre').value,
-                apellidos: document.getElementById('apellidos').value,
-                documento_identidad: document.getElementById('documento_identidad').value,
-                telefono: document.getElementById('telefono').value,
-                direccion: document.getElementById('direccion').value
-            };
-        }
-    
-        // Mostrar los datos finales en el console.log
-        console.log({
-            cliente: clienteFinal,  // Datos del cliente (nuevo o existente)
-            fechas: {
-                entrada: fechaEntrada.value,
-                salida: fechaSalida.value
-            },
-            habitaciones: habitacionesSeleccionadas,
-            totalPagar: total.toFixed(2),  // Total a pagar con descuento y cobro extra
-            descuento: tipoDescuento === 'porcentaje' ? (total * descuento) / 100 : descuento,  // Si es porcentaje, mostramos en pesos
-            cobroExtra: cobroExtra,
-            observaciones: observaciones,  // Observaciones ingresadas
-            metodoPago: metodoPago  // Método de pago seleccionado
-        });
-    
-        // Enviar los datos al servidor
-        const url = '/api/reservaciones';  // URL de la API de reservaciones
-        const datos = new FormData();
-    
-        // Crear la estructura de datos
-        const datosReserva = {
-            cliente: {
-                correo: clienteFinal.correo,
-                nombre: clienteFinal.nombre,
-                apellidos: clienteFinal.apellidos,
-                documento_identidad: clienteFinal.documento_identidad,
-                telefono: clienteFinal.telefono,
-                direccion: clienteFinal.direccion
-            },
-            fechas: {
-                entrada: fechaEntrada.value,
-                salida: fechaSalida.value
-            },
-            habitaciones: habitacionesSeleccionadas,  // Array de habitaciones seleccionadas
-            pago: {
-                totalPagar: total.toFixed(2),
-                totalPagarOriginal: totalPagarOriginal.toFixed(2),
-                descuento: tipoDescuento === 'porcentaje' ? (total * descuento) / 100 : descuento,
-                cobroExtra: cobroExtra,
-                adelanto: adelanto.toFixed(2)
-            },
-            observaciones: observaciones,
-            metodoPago: metodoPago
+    // Obtener el descuento
+    const descuento = parseFloat(descuentoInput.value) || 0;
+    const tipoDescuento = document.querySelector('input[name="tipoDescuento"]:checked').value;
+    if (tipoDescuento === 'porcentaje') {
+        // Si el descuento es porcentaje, lo convertimos a cantidad en pesos
+        total -= (total * descuento) / 100; // Se resta el porcentaje del total
+    } else {
+        // Si es un monto, simplemente lo restamos
+        total -= descuento;
+    }
+
+    // Aplicar cobro extra
+    const cobroExtra = parseFloat(cobroExtraInput.value) || 0;
+    total += cobroExtra;
+
+    // Obtener el adelanto ingresado en el formulario
+    const adelanto = parseFloat(document.getElementById('adelanto').value) || 0;  // Si no se ingresa un valor, por defecto será 0
+
+    // Restar el adelanto
+    total -= adelanto;  // Restar el adelanto del total
+
+    // Asegurarse de que el total no sea negativo
+    total = total < 0 ? 0 : total;
+
+    // Actualizar el total en el campo correspondiente
+    totalPagarInput.value = total.toFixed(2);
+
+    // Obtener el cliente
+    let clienteFinal = {};
+
+    if (clienteNuevo.correo) {
+        // Si el cliente es nuevo, usamos los datos que se ingresaron
+        clienteFinal = clienteNuevo;
+    } else {
+        // Si el cliente ya existía y fue seleccionado, usamos sus datos
+        clienteFinal = {
+            correo: inputCorreo.value,
+            nombre: document.getElementById('nombre').value,
+            apellidos: document.getElementById('apellidos').value,
+            documento_identidad: document.getElementById('documento_identidad').value,
+            telefono: document.getElementById('telefono').value,
+            direccion: document.getElementById('direccion').value
         };
+    }
 
-        // Convertirlo a JSON para enviar al servidor
-        const jsonDatosReserva = JSON.stringify(datosReserva);
+    // Mostrar los datos finales en el console.log
+    console.log({
+        cliente: clienteFinal,  // Datos del cliente (nuevo o existente)
+        fechas: {
+            entrada: fechaEntrada.value,
+            salida: fechaSalida.value
+        },
+        habitaciones: habitacionesSeleccionadas,
+        totalPagar: total.toFixed(2),  // Total a pagar con descuento y cobro extra
+        descuento: tipoDescuento === 'porcentaje' ? (total * descuento) / 100 : descuento,  // Si es porcentaje, mostramos en pesos
+        cobroExtra: cobroExtra,
+        observaciones: document.getElementById('observaciones').value.trim(),  // Observaciones ingresadas
+        metodoPago: document.getElementById('metodoPago').value  // Método de pago seleccionado
+    });
 
-        // Enviar el JSON usando FormData (si es necesario)
-        datos.append('reserva', jsonDatosReserva);
-  
-        // Realizar la solicitud fetch
-        try {
-            const respuesta = await fetch(url, {
-                method: 'POST',
-                body: datos
-            });
+    // Enviar los datos al servidor
+    const url = '/api/reservaciones';  // URL de la API de reservaciones
+    const datos = new FormData();
 
-            if (!respuesta.ok) {
-                throw new Error('Error en la respuesta del servidor');
-            }
+    // Crear la estructura de datos
+    const datosReserva = {
+        cliente: {
+            correo: clienteFinal.correo,
+            nombre: clienteFinal.nombre,
+            apellidos: clienteFinal.apellidos,
+            documento_identidad: clienteFinal.documento_identidad,
+            telefono: clienteFinal.telefono,
+            direccion: clienteFinal.direccion
+        },
+        fechas: {
+            entrada: fechaEntrada.value,
+            salida: fechaSalida.value
+        },
+        habitaciones: habitacionesSeleccionadas,  // Array de habitaciones seleccionadas
+        pago: {
+            totalPagar: total.toFixed(2),
+            totalPagarOriginal: totalPagarOriginal.toFixed(2),
+            descuento: tipoDescuento === 'porcentaje' ? (total * descuento) / 100 : descuento,
+            cobroExtra: cobroExtra,
+            adelanto: adelanto.toFixed(2)
+        },
+        observaciones: document.getElementById('observaciones').value.trim(),
+        metodoPago: document.getElementById('metodoPago').value
+    };
 
-            const resultado = await respuesta.json();
+    // console.log(datosReserva);
+    // return;
 
-            // Mostrar alerta con los resultados
-            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+    // Convertirlo a JSON para enviar al servidor
+    const jsonDatosReserva = JSON.stringify(datosReserva);
 
-            // Resetear el modal para una nueva reservación
-            resetearModal();
+    // Enviar el JSON usando FormData (si es necesario)
+    datos.append('reserva', jsonDatosReserva);
 
-            // Cerrar el modal con Bootstrap
-            var modalElement = document.getElementById('modalReservacion');
-            var MyModal = new bootstrap.Modal(modalElement);
-            MyModal.hide();
+    // Realizar la solicitud fetch
+    try {
+        const respuesta = await fetch(url, {
+            method: 'POST',
+            body: datos
+        });
 
-            //location.reload();
-
-        } catch (error) {
-            console.error('Error en la solicitud:', error);
-            // Puedes agregar aquí un mensaje de error al usuario si es necesario
-            mostrarAlerta('Error', 'Hubo un problema al procesar la solicitud', 'error');
+        if (!respuesta.ok) {
+            throw new Error('Error en la respuesta del servidor');
         }
-    });    
 
-    // Agregar listeners para actualizar en tiempo real el total cuando haya cambios
-    descuentoInput.addEventListener('input', calcularTotalPagar);
-    cobroExtraInput.addEventListener('input', calcularTotalPagar);
-    adelantoInput.addEventListener('input', calcularTotalPagar);
-    
+        const resultado = await respuesta.json();
+
+        // Mostrar alerta con los resultados
+        mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+
+        // Resetear el modal para una nueva reservación
+        resetearModal();
+
+        // Cerrar el modal con Bootstrap
+        var modalElement = document.getElementById('modalReservacion');
+        var MyModal = new bootstrap.Modal(modalElement);
+        MyModal.hide();
+
+        //location.reload();
+
+    } catch (error) {
+        console.error('Error en la solicitud:', error);
+        // Puedes agregar aquí un mensaje de error al usuario si es necesario
+        mostrarAlerta('Error', 'Hubo un problema al procesar la solicitud', 'error');
+    }
+});    
+
+// Agregar listeners para actualizar en tiempo real el total cuando haya cambios
+descuentoInput.addEventListener('input', calcularTotalPagar);
+cobroExtraInput.addEventListener('input', calcularTotalPagar);
+adelantoInput.addEventListener('input', calcularTotalPagar);
+
 
     function resetearModal() {
         // Limpiar todos los campos del formulario en el modal
