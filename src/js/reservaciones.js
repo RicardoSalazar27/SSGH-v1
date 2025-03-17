@@ -407,6 +407,8 @@ function calcularTotalPagar() {
             var MyModal = new bootstrap.Modal(modalElement);
             MyModal.hide();
 
+            //location.reload();
+
         } catch (error) {
             console.error('Error en la solicitud:', error);
             // Puedes agregar aquí un mensaje de error al usuario si es necesario

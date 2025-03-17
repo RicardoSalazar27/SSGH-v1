@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Model\Hotel;
 use Model\Reserva;
+use Model\Reservacion;
 use Model\Usuario;
 use MVC\Router;
 
@@ -51,13 +52,9 @@ class ReservacionesController {
     
             // Verificar si el JSON fue decodificado correctamente
             if ($datos_json === null) {
-                echo json_encode([
-                    'tipo' => 'error',
-                    'titulo' => 'Error',
-                    'mensaje' => 'Los datos enviados no son válidos (JSON mal formado).'
-                ]);
+                echo json_encode(respuesta('error', 'Error', 'Los datos enviados no son válidos (JSON mal formado).'));
                 exit;
-            }
+            }            
     
             // Recoger los datos del cliente y la reservación desde el JSON decodificado
             $datos = [
@@ -93,18 +90,33 @@ class ReservacionesController {
             $resultado = Reserva::crearReservacion($datos);
     
             if ($resultado) {
-                echo json_encode([
-                    'tipo' => 'success',
-                    'titulo' => 'Reserva Exitosa',
-                    'mensaje' => 'La reservación se ha creado correctamente.'
-                ]);
+                echo json_encode(respuesta('success', 'Reserva Exitosa', 'La reservación se ha creado correctamente.'));
             } else {
-                echo json_encode([
-                    'tipo' => 'error',
-                    'titulo' => 'Error',
-                    'mensaje' => 'Hubo un problema al crear la reservación.'
-                ]);
-            }
+                echo json_encode(respuesta('error', 'Error', 'Hubo un problema al crear la reservación.'));
+            }            
         }
-    }        
+    }
+    
+    public static function listar(){
+
+        is_auth();
+    
+        // Establecer los headers al inicio
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+        // Obtener todos las reservaciones
+        $reservaciones = Reservacion::obtenerReservasConHabitaciones();
+
+        // Responder con los datos o con un mensaje si no hay registros
+        if (empty($reservaciones)) {
+            http_response_code(204); // 204 No Content cuando no hay datos
+            echo json_encode(respuesta('info', 'Sin reservaciones', 'No hay reservaciones registradas'));
+        } else {
+            http_response_code(200); // 200 OK
+            echo json_encode($reservaciones);
+        }
+    }
 }

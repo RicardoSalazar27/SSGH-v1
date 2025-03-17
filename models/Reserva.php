@@ -54,4 +54,50 @@ class Reserva extends ActiveRecord {
         // Llamar al procedimiento almacenado a través del método ejecutarProcedimiento
         return self::ejecutarProcedimiento($nombreProcedimiento, $params);
     }
+
+    // Función para obtener las reservas con las habitaciones asociadas
+//     public static function obtenerReservasConHabitaciones() {
+//         // Consulta SQL para obtener las reservas y las habitaciones asociadas
+//         // $query = " 
+//         // SELECT 
+//         //     r.ID_reserva,
+//         //     r.ID_usuario,
+//         //     r.ID_cliente,
+//         //     r.fecha_entrada,
+//         //     r.fecha_salida,
+//         //     r.ID_estado,
+//         //     r.precio_total,
+//         //     r.precio_pendiente,
+//         //     rh.ID_habitacion
+//         // FROM Reservas r
+//         // LEFT JOIN Reservas_Habitaciones rh ON r.ID_reserva = rh.ID_reserva
+//         // ORDER BY r.ID_reserva;
+
+//         // ";
+        
+//         $query = "
+//     SELECT 
+//         r.ID_reserva,
+//         r.ID_usuario,
+//         r.ID_cliente,
+//         r.fecha_entrada,
+//         r.fecha_salida,
+//         r.ID_estado,
+//         r.precio_total,
+//         r.precio_pendiente,
+//         c.nombre AS cliente_nombre,
+//         GROUP_CONCAT(h.numero ORDER BY h.numero) AS habitaciones
+//     FROM Reservas r
+//     LEFT JOIN Reservas_Habitaciones rh ON r.ID_reserva = rh.ID_reserva
+//     LEFT JOIN Habitaciones h ON rh.ID_habitacion = h.id
+//     LEFT JOIN Clientes c ON r.ID_cliente = c.id
+//     GROUP BY r.ID_reserva, c.nombre
+//     ORDER BY r.ID_reserva;
+// ";
+
+
+//         // Ejecutar la consulta SQL y devolver los resultados
+//         return self::consultarSQL($query);
+//     }
+
 }
