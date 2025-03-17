@@ -375,9 +375,6 @@ btnConfirmar.addEventListener('click', async () => {
         metodoPago: document.getElementById('metodoPago').value
     };
 
-    // console.log(datosReserva);
-    // return;
-
     // Convertirlo a JSON para enviar al servidor
     const jsonDatosReserva = JSON.stringify(datosReserva);
 
