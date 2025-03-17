@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Model\Hotel;
+use Model\Reserva;
 use Model\Usuario;
 use MVC\Router;
 
@@ -35,7 +36,7 @@ class ReservacionesController {
         ]);
     }
 
-    public static function crear(){
+    public static function crear() {
         is_auth();
     
         // Establecer los headers al inicio
@@ -45,13 +46,65 @@ class ReservacionesController {
         header('Access-Control-Allow-Headers: Content-Type, Authorization');
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // echo json_encode([
-            //     'tipo' => 'error',
-            //     'titulo' => 'Ooops...',
-            //     'mensaje' => 'nos comunicamos perro'
-            // ]);
-            debuguear($_POST);
+            // Decodificar el JSON recibido bajo la clave 'reserva'
+            $datos_json = json_decode($_POST['reserva'], true); // true para convertirlo a un array asociativo
+    
+            // Verificar si el JSON fue decodificado correctamente
+            if ($datos_json === null) {
+                echo json_encode([
+                    'tipo' => 'error',
+                    'titulo' => 'Error',
+                    'mensaje' => 'Los datos enviados no son válidos (JSON mal formado).'
+                ]);
+                exit;
+            }
+    
+            // Recoger los datos del cliente y la reservación desde el JSON decodificado
+            $datos = [
+                'cliente' => [
+                    'correo' => $datos_json['cliente']['correo'] ?? '',
+                    'nombre' => $datos_json['cliente']['nombre'] ?? '',
+                    'apellidos' => $datos_json['cliente']['apellidos'] ?? '',
+                    'documento_identidad' => $datos_json['cliente']['documento_identidad'] ?? '',
+                    'telefono' => $datos_json['cliente']['telefono'] ?? '',
+                    'direccion' => $datos_json['cliente']['direccion'] ?? ''
+                ],
+                'fechas' => [
+                    'entrada' => $datos_json['fechas']['entrada'] ?? '',
+                    'salida' => $datos_json['fechas']['salida'] ?? ''
+                ],
+                'pago' => [
+                    'totalPagar' => (float) $datos_json['pago']['totalPagar'], // Convertir a número flotante
+                    'adelanto' => (float) $datos_json['pago']['adelanto'], // Convertir a número flotante
+                    'descuento' => (float) $datos_json['pago']['descuento'], // Convertir a número flotante
+                    'cobroExtra' => (float) $datos_json['pago']['cobroExtra'], // Convertir a número flotante
+                    'totalPagarOriginal' => (float) $datos_json['pago']['totalPagarOriginal'] // Convertir a número flotante
+                ],
+                'metodoPago' => $datos_json['metodoPago'] ?? '',
+                'habitaciones' => array_map('intval', $datos_json['habitaciones'] ?? []), // Convertir todas las habitaciones a enteros
+                'observaciones' => $datos_json['observaciones'] ?? '', // Observaciones opcionales
+                'usuario_id' => $datos_json['usuario_id'] ?? 1  // ID de usuario, puede venir de sesión o de POST
+            ];
+    
+            // Debug para ver los datos decodificados
+            //debuguear($datos);
+    
+            // Llamar al modelo para crear la reservación
+            $resultado = Reserva::crearReservacion($datos);
+    
+            if ($resultado) {
+                echo json_encode([
+                    'tipo' => 'success',
+                    'titulo' => 'Reserva Exitosa',
+                    'mensaje' => 'La reservación se ha creado correctamente.'
+                ]);
+            } else {
+                echo json_encode([
+                    'tipo' => 'error',
+                    'titulo' => 'Error',
+                    'mensaje' => 'Hubo un problema al crear la reservación.'
+                ]);
+            }
         }
-    }
-
+    }        
 }

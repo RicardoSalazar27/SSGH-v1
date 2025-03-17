@@ -308,4 +308,21 @@ class ActiveRecord {
         $resultado = self::$db->query($query);
         return $resultado;
     }
+    
+    public static function ejecutarProcedimiento($nombreProcedimiento, $parametros = []) {
+        // Convertir los parámetros a una cadena para usarlos en la consulta
+        $parametrosSQL = implode(", ", array_map(function($param) {
+            // Asegurarse de que los parámetros numéricos sean tratados correctamente
+            return is_numeric($param) ? $param : "'".$param."'";
+        }, $parametros));
+        
+        // Construir la consulta
+        $query = "CALL $nombreProcedimiento($parametrosSQL)";
+        //debuguear($query);
+    
+        // Ejecutar el procedimiento almacenado
+        $resultado = self::$db->query($query);
+        return $resultado;
+    }    
+
 }
