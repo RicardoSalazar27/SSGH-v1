@@ -331,25 +331,49 @@ btnConfirmar.addEventListener('click', async () => {
     }
 
     // Mostrar los datos finales en el console.log
-    console.log({
-        cliente: clienteFinal,  // Datos del cliente (nuevo o existente)
-        fechas: {
-            entrada: fechaEntrada.value,
-            salida: fechaSalida.value
-        },
-        habitaciones: habitacionesSeleccionadas,
-        totalPagar: total.toFixed(2),  // Total a pagar con descuento y cobro extra
-        descuento: tipoDescuento === 'porcentaje' ? (total * descuento) / 100 : descuento,  // Si es porcentaje, mostramos en pesos
-        cobroExtra: cobroExtra,
-        observaciones: document.getElementById('observaciones').value.trim(),  // Observaciones ingresadas
-        metodoPago: document.getElementById('metodoPago').value  // Método de pago seleccionado
-    });
+    // console.log({
+    //     cliente: clienteFinal,  // Datos del cliente (nuevo o existente)
+    //     fechas: {
+    //         entrada: fechaEntrada.value,
+    //         salida: fechaSalida.value
+    //     },
+    //     habitaciones: habitacionesSeleccionadas,
+    //     totalPagar: total.toFixed(2),  // Total a pagar con descuento y cobro extra
+    //     descuento: tipoDescuento === 'porcentaje' ? (total * descuento) / 100 : descuento,  // Si es porcentaje, mostramos en pesos
+    //     cobroExtra: cobroExtra,
+    //     observaciones: document.getElementById('observaciones').value.trim(),  // Observaciones ingresadas
+    //     metodoPago: document.getElementById('metodoPago').value  // Método de pago seleccionado
+    // });
 
     // Enviar los datos al servidor
     const url = '/api/reservaciones';  // URL de la API de reservaciones
     const datos = new FormData();
 
     // Crear la estructura de datos
+    // const datosReserva = {
+    //     cliente: {
+    //         correo: clienteFinal.correo,
+    //         nombre: clienteFinal.nombre,
+    //         apellidos: clienteFinal.apellidos,
+    //         documento_identidad: clienteFinal.documento_identidad,
+    //         telefono: clienteFinal.telefono,
+    //         direccion: clienteFinal.direccion
+    //     },
+    //     fechas: {
+    //         entrada: fechaEntrada.value,
+    //         salida: fechaSalida.value
+    //     },
+    //     habitaciones: habitacionesSeleccionadas,  // Array de habitaciones seleccionadas
+    //     pago: {
+    //         totalPagar: total.toFixed(2),
+    //         totalPagarOriginal: totalPagarOriginal.toFixed(2),
+    //         descuento: tipoDescuento === 'porcentaje' ? (total * descuento) / 100 : descuento,
+    //         cobroExtra: cobroExtra,
+    //         adelanto: adelanto.toFixed(2)
+    //     },
+    //     observaciones: document.getElementById('observaciones').value.trim(),
+    //     metodoPago: document.getElementById('metodoPago').value
+    // };
     const datosReserva = {
         cliente: {
             correo: clienteFinal.correo,
@@ -360,8 +384,8 @@ btnConfirmar.addEventListener('click', async () => {
             direccion: clienteFinal.direccion
         },
         fechas: {
-            entrada: fechaEntrada.value,
-            salida: fechaSalida.value
+            entrada: `${fechaEntrada.value} 14:00:00`, // Agregar manualmente la hora de entrada
+            salida: `${fechaSalida.value} 12:00:00`   // Agregar manualmente la hora de salida
         },
         habitaciones: habitacionesSeleccionadas,  // Array de habitaciones seleccionadas
         pago: {
@@ -374,6 +398,8 @@ btnConfirmar.addEventListener('click', async () => {
         observaciones: document.getElementById('observaciones').value.trim(),
         metodoPago: document.getElementById('metodoPago').value
     };
+    // console.log(datosReserva);
+    // return;
 
     // Convertirlo a JSON para enviar al servidor
     const jsonDatosReserva = JSON.stringify(datosReserva);

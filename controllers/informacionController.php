@@ -30,7 +30,7 @@ class informacionController {
 
         is_auth();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
+        
             // Buscar el hotel por correo
             $hotel = Hotel::find($_POST['id']);
     
@@ -80,7 +80,6 @@ class informacionController {
             if (empty($_FILES['img']['tmp_name'])) {
                 unset($datosActualizar['img']); // Elimina la clave 'img' para no modificar el campo en la BD
             }
-    
             $hotel->sincronizar($datosActualizar);
     
             // Guardar los cambios en la base de datos

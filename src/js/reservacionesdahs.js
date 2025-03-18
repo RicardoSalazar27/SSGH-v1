@@ -65,39 +65,23 @@ if (window.location.pathname === '/admin/reservaciones') {
 
         // Obtener las reservaciones desde el endpoint
         fetch('http://localhost:3000/api/reservaciones')
-            .then(response => response.json())
-            .then(data => {
-                // Iterar sobre cada reservación y agregarla al calendario
-                data.forEach(reservacion => {
-                    // Formatear el título del evento con las habitaciones y el nombre del cliente
-                    const habitaciones = reservacion.habitaciones.split(',').map((habitacion, index) => {
-                        const tipoCama = habitacionesInfo[parseInt(reservacion.ID_habitacion.split(',')[index])] || 'Desconocido';
-                        return `${habitacion.trim()} - ${tipoCama}`;
-                    }).join(', ');
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(reservacion => {
+                // Crear el evento con la información proporcionada por la API
+                const evento = {
+                    title: `${reservacion.habitaciones} | ${reservacion.cliente_nombre}`, // Usa directamente el valor de habitaciones
+                    start: reservacion.fecha_entrada, // Fecha y hora exactas de entrada
+                    end: reservacion.fecha_salida, // Fecha y hora exactas de salida
+                    description: reservacion.estado_descripcion, // Descripción del estado
+                    allDay: false,
+                    color: reservacion.estado_color // Color según el estado
+                };
 
-                    const evento = {
-                        title: `${habitaciones} | ${reservacion.cliente_nombre}`, // Título del evento con habitaciones y nombre del cliente
-                        start: `${reservacion.fecha_entrada}T09:00:00`, // Fecha de entrada
-                        end: `${reservacion.fecha_salida}T11:00:00`, // Fecha de salida
-                        description: reservacion.estado_descripcion, // Descripción del estado
-                        allDay: false,
-                        color: reservacion.estado_color // Color según el estado
-                    };
-
-                    // Agregar el evento al calendario
-                    calendar.addEvent(evento);
-                });
-            })
-            .catch(error => console.error('Error al obtener las reservaciones:', error));
-        
-        // Aquí puedes agregar una variable `habitacionesInfo` que contenga el tipo de cama para cada habitación
-        const habitacionesInfo = {
-            1: 'Individual',
-            5: 'Individual Doble',
-            6: 'Matrimonial',
-            13: 'Matrimonial Doble',
-            // Agrega el resto de habitaciones según los datos de tu base de datos
-        };
-        
+                // Agregar el evento al calendario
+                calendar.addEvent(evento);
+            });
+        })
+        .catch(error => console.error('Error al obtener las reservaciones:', error));
     });
 }

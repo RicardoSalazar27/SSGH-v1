@@ -25,7 +25,6 @@
                     <div class="card-header">
                         <h3 class="card-title">Información General</h3>
                     </div>
-
                     <form method="POST" action="/" enctype="multipart/form-data">
                         <div class="card-body">
                             <!-- Logo centrado con input para subir nuevo logo -->
