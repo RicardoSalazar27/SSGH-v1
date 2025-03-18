@@ -9,6 +9,7 @@ if (window.location.pathname === '/admin/reservaciones') {
 
         // Inicializar FullCalendar
         var calendar = new FullCalendar.Calendar(calendarEl, {
+            displayEventTime: false,
             locale: 'es',  // Establece el idioma a español
             initialView: 'dayGridMonth',
             headerToolbar: {
@@ -70,6 +71,7 @@ if (window.location.pathname === '/admin/reservaciones') {
             data.forEach(reservacion => {
                 // Crear el evento con la información proporcionada por la API
                 const evento = {
+                    id: reservacion.ID_reserva,
                     title: `${reservacion.habitaciones} | ${reservacion.cliente_nombre}`, // Usa directamente el valor de habitaciones
                     start: reservacion.fecha_entrada, // Fecha y hora exactas de entrada
                     end: reservacion.fecha_salida, // Fecha y hora exactas de salida
@@ -83,5 +85,14 @@ if (window.location.pathname === '/admin/reservaciones') {
             });
         })
         .catch(error => console.error('Error al obtener las reservaciones:', error));
+
+
+        calendar.on('eventClick', function(info) {
+            var evento = info.event;
+            console.log("ID del evento:", evento.id);
+            console.log("Título:", evento.title);
+            console.log("Fecha de inicio:", evento.start);
+        });
+        
     });
 }
