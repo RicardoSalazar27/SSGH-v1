@@ -85,4 +85,39 @@ class Reservacion extends ActiveRecord {
         // Ejecutar la consulta SQL y devolver los resultados
         return self::consultarSQL($query);
     }
+
+    // Función para obtener una reserva con las habitaciones asociadas por medio del ID
+    public static function obtenerReservaConHabitaciones($id) {
+        // Consulta SQL para obtener una reserva específica junto con sus habitaciones y detalles adicionales
+        $query = "
+            SELECT 
+                r.ID_reserva,
+                r.ID_usuario,
+                r.ID_cliente,
+                r.fecha_entrada,
+                r.fecha_salida,
+                r.ID_estado,
+                r.precio_total,
+                r.precio_pendiente,
+                c.nombre AS cliente_nombre,
+                GROUP_CONCAT(CONCAT(h.numero, ' - ', ca.tipo_cama) ORDER BY h.numero) AS habitaciones, -- Números de las habitaciones con tipo de cama
+                GROUP_CONCAT(h.id ORDER BY h.numero) AS ID_habitacion,      -- Obtener los IDs de las habitaciones
+                e.nombre AS estado_nombre,                                   -- Nombre del estado
+                e.descripcion AS estado_descripcion,                         -- Descripción del estado
+                e.color AS estado_color                                      -- Color del estado
+            FROM Reservas r
+            LEFT JOIN Reservas_Habitaciones rh ON r.ID_reserva = rh.ID_reserva
+            LEFT JOIN Habitaciones h ON rh.ID_habitacion = h.id
+            LEFT JOIN Categoria ca ON h.id_categoria = ca.id  -- Obtener el tipo de cama desde la tabla Categoria
+            LEFT JOIN Clientes c ON r.ID_cliente = c.id
+            LEFT JOIN Estado_Reservaciones e ON r.ID_estado = e.ID_estado   -- Unir con la tabla de estado
+            WHERE r.ID_reserva = '$id'  -- Filtro para obtener solo la reserva con el ID especificado
+            GROUP BY r.ID_reserva, c.nombre, e.nombre, e.descripcion, e.color
+            ORDER BY r.ID_reserva;
+        ";
+        
+        // Ejecutar la consulta SQL y devolver los resultados
+        return self::consultarSQL($query);
+    }
+
 }

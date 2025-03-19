@@ -119,4 +119,27 @@ class ReservacionesController {
             echo json_encode($reservaciones);
         }
     }
+
+    public static function obtener($id){
+
+        is_auth();
+    
+        // Establecer los headers al inicio
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+        // Obtener todos las reservaciones
+        $reservaciones = Reservacion::obtenerReservaConHabitaciones($id);
+
+        // Responder con los datos o con un mensaje si no hay registros
+        if (empty($reservaciones)) {
+            http_response_code(204); // 204 No Content cuando no hay datos
+            echo json_encode(respuesta('info', 'Sin reservaciones', 'No hay reservaciones registradas'));
+        } else {
+            http_response_code(200); // 200 OK
+            echo json_encode($reservaciones);
+        }
+    }
 }

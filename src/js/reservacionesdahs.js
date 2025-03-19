@@ -87,11 +87,14 @@ if (window.location.pathname === '/admin/reservaciones') {
         .catch(error => console.error('Error al obtener las reservaciones:', error));
 
 
+        var modalEditarReservacion = document.getElementById('modalEditar');
+        var MyModalEditarReserva = new bootstrap.Modal(modalEditarReservacion);
         calendar.on('eventClick', function(info) {
             var evento = info.event;
             console.log("ID del evento:", evento.id);
             console.log("Título:", evento.title);
             console.log("Fecha de inicio:", evento.start);
+            MyModalEditarReserva.show();
         });
         
     });

@@ -30,3 +30,4 @@
 
 <!-- Modal -->
 <?php include_once __DIR__ . '/modal.php'; ?>
+<?php include_once __DIR__ . '/modalEditar.php'; ?>
