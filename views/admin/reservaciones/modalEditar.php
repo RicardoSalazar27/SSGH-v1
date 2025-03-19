@@ -13,45 +13,45 @@
                 <h5 class="font-weight-bold text-center">DATOS DEL CLIENTE</h5>
                 <div class="mb-3 position-relative">
                     <label for="searchEmail" class="form-label">Buscar por Correo</label>
-                    <input type="email" id="searchEmail" class="form-control" placeholder="Ingrese el correo" autocomplete="off">
+                    <input type="email" id="searchEmailEditar" class="form-control" placeholder="Ingrese el correo" autocomplete="off">
                     <ul id="sugerenciasCorreo" class="list-group position-absolute d-none w-100" style="z-index: 1000;"></ul>
                 </div>
                 <div id="clienteFields">
                     <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" id="nombre" class="form-control">
+                        <label for="nombreEditar" class="form-label">Nombre</label>
+                        <input type="text" id="nombreEditar" class="form-control">
                     </div>
                     <div class="mb-3">
-                        <label for="apellidos" class="form-label">Apellidos</label>
-                        <input type="text" id="apellidos" class="form-control">
+                        <label for="apellidosEditar" class="form-label">Apellidos</label>
+                        <input type="text" id="apellidosEditar" class="form-control">
                     </div>
                     <div class="mb-3">
-                        <label for="documento_identidad" class="form-label">Documento de Identidad</label>
-                        <input type="text" id="documento_identidad" class="form-control">
+                        <label for="documento_identidadEditar" class="form-label">Documento de Identidad</label>
+                        <input type="text" id="documento_identidadEditar" class="form-control">
                     </div>
                     <div class="mb-3">
-                        <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="text" id="telefono" class="form-control">
+                        <label for="telefonoEditar" class="form-label">Teléfono</label>
+                        <input type="text" id="telefonoEditar" class="form-control">
                     </div>
                     <div class="mb-3">
-                        <label for="direccion" class="form-label">Dirección</label>
-                        <input type="text" id="direccion" class="form-control">
+                        <label for="direccionEditar" class="form-label">Dirección</label>
+                        <input type="text" id="direccionEditar" class="form-control">
                     </div>
                 </div>
 
                 <!-- Selección de Habitación y Fechas -->
                 <h5 class="font-weight-bold text-center mt-4">SELECCIONAR HABITACIÓN Y FECHAS</h5>
                 <div class="mb-3">
-                    <label for="fechaEntrada" class="form-label">Fecha de Entrada</label>
-                    <input type="date" id="fechaEntrada" class="form-control">
+                    <label for="fechaEntradaEditar" class="form-label">Fecha de Entrada</label>
+                    <input type="date" id="fechaEntradaEditar" class="form-control">
                 </div>
                 <div class="mb-3">
-                    <label for="fechaSalida" class="form-label">Fecha de Salida</label>
-                    <input type="date" id="fechaSalida" class="form-control">
+                    <label for="fechaSalidaEditar" class="form-label">Fecha de Salida</label>
+                    <input type="date" id="fechaSalidaEditar" class="form-control">
                 </div>
                 <div class="mb-3">
-                    <label for="habitacion" class="form-label">Seleccionar Habitación</label>
-                    <select id="habitacion" multiple></select>
+                    <label for="habitacionEditar" class="form-label">Seleccionar Habitación</label>
+                    <select id="habitacionEditar" multiple></select>
                 </div>
 
                 <!-- Costos y Métodos de Pago -->
@@ -81,17 +81,17 @@
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <label class="form-label">Adelanto:</label>
-                        <input type="number" id="adelanto" class="form-control" value="0">
+                        <input type="number" id="adelantoEditar" class="form-control" value="0">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Total a pagar:</label>
-                        <input type="number" id="totalPagar" class="form-control" value="0" readonly>
+                        <input type="number" id="totalPagarEditar" class="form-control" value="0" readonly>
                     </div>
                 </div>
 
                 <div class="mb-3 mt-3">
                     <label class="form-label">Método de pago:</label>
-                    <select id="metodoPago" class="form-control">
+                    <select id="metodoPagoEditar" class="form-control">
                         <option value="Efectivo">Efectivo</option>
                         <option value="Tarjeta">Tarjeta</option>
                         <option value="Transferencia">Transferencia</option>
@@ -100,7 +100,7 @@
 
                 <div class="mb-3">
                     <label class="form-label">Observaciones:</label>
-                    <textarea id="observaciones" class="form-control" rows="2"></textarea>
+                    <textarea id="observacionesEditar" class="form-control" rows="2"></textarea>
                 </div>
             </div>
 

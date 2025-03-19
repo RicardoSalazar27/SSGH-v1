@@ -131,7 +131,7 @@ class ReservacionesController {
         header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
         // Obtener todos las reservaciones
-        $reservaciones = Reservacion::obtenerReservaConHabitaciones($id);
+        $reservaciones = array_shift(Reservacion::obtenerReservaConHabitaciones($id)); 
 
         // Responder con los datos o con un mensaje si no hay registros
         if (empty($reservaciones)) {
