@@ -50,12 +50,6 @@ class ReservacionesController {
             // Decodificar el JSON recibido bajo la clave 'reserva'
             $datos_json = json_decode($_POST['reserva'], true); // true para convertirlo a un array asociativo
     
-            // Verificar si el JSON fue decodificado correctamente
-            if ($datos_json === null) {
-                echo json_encode(respuesta('error', 'Error', 'Los datos enviados no son válidos (JSON mal formado).'));
-                exit;
-            }            
-    
             // Recoger los datos del cliente y la reservación desde el JSON decodificado
             $datos = [
                 'cliente' => [
@@ -71,24 +65,22 @@ class ReservacionesController {
                     'salida' => $datos_json['fechas']['salida'] ?? ''
                 ],
                 'pago' => [
-                    'totalPagar' => (float) $datos_json['pago']['totalPagar'], // Convertir a número flotante
-                    'adelanto' => (float) $datos_json['pago']['adelanto'], // Convertir a número flotante
-                    'descuento' => (float) $datos_json['pago']['descuento'], // Convertir a número flotante
-                    'cobroExtra' => (float) $datos_json['pago']['cobroExtra'], // Convertir a número flotante
-                    'totalPagarOriginal' => (float) $datos_json['pago']['totalPagarOriginal'] // Convertir a número flotante
+                    'totalPagar' => (float) ($datos_json['pago']['totalPagar'] ?? 0),
+                    'adelanto' => (float) ($datos_json['pago']['adelanto'] ?? 0),
+                    'descuento' => (float) ($datos_json['pago']['descuento'] ?? 0),
+                    'cobroExtra' => (float) ($datos_json['pago']['cobroExtra'] ?? 0),
+                    'totalPagarOriginal' => (float) ($datos_json['pago']['totalPagarOriginal'] ?? 0),
+                    'tipoDescuento' => $datos_json['pago']['tipoDescuento'] ?? 'MONTO' // MONTO o PORCENTAJE
                 ],
                 'metodoPago' => $datos_json['metodoPago'] ?? '',
-                'habitaciones' => array_map('intval', $datos_json['habitaciones'] ?? []), // Convertir todas las habitaciones a enteros
-                'observaciones' => $datos_json['observaciones'] ?? '', // Observaciones opcionales
-                'usuario_id' => $datos_json['usuario_id'] ?? 1  // ID de usuario, puede venir de sesión o de POST
+                'habitaciones' => array_map('intval', $datos_json['habitaciones'] ?? []), // Convertir habitaciones a enteros
+                'observaciones' => $datos_json['observaciones'] ?? '',
+                'usuario_id' => (int) ($datos_json['usuario_id'] ?? 1) // Convertir ID usuario a entero
             ];
-    
-            // Debug para ver los datos decodificados
-            //debuguear($datos);
-    
+
             // Llamar al modelo para crear la reservación
             $resultado = Reserva::crearReservacion($datos);
-    
+
             if ($resultado) {
                 echo json_encode(respuesta('success', 'Reserva Exitosa', 'La reservación se ha creado correctamente.'));
             } else {
@@ -130,16 +122,16 @@ class ReservacionesController {
         header('Access-Control-Allow-Methods: GET, OPTIONS');
         header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-        // Obtener todos las reservaciones
-        $reservaciones = array_shift(Reservacion::obtenerReservaConHabitaciones($id)); 
+        // Obtener la resrvacion por ID
+        $reservacion = array_shift(Reservacion::obtenerReservaConHabitaciones($id)); 
 
         // Responder con los datos o con un mensaje si no hay registros
-        if (empty($reservaciones)) {
+        if (empty($reservacion)) {
             http_response_code(204); // 204 No Content cuando no hay datos
-            echo json_encode(respuesta('info', 'Sin reservaciones', 'No hay reservaciones registradas'));
+            echo json_encode(respuesta('info', 'Sin reservacion', 'No hay reservacion registrada'));
         } else {
             http_response_code(200); // 200 OK
-            echo json_encode($reservaciones);
+            echo json_encode($reservacion);
         }
     }
 }

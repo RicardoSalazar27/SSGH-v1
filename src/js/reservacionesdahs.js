@@ -129,7 +129,7 @@ if (window.location.pathname === '/admin/reservaciones') {
                 const $totalOriginal = reservacion.precio_total;
 
                 document.getElementById('totalPagarEditar').value = reservacion.precio_pendiente;
-                document.getElementById('adelantoEditar').value = reservacion.precio_pendiente;
+                //document.getElementById('adelantoEditar').value = reservacion.precio_pendiente;
                 
         
                 MyModalEditarReserva.show();

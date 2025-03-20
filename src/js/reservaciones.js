@@ -248,7 +248,7 @@ function cambiarPaso(nuevoPaso) {
         const tipoDescuento = document.querySelector('input[name="tipoDescuento"]:checked') ? document.querySelector('input[name="tipoDescuento"]:checked').value : 'monto';  // Si no está seleccionado, por defecto es 'monto'
 
         // Aplicar el descuento
-        if (tipoDescuento === 'porcentaje') {
+        if (tipoDescuento === 'PORCENTAJE') {
             total -= (total * descuento) / 100;  // Descuento en porcentaje
         } else {
             total -= descuento;  // Descuento en monto fijo
@@ -288,7 +288,7 @@ function cambiarPaso(nuevoPaso) {
         // Obtener el descuento
         const descuento = parseFloat(descuentoInput.value) || 0;
         const tipoDescuento = document.querySelector('input[name="tipoDescuento"]:checked').value;
-        if (tipoDescuento === 'porcentaje') {
+        if (tipoDescuento === 'PORCENTAJE') {
             // Si el descuento es porcentaje, lo convertimos a cantidad en pesos
             total -= (total * descuento) / 100; // Se resta el porcentaje del total
         } else {
@@ -352,13 +352,17 @@ function cambiarPaso(nuevoPaso) {
             pago: {
                 totalPagar: total.toFixed(2),
                 totalPagarOriginal: totalPagarOriginal.toFixed(2),
-                descuento: tipoDescuento === 'porcentaje' ? (total * descuento) / 100 : descuento,
+                descuento: tipoDescuento === 'PORCENTAJE' ? (totalPagarOriginal * descuento) / 100 : descuento,
+                tipoDescuento : tipoDescuento,
                 cobroExtra: cobroExtra,
                 adelanto: adelanto.toFixed(2)
             },
             observaciones: document.getElementById('observaciones').value.trim(),
             metodoPago: document.getElementById('metodoPago').value
         };
+
+        // console.log(datosReserva);
+        // return;
         
         // Convertirlo a JSON para enviar al servidor
         const jsonDatosReserva = JSON.stringify(datosReserva);
