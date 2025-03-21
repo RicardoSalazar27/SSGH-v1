@@ -28,7 +28,8 @@ class Reservacion extends ActiveRecord {
         'adelanto',
         'cobro_extra',
         'descuento_aplicado',
-        'tipo_descuento'
+        'tipo_descuento',
+        'metodo_pago'
     ];
 
     public $ID_reserva;
@@ -55,6 +56,7 @@ class Reservacion extends ActiveRecord {
     public $cobro_extra;
     public $descuento_aplicado;
     public $tipo_descuento;
+    public $metodo_pago;
 
     public function __construct($args = []) {
         $this->ID_reserva = $args['ID_reserva'] ?? null;
@@ -81,12 +83,14 @@ class Reservacion extends ActiveRecord {
         $this->cobro_extra = $args['cobro_extra'] ?? 0.0;
         $this->descuento_aplicado = $args['descuento_aplicado'] ?? 0.0;
         $this->tipo_descuento = $args['tipo_descuento'] ?? 'MONTO';
+        $this->metodo_pago = $args['metodo_pago'] ?? '';
     }        
 
     public static function obtenerReservasConHabitaciones() {
         $query = "
             SELECT 
                 r.*, 
+                r.metodo_pago,  -- Agregado 'metodo_pago'
                 c.nombre AS cliente_nombre,
                 c.apellidos AS cliente_apellidos,
                 c.documento_identidad,
@@ -113,11 +117,12 @@ class Reservacion extends ActiveRecord {
         ";
         return self::consultarSQL($query);
     }
-
+    
     public static function obtenerReservaConHabitaciones($id) {
         $query = "
             SELECT 
                 r.*, 
+                r.metodo_pago,  -- Agregado 'metodo_pago'
                 c.nombre AS cliente_nombre,
                 c.apellidos AS cliente_apellidos,
                 c.documento_identidad,
@@ -144,5 +149,5 @@ class Reservacion extends ActiveRecord {
             ORDER BY r.ID_reserva;
         ";
         return self::consultarSQL($query);
-    }
+    }    
 }

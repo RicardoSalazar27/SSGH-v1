@@ -137,17 +137,27 @@ if (window.location.pathname === '/admin/reservaciones') {
         
                 // Manejo del descuento
                 if (reservacion.tipo_descuento === "PORCENTAJE") {
+                    // Calcular el porcentaje de descuento
+                    let porcentajeDescuento = (reservacion.descuento_aplicado / reservacion.precio_total) * 100;
+
+                    // Asignar el porcentaje calculado al campo de descuento
+                    document.getElementById('descuentoEditar').value = porcentajeDescuento.toFixed(2);  // Mostrar con dos decimales
+
+                    // Marcar el checkbox de porcentaje y desmarcar el de monto
                     document.getElementById('descuentoPorcentajeEditar').checked = true;
                     document.getElementById('descuentoMontoEditar').checked = false;
                 } else {
+                    // Si el descuento es en monto, asignar el valor directamente
+                    document.getElementById('descuentoEditar').value = reservacion.descuento_aplicado;
+
+                    // Marcar el checkbox de monto y desmarcar el de porcentaje
                     document.getElementById('descuentoMontoEditar').checked = true;
                     document.getElementById('descuentoPorcentajeEditar').checked = false;
                 }
-        
-                document.getElementById('descuentoEditar').value = reservacion.descuento_aplicado;
-        
+
+
                 // Llenar el método de pago
-                document.getElementById('metodoPagoEditar').value = reservacion.tipo_descuento; // Asegúrate de que esto sea el campo correcto.
+                document.getElementById('metodoPagoEditar').value = reservacion.metodo_pago; // Asegúrate de que esto sea el campo correcto.
         
                 MyModalEditarReserva.show();
             } catch (error) {

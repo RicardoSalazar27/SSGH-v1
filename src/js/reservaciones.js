@@ -360,7 +360,7 @@ function cambiarPaso(nuevoPaso) {
             observaciones: document.getElementById('observaciones').value.trim(),
             metodo_pago: document.getElementById('metodoPago').value
         };
-        console.log(datosReserva);
+        //console.log(datosReserva);
         //return;
         
         // Convertirlo a JSON para enviar al servidor

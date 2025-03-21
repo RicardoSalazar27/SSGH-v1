@@ -64,9 +64,6 @@ class Reserva extends ActiveRecord {
             $datos['observaciones']
         ];
 
-        //   debuguear($params);
-        //   return;
-
         return self::ejecutarProcedimiento($nombreProcedimiento, $params);
     }
 }
