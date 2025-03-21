@@ -358,11 +358,10 @@ function cambiarPaso(nuevoPaso) {
                 adelanto: adelanto.toFixed(2)
             },
             observaciones: document.getElementById('observaciones').value.trim(),
-            metodoPago: document.getElementById('metodoPago').value
+            metodo_pago: document.getElementById('metodoPago').value
         };
-
-        // console.log(datosReserva);
-        // return;
+        console.log(datosReserva);
+        //return;
         
         // Convertirlo a JSON para enviar al servidor
         const jsonDatosReserva = JSON.stringify(datosReserva);

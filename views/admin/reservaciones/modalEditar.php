@@ -60,19 +60,19 @@
                     <div class="col-md-6">
                         <label class="form-label">Descuento:</label>
                         <div class="d-flex">
-                            <input type="radio" name="tipoDescuento" value="porcentaje" id="descuentoPorcentaje">
+                            <input type="radio" name="tipoDescuento" value="PORCENTAJE" id="descuentoPorcentajeEditar">
                             <label for="descuentoPorcentaje" class="ms-2">%</label>
 
-                            <input type="radio" name="tipoDescuento" value="monto" id="descuentoMonto" checked class="ms-3">
+                            <input type="radio" name="tipoDescuento" value="MONTO" id="descuentoMontoEditar" checked class="ms-3">
                             <label for="descuentoMonto" class="ms-2">MXN$</label>
                         </div>
-                        <input type="number" id="descuento" class="form-control mt-2" value="0">
+                        <input type="number" id="descuentoEditar" class="form-control mt-2" value="0">
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Cobro extra:</label>
                         <div class="input-group">
-                            <input type="number" id="cobroExtra" class="form-control" value="0">
+                            <input type="number" id="cobroExtraEditar" class="form-control" value="0">
                             <button class="btn btn-outline-secondary">+</button>
                         </div>
                     </div>

@@ -1,12 +1,11 @@
 <?php
 namespace Model;
-
 class Reserva extends ActiveRecord {
     public static $tabla = 'Reservas';
     public static $columnasDB = [
         'ID_reserva', 'ID_usuario', 'ID_cliente', 'fecha_entrada', 'fecha_salida', 'ID_estado', 
         'precio_total', 'precio_pendiente', 'adelanto', 'cobro_extra', 'descuento_aplicado', 
-        'tipo_descuento', 'observaciones'
+        'tipo_descuento', 'observaciones', 'metodo_pago' // Agregar el campo 'metodo_pago'
     ];
 
     public $ID_reserva;
@@ -22,6 +21,7 @@ class Reserva extends ActiveRecord {
     public $descuento_aplicado;
     public $tipo_descuento;
     public $observaciones;
+    public $metodo_pago; // Agregar la propiedad para 'metodo_pago'
 
     public function __construct($args = []) {
         $this->ID_reserva = $args['ID_reserva'] ?? null;
@@ -37,11 +37,12 @@ class Reserva extends ActiveRecord {
         $this->descuento_aplicado = $args['descuento_aplicado'] ?? 0;
         $this->tipo_descuento = $args['tipo_descuento'] ?? '';
         $this->observaciones = $args['observaciones'] ?? 'sin observaciones';
+        $this->metodo_pago = $args['metodo_pago'] ?? ''; // Inicializar 'metodo_pago'
     }
 
     public static function crearReservacion($datos) {
         $nombreProcedimiento = "crear_reservacion";
-
+        //debuguear($datos['pago']); // Para ver si 'metodo_pago' existe
         $params = [
             $datos['cliente']['correo'],
             $datos['cliente']['nombre'],
@@ -57,11 +58,14 @@ class Reserva extends ActiveRecord {
             $datos['pago']['tipoDescuento'],
             $datos['pago']['cobroExtra'],
             $datos['pago']['totalPagarOriginal'],
-            $datos['metodoPago'],
+            $datos['pago']['metodo_pago'], // Aquí pasamos el 'metodo_pago'
             json_encode($datos['habitaciones']),
             $datos['usuario_id'],
             $datos['observaciones']
         ];
+
+        //   debuguear($params);
+        //   return;
 
         return self::ejecutarProcedimiento($nombreProcedimiento, $params);
     }

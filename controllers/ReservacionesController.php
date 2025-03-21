@@ -70,14 +70,15 @@ class ReservacionesController {
                     'descuento' => (float) ($datos_json['pago']['descuento'] ?? 0),
                     'cobroExtra' => (float) ($datos_json['pago']['cobroExtra'] ?? 0),
                     'totalPagarOriginal' => (float) ($datos_json['pago']['totalPagarOriginal'] ?? 0),
-                    'tipoDescuento' => $datos_json['pago']['tipoDescuento'] ?? 'MONTO' // MONTO o PORCENTAJE
+                    'tipoDescuento' => $datos_json['pago']['tipoDescuento'] ?? 'MONTO', // MONTO o PORCENTAJE
+                    'metodo_pago' => $datos_json['metodo_pago'] ?? '' // Agregar metodoPago dentro de 'pago'
                 ],
-                'metodoPago' => $datos_json['metodoPago'] ?? '',
                 'habitaciones' => array_map('intval', $datos_json['habitaciones'] ?? []), // Convertir habitaciones a enteros
                 'observaciones' => $datos_json['observaciones'] ?? '',
                 'usuario_id' => (int) ($datos_json['usuario_id'] ?? 1) // Convertir ID usuario a entero
-            ];
-
+            ];            
+             //debuguear($datos);
+             //return;
             // Llamar al modelo para crear la reservación
             $resultado = Reserva::crearReservacion($datos);
 

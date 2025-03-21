@@ -116,7 +116,7 @@ if (window.location.pathname === '/admin/reservaciones') {
                 document.getElementById('observacionesEditar').value = reservacion.observaciones;
         
                 // Extraer solo la fecha (YYYY-MM-DD) de la fecha de entrada y salida
-                let fechaEntrada = reservacion.fecha_entrada.split(' ')[0];  
+                let fechaEntrada = reservacion.fecha_entrada.split(' ')[0];
                 let fechaSalida = reservacion.fecha_salida.split(' ')[0];
         
                 // Asignar solo la fecha (sin hora) a los campos de fecha
@@ -125,19 +125,36 @@ if (window.location.pathname === '/admin/reservaciones') {
         
                 // Llamada para cargar las habitaciones disponibles y seleccionadas
                 await cargarHabitacionesDisponibles(fechaEntrada, fechaSalida, reservacion.ID_habitacion);
-
+        
                 const $totalOriginal = reservacion.precio_total;
-
+        
+                // Asignar valores para los costos
                 document.getElementById('totalPagarEditar').value = reservacion.precio_pendiente;
-                //document.getElementById('adelantoEditar').value = reservacion.precio_pendiente;
-                
+        
+                // Llenar los campos de pagos
+                document.getElementById('adelantoEditar').value = reservacion.adelanto;
+                document.getElementById('cobroExtraEditar').value = reservacion.cobro_extra;
+        
+                // Manejo del descuento
+                if (reservacion.tipo_descuento === "PORCENTAJE") {
+                    document.getElementById('descuentoPorcentajeEditar').checked = true;
+                    document.getElementById('descuentoMontoEditar').checked = false;
+                } else {
+                    document.getElementById('descuentoMontoEditar').checked = true;
+                    document.getElementById('descuentoPorcentajeEditar').checked = false;
+                }
+        
+                document.getElementById('descuentoEditar').value = reservacion.descuento_aplicado;
+        
+                // Llenar el método de pago
+                document.getElementById('metodoPagoEditar').value = reservacion.tipo_descuento; // Asegúrate de que esto sea el campo correcto.
         
                 MyModalEditarReserva.show();
             } catch (error) {
                 console.error('Error al obtener los datos de la reservación:', error);
             }
         });
-        
+                
         // Función para cargar habitaciones disponibles
         async function cargarHabitacionesDisponibles(fechaEntrada, fechaSalida, habitacionesSeleccionadasIds) {
         const selectHabitacion = document.getElementById('habitacionEditar');
