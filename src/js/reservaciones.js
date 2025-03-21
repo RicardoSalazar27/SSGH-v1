@@ -103,20 +103,28 @@ function actualizarBarraProgreso(porcentaje) {
 btnSiguiente.addEventListener('click', () => {
     switch (pasoActual) {
         case 1:
-            if (!inputCorreo.value.trim()) {
-                alert("Por favor, ingrese un correo.");
-                return;
-            }
+            // if (!inputCorreo.value.trim()) {
+            //     alert("Por favor, ingrese un correo.");
+            //     return;
+            // }
             if (!document.getElementById('nombre').value.trim()) {
                 guardarClienteNuevo();
             }
+            
+            const inputNombre = document.getElementById('nombre').value.trim();
+            const inputTelefono = document.getElementById('telefono').value.trim();
+            
+            if (!inputNombre || !inputTelefono) {
+                mostrarAlerta('Campos Obligatorios', 'El nombre y el teléfono son obligatorios para crear reservación', 'warning');
+                return;
+            }            
             cambiarPaso(2);
             actualizarBarraProgreso(66);  // Actualizar barra a 66% en el paso 2
             break;
         case 2:
             habitacionesSeleccionadas = choices.getValue(true);
             if (habitacionesSeleccionadas.length === 0) {
-                alert("Por favor, seleccione una habitación.");
+                mostrarAlerta('No selecciono habitaciones','Por favor, seleccione una habitación.','warning');
                 return;
             }
             cambiarPaso(3);
@@ -126,9 +134,9 @@ btnSiguiente.addEventListener('click', () => {
             btnConfirmar.classList.remove('d-none'); // Mostrar el botón de Confirmar en el paso 3
             actualizarBarraProgreso(100);  // Actualizar barra a 100% en el paso 3
             break;
-        case 3:
-            alert("Reserva confirmada!");
-            break;
+        // case 3:
+        //     alert("Reserva confirmada!");
+        //     break;
     }
 });
 
@@ -383,30 +391,7 @@ function cambiarPaso(nuevoPaso) {
             const resultado = await respuesta.json();
 
             // Mostrar alerta con los resultados
-            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
-
-            // Resetear el modal para una nueva reservación
-            resetearModal();
-
-            // Cerrar el modal con Bootstrap
-            var modalElement = document.getElementById('modalReservacion');
-            var MyModal = new bootstrap.Modal(modalElement);
-            MyModal.hide();
-
-            //window.location.reload();
-            //calendar.refetchEvents();
-
-            // Agregar el evento dinámicamente al calendario
-            // calendar.addEvent({
-            //     //id: datos.id,  // Asegúrate de que el backend te devuelva un ID único
-            //     title: `${datos.habitaciones} | ${datos.cliente_nombre}`,  // Nombre del evento
-            //     start: datos.fecha_entrada, // Fecha y hora exactas de entrada
-            //     end: datos.fecha_salida, // Fecha y hora exactas de salida
-            //     description: datos.estado_descripcion, // Descripción del estado
-            //     allDay: false,
-            //     color: datos.estado_color // Color según el estado
-            // });
-
+            mostrarAlerta3(resultado.titulo, resultado.mensaje, resultado.tipo);
         } catch (error) {
             console.error('Error en la solicitud:', error);
             // Puedes agregar aquí un mensaje de error al usuario si es necesario
