@@ -28,17 +28,18 @@ if (window.location.pathname === '/admin/reservaciones') {
             dateClick: dateClickHandler
         });
 
+        // Inicializar el calendario
         calendar.render();
         setupEventListeners();
-
-        // Cargar las reservas desde el API
         loadReservations();
 
+        // Variables y modal para edición
         const modalEditarReservacion = document.getElementById('modalEditar');
         const MyModalEditarReserva = new bootstrap.Modal(modalEditarReservacion);
         let reservacionOriginal;
         let choices = null;
 
+        // Configuración de eventos
         calendar.on('eventClick', async function(info) {
             await handleEventClick(info, MyModalEditarReserva);
         });
@@ -58,11 +59,11 @@ if (window.location.pathname === '/admin/reservaciones') {
         function setupEventListeners() {
             let btnNuevaReservacion = document.querySelector('#btnAgregarReservacion');
             btnNuevaReservacion.addEventListener('click', function() {
-                MyModal.show(); // Mostrar el modal de nueva reservación
+                MyModal.show();
             });
         }
 
-        // Cargar reservas
+        // Cargar reservas desde el API
         function loadReservations() {
             fetch('http://localhost:3000/api/reservaciones')
                 .then(response => response.json())
@@ -95,8 +96,6 @@ if (window.location.pathname === '/admin/reservaciones') {
                 }
                 const reservacion = await respuesta.json();
                 reservacionOriginal = { ...reservacion };
-                // console.log('reservacion:');
-                // console.log(reservacionOriginal);
                 populateEditForm(reservacion);
                 await cargarHabitacionesDisponibles(reservacion.fecha_entrada.split(' ')[0], reservacion.fecha_salida.split(' ')[0], reservacion.ID_habitacion);
 
@@ -121,7 +120,6 @@ if (window.location.pathname === '/admin/reservaciones') {
             let fechaSalida = reservacion.fecha_salida.split(' ')[0];
             document.getElementById('fechaEntradaEditar').value = fechaEntrada;
             document.getElementById('fechaSalidaEditar').value = fechaSalida;
-
             // Rellenar campos de pago
             document.getElementById('adelantoEditar').value = reservacion.adelanto;
             document.getElementById('cobroExtraEditar').value = reservacion.cobro_extra;
