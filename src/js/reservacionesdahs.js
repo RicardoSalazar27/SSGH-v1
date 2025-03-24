@@ -52,6 +52,12 @@ if (window.location.pathname === '/admin/reservaciones') {
             } else {
                 console.error("El input con ID 'start' no se encontró.");
             }
+
+            // Antes de mostrar el modal, asegúrate de limpiar previamente las selecciones de habitaciones
+            if (choices) {
+                choices.clearChoices();
+            }
+
             MyModal.show();
         }
 
@@ -88,7 +94,7 @@ if (window.location.pathname === '/admin/reservaciones') {
         async function handleEventClick(info, modal) {
             const evento = info.event;
             const idEvento = evento.id;
-        
+
             try {
                 const respuesta = await fetch(`/api/reservaciones/${idEvento}`);
                 if (!respuesta.ok) {
@@ -97,26 +103,14 @@ if (window.location.pathname === '/admin/reservaciones') {
                 const reservacion = await respuesta.json();
                 reservacionOriginal = { ...reservacion };
                 populateEditForm(reservacion);
-        
-                const fechaEntradaEditar = document.getElementById('fechaEntradaEditar');
-                const fechaSalidaEditar = document.getElementById('fechaSalidaEditar');
-        
-                const changeHandler = () => {
-                    cargarHabitacionesDisponibles(fechaEntradaEditar.value, fechaSalidaEditar.value, reservacionOriginal.ID_habitacion);
-                };
-        
-                fechaEntradaEditar.removeEventListener('change', changeHandler);
-                fechaSalidaEditar.removeEventListener('change', changeHandler);
-        
-                fechaEntradaEditar.addEventListener('change', changeHandler);
-                fechaSalidaEditar.addEventListener('change', changeHandler);
-        
+                await cargarHabitacionesDisponibles(reservacion.fecha_entrada.split(' ')[0], reservacion.fecha_salida.split(' ')[0], reservacion.ID_habitacion);
+
                 modal.show();
-        
+
             } catch (error) {
                 console.error('Error al obtener los datos de la reservación:', error);
             }
-        }        
+        }
 
         // Población de formulario de edición
         function populateEditForm(reservacion) {
@@ -132,10 +126,6 @@ if (window.location.pathname === '/admin/reservaciones') {
             let fechaSalida = reservacion.fecha_salida.split(' ')[0];
             document.getElementById('fechaEntradaEditar').value = fechaEntrada;
             document.getElementById('fechaSalidaEditar').value = fechaSalida;
-
-            // Agregar aquí la llamada a cargarHabitacionesDisponibles
-            cargarHabitacionesDisponibles(fechaEntrada, fechaSalida, reservacion.ID_habitacion);
-            
             // Rellenar campos de pago
             document.getElementById('adelantoEditar').value = reservacion.adelanto;
             document.getElementById('cobroExtraEditar').value = reservacion.cobro_extra;
@@ -158,20 +148,19 @@ if (window.location.pathname === '/admin/reservaciones') {
         // Cargar habitaciones disponibles
         async function cargarHabitacionesDisponibles(fechaEntrada, fechaSalida, habitacionesSeleccionadasIds) {
             const selectHabitacion = document.getElementById('habitacionEditar');
-        
+
             try {
                 const response = await fetch(`/api/habitaciones/disponibles/${fechaEntrada}/${fechaSalida}`);
                 let habitacionesDisponibles = await response.json();
-        
+                
                 const habitacionesSeleccionadas = habitacionesSeleccionadasIds ? habitacionesSeleccionadasIds.split(',').map(id => id.trim()) : [];
-        
+
                 const responseHabitaciones = await fetch('/api/habitaciones');
                 const todasHabitaciones = await responseHabitaciones.json();
-        
-                // Usar un conjunto para eliminar duplicados
+
                 const habitacionesCompletasSeleccionadas = todasHabitaciones.filter(habitacion => habitacionesSeleccionadas.includes(habitacion.id.toString()));
                 habitacionesDisponibles = habitacionesDisponibles.filter(h => !habitacionesSeleccionadas.includes(h.id.toString()));
-        
+
                 if (!choices) {
                     choices = new Choices(selectHabitacion, {
                         removeItemButton: true,
@@ -180,29 +169,55 @@ if (window.location.pathname === '/admin/reservaciones') {
                         searchEnabled: false,
                     });
                 }
-        
-                choices.clearChoices();
-        
-                let opciones = new Set();  // Usar un Set para evitar duplicados
+
+                // Elimina las elecciones anteriores antes de agregar nuevas para evitar duplicados
+                if(choices.clearChoices()){
+                    console.log('se limpiaron las selecciones');
+                } else{
+                    console.log('NO se limpiaron las selecciones');
+                }
+
+                let opciones = [];
                 habitacionesCompletasSeleccionadas.forEach(habitacion => {
-                    opciones.add({
+                    opciones.push({
                         value: habitacion.id,
-                        label: `Habitación ${habitacion.numero} | ${habitacion.id_categoria.nombre} | ${habitacion.id_categoria.tipo_cama} | Capacidad max. ${habitacion.id_categoria.capacidad_maxima} personas | $${habitacion.id_categoria.precio_base} MXN`,
-                        selected: true
+                        label: `Habitación ${habitacion.numero} | ${habitacion.id_categoria.nombre} | Capacidad max. ${habitacion.id_categoria.capacidad_maxima} personas | $${habitacion.id_categoria.precio_base} MXN`,
+                        selected: true  // Mantener seleccionada la habitación actual
                     });
                 });
-        
+
                 habitacionesDisponibles.forEach(habitacion => {
-                    opciones.add({
+                    opciones.push({
                         value: habitacion.id,
-                        label: `Habitación ${habitacion.numero} | ${habitacion.id_categoria.nombre} | ${habitacion.id_categoria.tipo_cama} | Capacidad max. ${habitacion.id_categoria.capacidad_maxima} personas | $${habitacion.id_categoria.precio_base} MXN`
+                        label: `Habitación ${habitacion.numero} | ${habitacion.id_categoria.nombre} | Capacidad max. ${habitacion.id_categoria.capacidad_maxima} personas | $${habitacion.id_categoria.precio_base} MXN`
                     });
                 });
-        
-                choices.setChoices(Array.from(opciones));  // Convertir el Set a Array
+
+                choices.setChoices(opciones);
+                console.log(choices);
+                //console.log(habitacionesSeleccionadas); id de las habitaciones
+                console.log(habitacionesCompletasSeleccionadas);
             } catch (error) {
                 console.error('Error al obtener habitaciones disponibles:', error);
             }
-        }        
+        }
+
+        // Agregar eventos para detectar cambios en las fechas de edición
+        document.getElementById('fechaEntradaEditar').addEventListener('change', function() {
+            const fechaEntrada = this.value;
+            const fechaSalida = document.getElementById('fechaSalidaEditar').value;  // Obtener la fecha de salida
+            if (fechaEntrada && fechaSalida) {
+                cargarHabitacionesDisponibles(fechaEntrada, fechaSalida, reservacionOriginal.ID_habitacion);
+            }
+        });
+
+        document.getElementById('fechaSalidaEditar').addEventListener('change', function() {
+            const fechaSalida = this.value;
+            const fechaEntrada = document.getElementById('fechaEntradaEditar').value;  // Obtener la fecha de entrada
+            if (fechaEntrada && fechaSalida) {
+                cargarHabitacionesDisponibles(fechaEntrada, fechaSalida, reservacionOriginal.ID_habitacion);
+            }
+        });
+
     });
 }
