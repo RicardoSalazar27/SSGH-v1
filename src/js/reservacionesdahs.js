@@ -3,7 +3,8 @@ if (window.location.pathname === '/admin/reservaciones') {
         var calendarEl = document.getElementById('calendar');
         var modalElement = document.getElementById('modalReservacion');
         var MyModal = new bootstrap.Modal(modalElement);
-
+        // Definir todasHabitaciones globalmente
+        let todasHabitaciones = [];
         // Configuración del calendario
         var calendar = new FullCalendar.Calendar(calendarEl, {
             displayEventTime: false,
@@ -156,11 +157,11 @@ if (window.location.pathname === '/admin/reservaciones') {
                 const habitacionesSeleccionadas = habitacionesSeleccionadasIds ? habitacionesSeleccionadasIds.split(',').map(id => id.trim()) : [];
 
                 const responseHabitaciones = await fetch('/api/habitaciones');
-                const todasHabitaciones = await responseHabitaciones.json();
+                todasHabitaciones = await responseHabitaciones.json();
 
                 const habitacionesCompletasSeleccionadas = todasHabitaciones.filter(habitacion => habitacionesSeleccionadas.includes(habitacion.id.toString()));
                 habitacionesDisponibles = habitacionesDisponibles.filter(h => !habitacionesSeleccionadas.includes(h.id.toString()));
- 
+
                 // Inicializa Choices solo si aún no está inicializado
                 if (!choices) {
                     choices = new Choices(selectHabitacion, {
@@ -198,33 +199,58 @@ if (window.location.pathname === '/admin/reservaciones') {
                 // Establece las nuevas opciones
                 choices.setChoices(opciones);
 
+                // Calcular precio total cuando cambien las habitaciones seleccionadas o las fechas
+                calculateTotalPrice();
+
                 // Obtener habitaciones seleccionadas desde Choices
                 document.getElementById('habitacionEditar').addEventListener('change', function() {
                     let habitacionesSeleccionadas = choices.getValue(true);
                     //console.log('Habitaciones seleccionadas:', habitacionesSeleccionadas);
+                    calculateTotalPrice();
                 });
+
+                // Detectar cambio de fechas
+                document.getElementById('fechaEntradaEditar').addEventListener('change', function() {
+                    calculateTotalPrice();
+                });
+
+                document.getElementById('fechaSalidaEditar').addEventListener('change', function() {
+                    calculateTotalPrice();
+                });
+
             } catch (error) {
                 console.error('Error al obtener habitaciones disponibles:', error);
             }
         }
 
-        // Agregar eventos para detectar cambios en las fechas de edición
-        document.getElementById('fechaEntradaEditar').addEventListener('change', function() {
-            const fechaEntrada = this.value;
-            const fechaSalida = document.getElementById('fechaSalidaEditar').value;  // Obtener la fecha de salida
-            if (fechaEntrada && fechaSalida) {
-                cargarHabitacionesDisponibles(fechaEntrada, fechaSalida, reservacionOriginal.ID_habitacion);
-            }
-        });
+        // Calcular precio total
+        function calculateTotalPrice() {
+            const habitacionesSeleccionadas = choices.getValue(true);
+            const fechaEntrada = document.getElementById('fechaEntradaEditar').value;
+            const fechaSalida = document.getElementById('fechaSalidaEditar').value;
 
-        document.getElementById('fechaSalidaEditar').addEventListener('change', function() {
-            const fechaSalida = this.value;
-            const fechaEntrada = document.getElementById('fechaEntradaEditar').value;  // Obtener la fecha de entrada
-            if (fechaEntrada && fechaSalida) {
-                cargarHabitacionesDisponibles(fechaEntrada, fechaSalida, reservacionOriginal.ID_habitacion);
+            if (!fechaEntrada || !fechaSalida || habitacionesSeleccionadas.length === 0) {
+                return;
             }
-        });
 
+            // Calcular la cantidad de noches
+            const fechaEntradaObj = new Date(fechaEntrada);
+            const fechaSalidaObj = new Date(fechaSalida);
+            const diferenciaEnTiempo = fechaSalidaObj - fechaEntradaObj;
+            const noches = diferenciaEnTiempo / (1000 * 3600 * 24); // Convertir a días
+
+            let totalPrice = 0;
+
+            // Obtener los precios de las habitaciones seleccionadas
+            habitacionesSeleccionadas.forEach(id => {
+                const habitacion = todasHabitaciones.find(h => h.id.toString() === id);
+                if (habitacion) {
+                    totalPrice += habitacion.id_categoria.precio_base * noches;
+                }
+            });
+
+            console.log(`Precio total: $${totalPrice} MXN`);
+        }
 
     });
 }
