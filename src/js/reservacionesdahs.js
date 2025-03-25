@@ -271,6 +271,8 @@ if (window.location.pathname === '/admin/reservaciones') {
 
             // Mostrar el precio final
             console.log(`Precio total: $${totalPrice.toFixed(2)} MXN`);
+            const totalPagarInput = document.getElementById('totalPagarEditar');
+            totalPagarInput.value = totalPrice.toFixed(2);
         }
 
         // Función para actualizar el precio cada vez que se cambien los campos de pago
@@ -287,7 +289,6 @@ if (window.location.pathname === '/admin/reservaciones') {
 
         // Llamamos la función de setup para los listeners
         setupEventListenersForPriceUpdates();
-
 
     });
 }
