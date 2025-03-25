@@ -160,7 +160,10 @@ if (window.location.pathname === '/admin/reservaciones') {
 
                 const habitacionesCompletasSeleccionadas = todasHabitaciones.filter(habitacion => habitacionesSeleccionadas.includes(habitacion.id.toString()));
                 habitacionesDisponibles = habitacionesDisponibles.filter(h => !habitacionesSeleccionadas.includes(h.id.toString()));
-
+                 // Después de obtener las habitaciones disponibles
+    console.log('Habitaciones Disponibles:', habitacionesDisponibles);
+    console.log('Todas las Habitaciones:', todasHabitaciones);
+                // Inicializa Choices solo si aún no está inicializado
                 if (!choices) {
                     choices = new Choices(selectHabitacion, {
                         removeItemButton: true,
@@ -171,32 +174,31 @@ if (window.location.pathname === '/admin/reservaciones') {
                 }
 
                 // Elimina las elecciones anteriores antes de agregar nuevas para evitar duplicados
-                if(choices.clearChoices()){
-                    console.log('se limpiaron las selecciones');
-                } else{
-                    console.log('NO se limpiaron las selecciones');
-                }
+                choices.clearChoices();
 
                 let opciones = [];
+
+                // Mantén las habitaciones seleccionadas
                 habitacionesCompletasSeleccionadas.forEach(habitacion => {
                     opciones.push({
                         value: habitacion.id,
                         label: `Habitación ${habitacion.numero} | ${habitacion.id_categoria.nombre} | Capacidad max. ${habitacion.id_categoria.capacidad_maxima} personas | $${habitacion.id_categoria.precio_base} MXN`,
-                        selected: true  // Mantener seleccionada la habitación actual
+                        selected: true  // Marcar como seleccionada
                     });
                 });
 
+                // Agrega habitaciones disponibles
                 habitacionesDisponibles.forEach(habitacion => {
                     opciones.push({
                         value: habitacion.id,
                         label: `Habitación ${habitacion.numero} | ${habitacion.id_categoria.nombre} | Capacidad max. ${habitacion.id_categoria.capacidad_maxima} personas | $${habitacion.id_categoria.precio_base} MXN`
                     });
                 });
+                // Elimina todas las opciones antes de agregar las nuevas
+                choices.clearStore();
 
+                // Establece las nuevas opciones
                 choices.setChoices(opciones);
-                console.log(choices);
-                //console.log(habitacionesSeleccionadas); id de las habitaciones
-                console.log(habitacionesCompletasSeleccionadas);
             } catch (error) {
                 console.error('Error al obtener habitaciones disponibles:', error);
             }
@@ -218,6 +220,7 @@ if (window.location.pathname === '/admin/reservaciones') {
                 cargarHabitacionesDisponibles(fechaEntrada, fechaSalida, reservacionOriginal.ID_habitacion);
             }
         });
+
 
     });
 }
