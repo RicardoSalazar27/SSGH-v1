@@ -249,8 +249,45 @@ if (window.location.pathname === '/admin/reservaciones') {
                 }
             });
 
-            console.log(`Precio total: $${totalPrice} MXN`);
+            // Ahora, ajustamos el total con base en los inputs de pago
+
+            // Obtener valores de inputs de pago
+            const adelanto = parseFloat(document.getElementById('adelantoEditar').value) || 0;
+            const cobroExtra = parseFloat(document.getElementById('cobroExtraEditar').value) || 0;
+
+            const descuento = parseFloat(document.getElementById('descuentoEditar').value) || 0;
+            const descuentoPorcentaje = document.getElementById('descuentoPorcentajeEditar').checked;
+
+            // Si el descuento es por porcentaje, aplicamos el porcentaje
+            if (descuentoPorcentaje) {
+                totalPrice -= (totalPrice * (descuento / 100));
+            } else {
+                totalPrice -= descuento;
+            }
+
+            // Sumamos el cobro extra y restamos el adelanto
+            totalPrice += cobroExtra;
+            totalPrice -= adelanto;
+
+            // Mostrar el precio final
+            console.log(`Precio total: $${totalPrice.toFixed(2)} MXN`);
         }
+
+        // Función para actualizar el precio cada vez que se cambien los campos de pago
+        function setupEventListenersForPriceUpdates() {
+            // Escuchar cambios en los inputs de fecha, adelanto, cobro extra y descuento
+            document.getElementById('fechaEntradaEditar').addEventListener('change', calculateTotalPrice);
+            document.getElementById('fechaSalidaEditar').addEventListener('change', calculateTotalPrice);
+            document.getElementById('adelantoEditar').addEventListener('input', calculateTotalPrice);
+            document.getElementById('cobroExtraEditar').addEventListener('input', calculateTotalPrice);
+            document.getElementById('descuentoEditar').addEventListener('input', calculateTotalPrice);
+            document.getElementById('descuentoPorcentajeEditar').addEventListener('change', calculateTotalPrice);
+            document.getElementById('descuentoMontoEditar').addEventListener('change', calculateTotalPrice);
+        }
+
+        // Llamamos la función de setup para los listeners
+        setupEventListenersForPriceUpdates();
+
 
     });
 }
