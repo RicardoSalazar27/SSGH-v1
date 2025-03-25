@@ -160,9 +160,7 @@ if (window.location.pathname === '/admin/reservaciones') {
 
                 const habitacionesCompletasSeleccionadas = todasHabitaciones.filter(habitacion => habitacionesSeleccionadas.includes(habitacion.id.toString()));
                 habitacionesDisponibles = habitacionesDisponibles.filter(h => !habitacionesSeleccionadas.includes(h.id.toString()));
-                 // Después de obtener las habitaciones disponibles
-    console.log('Habitaciones Disponibles:', habitacionesDisponibles);
-    console.log('Todas las Habitaciones:', todasHabitaciones);
+ 
                 // Inicializa Choices solo si aún no está inicializado
                 if (!choices) {
                     choices = new Choices(selectHabitacion, {
@@ -199,6 +197,12 @@ if (window.location.pathname === '/admin/reservaciones') {
 
                 // Establece las nuevas opciones
                 choices.setChoices(opciones);
+
+                // Obtener habitaciones seleccionadas desde Choices
+                document.getElementById('habitacionEditar').addEventListener('change', function() {
+                    let habitacionesSeleccionadas = choices.getValue(true);
+                    //console.log('Habitaciones seleccionadas:', habitacionesSeleccionadas);
+                });
             } catch (error) {
                 console.error('Error al obtener habitaciones disponibles:', error);
             }
