@@ -39,6 +39,7 @@ if (window.location.pathname === '/admin/reservaciones') {
         const MyModalEditarReserva = new bootstrap.Modal(modalEditarReservacion);
         let reservacionOriginal;
         let choices = null;
+        let totalPriceBase = 0;
 
         // Configuración de eventos
         calendar.on('eventClick', async function(info) {
@@ -248,7 +249,7 @@ if (window.location.pathname === '/admin/reservaciones') {
                     totalPrice += habitacion.id_categoria.precio_base * noches;
                 }
             });
-
+            totalPriceBase = totalPrice;
             // Ahora, ajustamos el total con base en los inputs de pago
 
             // Obtener valores de inputs de pago
@@ -290,5 +291,93 @@ if (window.location.pathname === '/admin/reservaciones') {
         // Llamamos la función de setup para los listeners
         setupEventListenersForPriceUpdates();
 
+        document.getElementById('btnEditar').addEventListener('click', async function (e) {
+            e.preventDefault();
+            console.log('Diste click en editar');
+        
+            const reservacionId = document.getElementById('idReservacion').value;
+        
+            const reservacionActualizada = {
+                cliente_nombre: document.getElementById('nombreEditar').value.trim(),
+                cliente_apellidos: document.getElementById('apellidosEditar').value.trim(),
+                correo: document.getElementById('searchEmailEditar').value.trim(),
+                documento_identidad: document.getElementById('documento_identidadEditar').value.trim(),
+                telefono: document.getElementById('telefonoEditar').value.trim(),
+                direccion: document.getElementById('direccionEditar').value.trim(),
+                fecha_entrada: document.getElementById('fechaEntradaEditar').value.trim(),
+                fecha_salida: document.getElementById('fechaSalidaEditar').value.trim(),
+                observaciones: document.getElementById('observacionesEditar').value.trim(),
+                adelanto: parseFloat(document.getElementById('adelantoEditar').value.trim()) || 0,
+                cobro_extra: parseFloat(document.getElementById('cobroExtraEditar').value.trim()) || 0,
+                descuento_aplicado: parseFloat(document.getElementById('descuentoEditar').value.trim()) || 0,
+                tipo_descuento: document.getElementById('descuentoPorcentajeEditar').checked ? 'PORCENTAJE' : 'MONTO',
+                metodo_pago: document.getElementById('metodoPagoEditar').value.trim(),
+                habitaciones: choices.getValue(true), // Suponiendo que choices está correctamente inicializado
+                totalPagar: parseFloat(document.getElementById('totalPagarEditar').value.trim()) || 0,
+                totalBase: totalPriceBase
+            };
+        
+            if (!reservacionOriginal) {
+                console.error('Error: No hay datos originales de la reservación');
+                mostrarAlerta('Error', 'No se pudieron comparar los datos originales', 'error');
+                return;
+            }
+        
+            console.log('Datos actualizados:', reservacionActualizada);
+            console.log('Datos originales:', reservacionOriginal);
+            return;
+        
+            // Comparar los datos originales con los nuevos para detectar cambios
+            let cambios = {};
+            for (let key in reservacionActualizada) {
+                // Convertir a string para evitar diferencias por tipos de datos
+                if (JSON.stringify(reservacionActualizada[key]) !== JSON.stringify(reservacionOriginal[key])) {
+                    cambios[key] = reservacionActualizada[key];
+                }
+            }
+        
+            // Si no hay cambios, no enviamos la petición
+            if (Object.keys(cambios).length === 0) {
+                mostrarAlerta('No hay cambios por enviar', 'error');
+                return;
+            }
+        
+            // Determinar si usar PUT o PATCH
+            const metodo = Object.keys(cambios).length === Object.keys(reservacionActualizada).length ? "PUT" : "PATCH";
+            const datos = metodo === "PUT" ? reservacionActualizada : cambios;
+        
+            try {
+                // Mostrar spinner de carga
+                document.getElementById('loadingSpinner').classList.remove('d-none');
+        
+                const respuestaUpdate = await fetch(`/api/reservaciones/${reservacionId}`, {
+                    method: metodo,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(datos),
+                });
+        
+                // Ocultar spinner
+                document.getElementById('loadingSpinner').classList.add('d-none');
+        
+                if (!respuestaUpdate.ok) {
+                    const errorData = await respuestaUpdate.json();
+                    throw new Error(errorData.mensaje || 'Error desconocido al actualizar');
+                }
+        
+                const resultado = await respuestaUpdate.json();
+                mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+        
+                // Cerrar modal y actualizar datos si es necesario
+                $('#modalEditar').modal('hide');
+                initDataTable(); // Suponiendo que esta función recarga la tabla de datos
+        
+            } catch (error) {
+                console.error('Error al actualizar la reservación:', error);
+                mostrarAlerta('Error', error.message, 'error');
+            }
+        });        
+        
     });
 }
