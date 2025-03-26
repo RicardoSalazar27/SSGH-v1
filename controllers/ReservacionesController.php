@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Model\Crear_Reservacion;
+use Model\EstadoReservacion;
 use Model\Hotel;
 use Model\Reservacion;
 use Model\Usuario;
@@ -16,6 +17,9 @@ class ReservacionesController {
         $usuario = Usuario::where('email', $_SESSION['email']);
 
         $hotel = Hotel::get(1);
+
+        $estadosDeReservacion = EstadoReservacion::todosEstadoReservacion();
+        //debuguear($estadosDeReservacion);
 
         // Crear arrays de traducción
         $dias = ['Sunday' => 'Domingo', 'Monday' => 'Lunes', 'Tuesday' => 'Martes', 'Wednesday' => 'Miércoles', 'Thursday' => 'Jueves', 'Friday' => 'Viernes', 'Saturday' => 'Sábado'];
@@ -33,7 +37,8 @@ class ReservacionesController {
             'titulo' => 'Reservaciones',
             'usuario' => $usuario,
             'hotel' => $hotel,
-            'fecha' => $fecha
+            'fecha' => $fecha,
+            'estadosDeReservacion' => $estadosDeReservacion
         ]);
     }
 

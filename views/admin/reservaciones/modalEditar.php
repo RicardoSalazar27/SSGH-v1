@@ -102,14 +102,15 @@
                     <label class="form-label">Observaciones:</label>
                     <textarea id="observacionesEditar" class="form-control" rows="2"></textarea>
                 </div>
-
                 <div class="mb-3">
-                    <label for="estatus" class="form-label">Estatus</label>
-                    <select id="estatusEditar"></select>
+                    <label for="estatusEditar" class="form-label">Estatus</label>
+                    <select id="estatusEditar" class="form-control">
+                        <?php foreach ($estadosDeReservacion as $estatus) { ?>
+                            <option value="<?php echo $estatus->ID_estado; ?>"><?php echo $estatus->nombre; ?></option>
+                        <?php } ?>
+                    </select>
                 </div>
-                
             </div>
-
             <div class="modal-footer">
                 <button id="btnEditar" class="btn btn-primary">
                     Guardar Cambios <span id="loadingSpinner" class="spinner-border spinner-border-sm d-none"></span>
