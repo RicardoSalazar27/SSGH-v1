@@ -322,40 +322,17 @@ if (window.location.pathname === '/admin/reservaciones') {
                 mostrarAlerta('Error', 'No se pudieron comparar los datos originales', 'error');
                 return;
             }
-        
-            console.log('Datos actualizados:', reservacionActualizada);
-            console.log('Datos originales:', reservacionOriginal);
-            return;
-        
-            // Comparar los datos originales con los nuevos para detectar cambios
-            let cambios = {};
-            for (let key in reservacionActualizada) {
-                // Convertir a string para evitar diferencias por tipos de datos
-                if (JSON.stringify(reservacionActualizada[key]) !== JSON.stringify(reservacionOriginal[key])) {
-                    cambios[key] = reservacionActualizada[key];
-                }
-            }
-        
-            // Si no hay cambios, no enviamos la petición
-            if (Object.keys(cambios).length === 0) {
-                mostrarAlerta('No hay cambios por enviar', 'error');
-                return;
-            }
-        
-            // Determinar si usar PUT o PATCH
-            const metodo = Object.keys(cambios).length === Object.keys(reservacionActualizada).length ? "PUT" : "PATCH";
-            const datos = metodo === "PUT" ? reservacionActualizada : cambios;
-        
+
             try {
                 // Mostrar spinner de carga
                 document.getElementById('loadingSpinner').classList.remove('d-none');
         
                 const respuestaUpdate = await fetch(`/api/reservaciones/${reservacionId}`, {
-                    method: metodo,
+                    method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(datos),
+                    body: JSON.stringify(reservacionActualizada),
                 });
         
                 // Ocultar spinner
@@ -369,9 +346,8 @@ if (window.location.pathname === '/admin/reservaciones') {
                 const resultado = await respuestaUpdate.json();
                 mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
         
-                // Cerrar modal y actualizar datos si es necesario
+                // Cerrar modal
                 $('#modalEditar').modal('hide');
-                initDataTable(); // Suponiendo que esta función recarga la tabla de datos
         
             } catch (error) {
                 console.error('Error al actualizar la reservación:', error);
