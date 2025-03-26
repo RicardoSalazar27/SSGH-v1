@@ -1,6 +1,6 @@
 <?php
 namespace Model;
-class Reserva extends ActiveRecord {
+class Crear_Reservacion extends ActiveRecord {
     public static $tabla = 'Reservas';
     public static $columnasDB = [
         'ID_reserva', 'ID_usuario', 'ID_cliente', 'fecha_entrada', 'fecha_salida', 'ID_estado', 

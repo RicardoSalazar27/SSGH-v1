@@ -102,6 +102,12 @@
                     <label class="form-label">Observaciones:</label>
                     <textarea id="observacionesEditar" class="form-control" rows="2"></textarea>
                 </div>
+
+                <div class="mb-3">
+                    <label for="estatus" class="form-label">Estatus</label>
+                    <select id="estatusEditar"></select>
+                </div>
+                
             </div>
 
             <div class="modal-footer">

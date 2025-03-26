@@ -2,8 +2,8 @@
 
 namespace Controllers;
 
+use Model\Crear_Reservacion;
 use Model\Hotel;
-use Model\Reserva;
 use Model\Reservacion;
 use Model\Usuario;
 use MVC\Router;
@@ -80,7 +80,7 @@ class ReservacionesController {
              //debuguear($datos);
              //return;
             // Llamar al modelo para crear la reservación
-            $resultado = Reserva::crearReservacion($datos);
+            $resultado = Crear_Reservacion::crearReservacion($datos);
 
             if ($resultado) {
                 echo json_encode(respuesta('success', 'Reserva Exitosa', 'La reservación se ha creado correctamente.'));
