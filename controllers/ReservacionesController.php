@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Model\Crear_Reservacion;
+use Model\Editar_Reservacion;
 use Model\EstadoReservacion;
 use Model\Hotel;
 use Model\Reservacion;
@@ -19,7 +20,6 @@ class ReservacionesController {
         $hotel = Hotel::get(1);
 
         $estadosDeReservacion = EstadoReservacion::todosEstadoReservacion();
-        //debuguear($estadosDeReservacion);
 
         // Crear arrays de traducción
         $dias = ['Sunday' => 'Domingo', 'Monday' => 'Lunes', 'Tuesday' => 'Martes', 'Wednesday' => 'Miércoles', 'Thursday' => 'Jueves', 'Friday' => 'Viernes', 'Saturday' => 'Sábado'];
@@ -142,7 +142,6 @@ class ReservacionesController {
     }
 
     public static function actualizar($id) {
-
         is_auth();
     
         // Establecer los headers al inicio
@@ -167,46 +166,64 @@ class ReservacionesController {
                 echo json_encode(respuesta('error', 'Error', 'No se proporcionaron datos para actualizar'));
                 exit;
             }
-            debuguear($datos);
-            echo json_encode(respuesta('succes', 'good', 'nos comunicamos correctamente prro'));
     
-            // Buscar el objeto en la base de datos
-            // $nivel = Nivel::find($id);
-            // if (!$nivel) {
-            //     http_response_code(404);
-            //     echo json_encode(respuesta('error', 'No encontrado', 'El Nivel no existe'));
-            //     exit;
-            // }
+            // Preparar los datos para ser enviados al modelo
+            $datos_reservacion = [
+                'ID_reserva' => $id, // ID de la reservación a actualizar
+                'cliente' => [
+                    'correo' => $datos['cliente']['correo'] ?? '',
+                    'nombre' => $datos['cliente']['nombre'] ?? '',
+                    'apellidos' => $datos['cliente']['apellidos'] ?? '',
+                    'documento_identidad' => $datos['cliente']['documento_identidad'] ?? '',
+                    'telefono' => $datos['cliente']['telefono'] ?? '',
+                    'direccion' => $datos['cliente']['direccion'] ?? ''
+                ],
+                'fechas' => [
+                    'entrada' => $datos['fechas']['entrada'] ?? '',
+                    'salida' => $datos['fechas']['salida'] ?? ''
+                ],
+                'pago' => [
+                    'totalPagar' => (float) ($datos['pago']['totalPagar'] ?? 0),
+                    'adelanto' => (float) ($datos['pago']['adelanto'] ?? 0),
+                    'descuento' => (float) ($datos['pago']['descuento'] ?? 0),
+                    'cobroExtra' => (float) ($datos['pago']['cobroExtra'] ?? 0),
+                    'totalPagarOriginal' => (float) ($datos['pago']['totalPagarOriginal'] ?? 0),
+                    'tipoDescuento' => $datos['pago']['tipoDescuento'] ?? 'MONTO', // Monto o Porcentaje
+                    'metodo_pago' => $datos['metodo_pago'] ?? '' // Método de pago
+                ],
+                'habitaciones' => array_map('intval', $datos['habitaciones'] ?? []), // Convertir habitaciones a enteros
+                'observaciones' => $datos['observaciones'] ?? '',
+                'ID_estado' => (int) ($datos['ID_estado'] ?? 1) // Estado de la reservación
+            ];
+             //debuguear($datos_reservacion);
+             //return;
+            // Llamar al modelo para actualizar la reservación
+            $resultado = Editar_Reservacion::editarReservacion($datos_reservacion);
     
-            //     $nivel->update($datos); 
-            //     $nivel->updatepartially($datos);
-    
-            // $usuarioId = $_SESSION['id'];  // Asegúrate que $_SESSION['id'] tenga un valor válido
-            // $auditoria = new Auditoria();
-            // $registro = 'NULL';  // Si id_registro_afectado es NULL, esto está bien
-            // date_default_timezone_set("America/Mexico_City");
-            // $fechaHora = date('Y-m-d H:i:s');  // Esto devuelve la fecha y hora actuales en formato "YYYY-MM-DD HH:MM:SS"
-            // $datosAuditoria = [
-            //     'id_usuario' => $usuarioId,
-            //     'accion' => 'EDITAR',
-            //     'tabla_afectada' => 'Niveles',
-            //     'id_registro_afectado' => $registro,
-            //     'detalle' => "Editó Nivel $id",
-            //     'fecha_hora' => $fechaHora 
-            // ];
-    
-            // $auditoria->sincronizar($datosAuditoria);
-            // $auditoria->guardar();                
-    
-            // // Responder según el resultado
-            // if ($resultado) {
-            //     http_response_code(200);
-            //     echo json_encode(respuesta('success', 'Actualizado', 'Nivel actualizado correctamente'));
-            // } else {
-            //     http_response_code(500);
-            //     echo json_encode(respuesta('error', 'Error', 'Hubo un problema al actualizar el nivel'));
-            // }
-            // exit;
+            // Verificar si la actualización fue exitosa
+            if ($resultado) {
+                // $usuarioId = $_SESSION['id'];  // Asegúrate que $_SESSION['id'] tenga un valor válido
+                // $auditoria = new Auditoria();
+                // $registro = 'NULL';  // Si id_registro_afectado es NULL, esto está bien
+                // date_default_timezone_set("America/Mexico_City");
+                // $fechaHora = date('Y-m-d H:i:s');  // Esto devuelve la fecha y hora actuales en formato "YYYY-MM-DD HH:MM:SS"
+                // $datosAuditoria = [
+                //     'id_usuario' => $usuarioId,
+                //     'accion' => 'EDITAR',
+                //     'tabla_afectada' => 'Niveles',
+                //     'id_registro_afectado' => $registro,
+                //     'detalle' => "Editó Nivel $id",
+                //     'fecha_hora' => $fechaHora 
+                // ];
+        
+                // $auditoria->sincronizar($datosAuditoria);
+                // $auditoria->guardar();
+
+                echo json_encode(respuesta('success', 'Actualización exitosa', 'La reservación se ha actualizado correctamente'));
+            } else {
+                http_response_code(500);
+                echo json_encode(respuesta('error', 'Error al actualizar', 'Hubo un problema al actualizar la reservación'));
+            }
         }
     }
 }

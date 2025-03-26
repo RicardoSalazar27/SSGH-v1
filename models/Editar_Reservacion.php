@@ -3,13 +3,12 @@ namespace Model;
 class Editar_Reservacion extends ActiveRecord {
     public static $tabla = 'Reservas';
     public static $columnasDB = [
-        'ID_reserva', 'ID_usuario', 'ID_cliente', 'fecha_entrada', 'fecha_salida', 'ID_estado', 
+        'ID_reserva','ID_cliente', 'fecha_entrada', 'fecha_salida', 'ID_estado', 
         'precio_total', 'precio_pendiente', 'adelanto', 'cobro_extra', 'descuento_aplicado', 
         'tipo_descuento', 'observaciones', 'metodo_pago' // Agregar el campo 'metodo_pago'
     ];
 
     public $ID_reserva;
-    public $ID_usuario;
     public $ID_cliente;
     public $fecha_entrada;
     public $fecha_salida;
@@ -25,7 +24,6 @@ class Editar_Reservacion extends ActiveRecord {
 
     public function __construct($args = []) {
         $this->ID_reserva = $args['ID_reserva'] ?? null;
-        $this->ID_usuario = $args['ID_usuario'] ?? '';
         $this->ID_cliente = $args['ID_cliente'] ?? 1;
         $this->fecha_entrada = $args['fecha_entrada'] ?? '';
         $this->fecha_salida = $args['fecha_salida'] ?? '';
@@ -41,27 +39,28 @@ class Editar_Reservacion extends ActiveRecord {
     }
 
     public static function editarReservacion($datos) {
-        $nombreProcedimiento = "editar_reservacion";
+        $nombreProcedimiento = "actualizar_reservacion";
         //debuguear($datos['pago']); // Para ver si 'metodo_pago' existe
         $params = [
-            $datos['cliente']['correo'],
+            $datos['ID_reserva'],
             $datos['cliente']['nombre'],
             $datos['cliente']['apellidos'],
+            $datos['cliente']['correo'],
             $datos['cliente']['documento_identidad'],
             $datos['cliente']['telefono'],
             $datos['cliente']['direccion'],
             $datos['fechas']['entrada'],
             $datos['fechas']['salida'],
+            $datos['pago']['totalPagarOriginal'],
             $datos['pago']['totalPagar'],
             $datos['pago']['adelanto'],
             $datos['pago']['descuento'],
-            $datos['pago']['tipoDescuento'],
             $datos['pago']['cobroExtra'],
-            $datos['pago']['totalPagarOriginal'],
+            $datos['pago']['tipoDescuento'],
             $datos['pago']['metodo_pago'], // Aquí pasamos el 'metodo_pago'
-            json_encode($datos['habitaciones']),
-            $datos['usuario_id'],
-            $datos['observaciones']
+            $datos['observaciones'],
+            $datos['ID_estado'],
+            json_encode($datos['habitaciones'])
         ];
 
         return self::ejecutarProcedimiento($nombreProcedimiento, $params);

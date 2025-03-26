@@ -145,6 +145,7 @@ if (window.location.pathname === '/admin/reservaciones') {
             }
 
             document.getElementById('metodoPagoEditar').value = reservacion.metodo_pago;
+            document.getElementById('estatusEditar').value = reservacion.ID_estado;
             document.getElementById('totalPagarEditar').value = reservacion.precio_pendiente;
         }
 
@@ -294,36 +295,38 @@ if (window.location.pathname === '/admin/reservaciones') {
 
         document.getElementById('btnEditar').addEventListener('click', async function (e) {
             e.preventDefault();
-            console.log('Diste click en editar');
         
             const reservacionId = document.getElementById('idReservacion').value;
         
             const reservacionActualizada = {
-                cliente_nombre: document.getElementById('nombreEditar').value.trim(),
-                cliente_apellidos: document.getElementById('apellidosEditar').value.trim(),
-                correo: document.getElementById('searchEmailEditar').value.trim(),
-                documento_identidad: document.getElementById('documento_identidadEditar').value.trim(),
-                telefono: document.getElementById('telefonoEditar').value.trim(),
-                direccion: document.getElementById('direccionEditar').value.trim(),
-                fecha_entrada: document.getElementById('fechaEntradaEditar').value.trim(),
-                fecha_salida: document.getElementById('fechaSalidaEditar').value.trim(),
-                observaciones: document.getElementById('observacionesEditar').value.trim(),
-                adelanto: parseFloat(document.getElementById('adelantoEditar').value.trim()) || 0,
-                cobro_extra: parseFloat(document.getElementById('cobroExtraEditar').value.trim()) || 0,
-                descuento_aplicado: parseFloat(document.getElementById('descuentoEditar').value.trim()) || 0,
-                tipo_descuento: document.getElementById('descuentoPorcentajeEditar').checked ? 'PORCENTAJE' : 'MONTO',
-                metodo_pago: document.getElementById('metodoPagoEditar').value.trim(),
+                cliente: {
+                    correo: document.getElementById('searchEmailEditar').value.trim(),
+                    nombre: document.getElementById('nombreEditar').value.trim(),
+                    apellidos: document.getElementById('apellidosEditar').value.trim(),
+                    documento_identidad: document.getElementById('documento_identidadEditar').value.trim(),
+                    telefono: document.getElementById('telefonoEditar').value.trim(),
+                    direccion: document.getElementById('direccionEditar').value.trim()
+                },
+                fechas: {
+                    entrada: `${document.getElementById('fechaEntradaEditar').value.trim()} 14:00:00`, // Hora manual
+                    salida: `${document.getElementById('fechaSalidaEditar').value.trim()} 12:00:00`   // Hora manual
+                },
                 habitaciones: choices.getValue(true), // Suponiendo que choices está correctamente inicializado
-                totalPagar: parseFloat(document.getElementById('totalPagarEditar').value.trim()) || 0,
-                totalBase: totalPriceBase
+                pago: {
+                    totalPagar: parseFloat(document.getElementById('totalPagarEditar').value.trim()) || 0,
+                    totalPagarOriginal: totalPriceBase ? totalPriceBase.toFixed(2) : '0.00',
+                    descuento: document.getElementById('descuentoPorcentajeEditar').checked 
+                        ? ((totalPriceBase || 0) * (parseFloat(document.getElementById('descuentoEditar').value.trim()) || 0)) / 100 
+                        : parseFloat(document.getElementById('descuentoEditar').value.trim()) || 0,
+                    tipoDescuento: document.getElementById('descuentoPorcentajeEditar').checked ? 'PORCENTAJE' : 'MONTO',
+                    cobroExtra: parseFloat(document.getElementById('cobroExtraEditar').value.trim()) || 0,
+                    adelanto: (parseFloat(document.getElementById('adelantoEditar').value.trim()) || 0).toFixed(2)
+                },
+                observaciones: document.getElementById('observacionesEditar').value.trim(),
+                metodo_pago: document.getElementById('metodoPagoEditar').value.trim(),
+                ID_estado: document.getElementById('estatusEditar').value
             };
         
-            if (!reservacionOriginal) {
-                console.error('Error: No hay datos originales de la reservación');
-                mostrarAlerta('Error', 'No se pudieron comparar los datos originales', 'error');
-                return;
-            }
-
             try {
                 // Mostrar spinner de carga
                 document.getElementById('loadingSpinner').classList.remove('d-none');
@@ -333,7 +336,7 @@ if (window.location.pathname === '/admin/reservaciones') {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(reservacionActualizada),
+                    body: JSON.stringify(reservacionActualizada)
                 });
         
                 // Ocultar spinner
@@ -354,7 +357,6 @@ if (window.location.pathname === '/admin/reservaciones') {
                 console.error('Error al actualizar la reservación:', error);
                 mostrarAlerta('Error', error.message, 'error');
             }
-        });        
-        
+        });                
     });
 }
