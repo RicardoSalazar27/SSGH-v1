@@ -162,7 +162,7 @@ class ReservacionesController {
                 echo json_encode(respuesta('error', 'Error', 'No se proporcionaron datos para actualizar'));
                 exit;
             }
-
+            debuguear($datos);
             echo json_encode(respuesta('succes', 'good', 'nos comunicamos correctamente prro'));
     
             // Buscar el objeto en la base de datos
