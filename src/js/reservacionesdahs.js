@@ -116,6 +116,7 @@ if (window.location.pathname === '/admin/reservaciones') {
 
         // Población de formulario de edición
         function populateEditForm(reservacion) {
+            document.getElementById('idReservacion').value = reservacion.ID_reserva;
             document.getElementById('nombreEditar').value = reservacion.cliente_nombre;
             document.getElementById('searchEmailEditar').value = reservacion.correo;
             document.getElementById('apellidosEditar').value = reservacion.cliente_apellidos;

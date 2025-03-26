@@ -135,4 +135,73 @@ class ReservacionesController {
             echo json_encode($reservacion);
         }
     }
+
+    public static function actualizar($id) {
+
+        is_auth();
+    
+        // Establecer los headers al inicio
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: PUT, PATCH, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'PUT' || $_SERVER['REQUEST_METHOD'] === 'PATCH') {
+            // Verificar si se recibió un ID válido desde la URL
+            if (!$id) {
+                http_response_code(400);
+                echo json_encode(respuesta('error', 'Error', 'ID no proporcionado en la URL'));
+                exit;
+            }
+    
+            // Obtener los datos del cuerpo de la solicitud
+            $datos = json_decode(file_get_contents('php://input'), true);
+    
+            if (empty($datos)) {
+                http_response_code(400);
+                echo json_encode(respuesta('error', 'Error', 'No se proporcionaron datos para actualizar'));
+                exit;
+            }
+
+            echo json_encode(respuesta('succes', 'good', 'nos comunicamos correctamente prro'));
+    
+            // Buscar el objeto en la base de datos
+            // $nivel = Nivel::find($id);
+            // if (!$nivel) {
+            //     http_response_code(404);
+            //     echo json_encode(respuesta('error', 'No encontrado', 'El Nivel no existe'));
+            //     exit;
+            // }
+    
+            //     $nivel->update($datos); 
+            //     $nivel->updatepartially($datos);
+    
+            // $usuarioId = $_SESSION['id'];  // Asegúrate que $_SESSION['id'] tenga un valor válido
+            // $auditoria = new Auditoria();
+            // $registro = 'NULL';  // Si id_registro_afectado es NULL, esto está bien
+            // date_default_timezone_set("America/Mexico_City");
+            // $fechaHora = date('Y-m-d H:i:s');  // Esto devuelve la fecha y hora actuales en formato "YYYY-MM-DD HH:MM:SS"
+            // $datosAuditoria = [
+            //     'id_usuario' => $usuarioId,
+            //     'accion' => 'EDITAR',
+            //     'tabla_afectada' => 'Niveles',
+            //     'id_registro_afectado' => $registro,
+            //     'detalle' => "Editó Nivel $id",
+            //     'fecha_hora' => $fechaHora 
+            // ];
+    
+            // $auditoria->sincronizar($datosAuditoria);
+            // $auditoria->guardar();                
+    
+            // // Responder según el resultado
+            // if ($resultado) {
+            //     http_response_code(200);
+            //     echo json_encode(respuesta('success', 'Actualizado', 'Nivel actualizado correctamente'));
+            // } else {
+            //     http_response_code(500);
+            //     echo json_encode(respuesta('error', 'Error', 'Hubo un problema al actualizar el nivel'));
+            // }
+            // exit;
+        }
+    }
 }

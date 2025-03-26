@@ -98,5 +98,6 @@ $router->post('/api/productos', [CatalogoProductosController::class, 'crear']);
 $router->post('/api/reservaciones', [ReservacionesController::class, 'crear']);
 $router->get('/api/reservaciones', [ReservacionesController::class, 'listar']);
 $router->get('/api/reservaciones/{id}', [ReservacionesController::class, 'obtener']);
+$router->patch('/api/reservaciones/{id}', [ReservacionesController::class, 'actualizar']);
 
 $router->comprobarRutas();
