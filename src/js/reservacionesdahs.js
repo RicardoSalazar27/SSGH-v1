@@ -314,18 +314,21 @@ if (window.location.pathname === '/admin/reservaciones') {
                 habitaciones: choices.getValue(true), // Suponiendo que choices está correctamente inicializado
                 pago: {
                     totalPagar: parseFloat(document.getElementById('totalPagarEditar').value.trim()) || 0,
-                    totalPagarOriginal: totalPriceBase ? totalPriceBase.toFixed(2) : '0.00',
+                    totalPagarOriginal: parseFloat(totalPriceBase || 0).toFixed(2), // Solo lo convierte a número y luego lo redondea
                     descuento: document.getElementById('descuentoPorcentajeEditar').checked 
                         ? ((totalPriceBase || 0) * (parseFloat(document.getElementById('descuentoEditar').value.trim()) || 0)) / 100 
                         : parseFloat(document.getElementById('descuentoEditar').value.trim()) || 0,
                     tipoDescuento: document.getElementById('descuentoPorcentajeEditar').checked ? 'PORCENTAJE' : 'MONTO',
                     cobroExtra: parseFloat(document.getElementById('cobroExtraEditar').value.trim()) || 0,
-                    adelanto: (parseFloat(document.getElementById('adelantoEditar').value.trim()) || 0).toFixed(2)
-                },
+                    adelanto: parseFloat(document.getElementById('adelantoEditar').value.trim()) || 0
+                },                
                 observaciones: document.getElementById('observacionesEditar').value.trim(),
                 metodo_pago: document.getElementById('metodoPagoEditar').value.trim(),
                 ID_estado: document.getElementById('estatusEditar').value
             };
+
+            //console.log(reservacionActualizada);
+            //return;
         
             try {
                 // Mostrar spinner de carga

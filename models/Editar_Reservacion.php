@@ -54,8 +54,8 @@ class Editar_Reservacion extends ActiveRecord {
             $datos['pago']['totalPagarOriginal'],
             $datos['pago']['totalPagar'],
             $datos['pago']['adelanto'],
-            $datos['pago']['descuento'],
             $datos['pago']['cobroExtra'],
+            $datos['pago']['descuento'],
             $datos['pago']['tipoDescuento'],
             $datos['pago']['metodo_pago'], // Aquí pasamos el 'metodo_pago'
             $datos['observaciones'],

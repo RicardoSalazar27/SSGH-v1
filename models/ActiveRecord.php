@@ -318,8 +318,8 @@ class ActiveRecord {
         
         // Construir la consulta
         $query = "CALL $nombreProcedimiento($parametrosSQL)";
-        // debuguear($query);
-        // return;
+        //debuguear($query);
+        //return;
     
         // Ejecutar el procedimiento almacenado
         $resultado = self::$db->query($query);
