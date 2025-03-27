@@ -308,7 +308,8 @@ class ActiveRecord {
         $resultado = self::$db->query($query);
         return $resultado;
     }
-    
+
+    // Permite Ejecutar Procedimeintos de Almacenado Definidos En Los MOdelos
     public static function ejecutarProcedimiento($nombreProcedimiento, $parametros = []) {
         // Convertir los parámetros a una cadena para usarlos en la consulta
         $parametrosSQL = implode(", ", array_map(function($param) {

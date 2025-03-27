@@ -351,7 +351,7 @@ if (window.location.pathname === '/admin/reservaciones') {
                 }
         
                 const resultado = await respuestaUpdate.json();
-                mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+                mostrarAlerta3(resultado.titulo, resultado.mensaje, resultado.tipo);
         
                 // Cerrar modal
                 $('#modalEditar').modal('hide');
