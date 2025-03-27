@@ -11,6 +11,7 @@ use Controllers\DashboardController;
 use Controllers\HabitacionController;
 use Controllers\informacionController;
 use Controllers\NivelesController;
+use Controllers\RecepcionController;
 use Controllers\ReservacionesController;
 use Controllers\UsuariosController;
 
@@ -49,6 +50,7 @@ $router->get('/admin/usuarios', [UsuariosController::class, 'index']);
 $router->get('/admin/clientes', [ClientesController::class, 'index']);
 $router->get('/admin/puntodeventa/catalogo', [CatalogoProductosController::class, 'index']);
 $router->get('/admin/reservaciones', [ReservacionesController::class, 'index']);
+$router->get('/admin/recepcion', [RecepcionController::class, 'index']);
 
 
 // API'S
