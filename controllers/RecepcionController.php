@@ -2,6 +2,8 @@
 
 namespace Controllers;
 
+use Model\EstadoCategoria;
+use Model\EstadoHabitacion;
 use Model\Habitacion;
 use Model\Hotel;
 use Model\Nivel;
@@ -22,12 +24,18 @@ class RecepcionController
         $niveles = Nivel::all('ASC');
         $habitaciones = Habitacion::all('ASC');
 
+        foreach($habitaciones as $habitacion){
+            $habitacion->id_estado_habitacion = EstadoHabitacion::find($habitacion->id_estado_habitacion);
+            $habitacion->id_categoria = EstadoCategoria::find($habitacion->id_categoria);
+        };
+
         // Render a la vista 
         $router->render('admin/recepcion/index', [
             'titulo' => 'Vista General De Recepcion',
             'usuario' => $usuario,
             'hotel' => $hotel,
-            'niveles' => $niveles
+            'niveles' => $niveles,
+            'habitaciones' => $habitaciones
         ]);
     }
 }

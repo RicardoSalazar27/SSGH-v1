@@ -43,6 +43,29 @@
                             <!-- Contenido de la pestaña 'Todos' -->
                             <div class="tab-pane fade show active" id="custom-tabs-one-todos" role="tabpanel" aria-labelledby="custom-tabs-one-todos-tab">
                                 Contenido de Todos
+                                <div class="row">
+                                    <?php foreach ($habitaciones as $habitacion){?>
+                                        <div class="col-xxl-3 col-xl-3 col-lg-4 col-md-4 col-12">
+                                            <div class="small-box bg-<?php echo $habitacion->id_estado_habitacion->color;?>" 
+                                                 data-id="<?php echo $habitacion->id; ?>" 
+                                                 data-nombre="<?php echo $habitacion->numero; ?>"
+                                                 data-categoria="<?php echo $habitacion->id_categoria->nombre;?>"
+                                                 data-estado="<?php echo $habitacion->id_estado_habitacion->nombre;?>">
+                                                <div class="inner">
+                                                    <h3><?php echo $habitacion->numero; ?></h3>
+                                                    <h4><?php echo $habitacion->id_categoria->nombre;?></h4>
+                                                    <p><?php echo $habitacion->id_estado_habitacion->nombre; ?></p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="fas fa-<?php echo $habitacion->id_estado_habitacion->icono;?>"></i>
+                                                </div>
+                                                <a href="#" class="small-box-footer" data-id="<?php echo $habitacion->id;?>">
+                                                    <?php echo $habitacion->id_estado_habitacion->descripcion; ?> <i class="fas fa-arrow-circle-right"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    <?php }; ?>
+                                </div>
                             </div>
                             <!-- Contenido dinámico por nivel -->
                             <?php foreach ($niveles as $nivel): ?>
@@ -57,6 +80,7 @@
         </div>
     </div>
 </section>
+<?php //debuguear($habitaciones);?>
 <!-- Modal -->
 <?php include_once __DIR__ . '/modal.php'; ?>
 <?php //include_once __DIR__ . '/modalEditar.php'; ?>
