@@ -69,42 +69,61 @@
 
     <!-- Segunda fila: Dos cards en columnas separadas -->
     <div class="row">
-    <div class="col-lg-6">
-        <div class="card card-success card-outline">
-            <div class="card-header">
-                <h5 class="card-title m-0">Datos del cliente</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <p><strong class="text-dark">Nombre</strong></p>
-                    <input type="text" class="form-control" value="iri EL NOMBRE">
+        <div class="col-lg-6">
+            <div class="card card-success card-outline">
+                <div class="card-header">
+                    <h5 class="card-title m-0">Datos del cliente</h5>
                 </div>
-                <div class="row">
-                    <!-- Primera columna-->
-                    <div class="col-md-3">
-                        <label for="tipo_documento" class="text-dark"><strong>Tipo Documento</strong></label>
-                        <input type="text" class="form-control" id="tipo_documento" value="va dpciemo">
-                        <label for="nit" class="text-dark"><strong>NIT</strong></label>
-                        <input type="text" class="form-control" id="nit" value="va nit o dni">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="nombre" class="text-dark col-form-label"><strong>Nombre</strong></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="nombre" placeholder="Nombre del huésped">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fa-solid fa-user-plus text-white"></i> <!-- Cambiar el color del ícono si es necesario -->
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                        <label for="documento" class="text-dark"><strong>Documento</strong></label>
-                        <input type="text" class="form-control" id="documento" value="va dpciemo">
-                        <label for="direccion" class="text-dark"><strong>Direccion</strong></label>
-                        <input type="text" class="form-control" id="direccion" value="va nit o dni">
+                    <div class="row">
+                        <!-- Primera columna-->
+                        <div class="col-md-6">
+                            <label for="tipo_documento" class="text-dark col-form-label"><strong>Tipo Documento</strong></label>
+                            <input type="text" class="form-control" id="tipo_documento" placeholder="Ej. DNI">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="documento" class="text-dark col-form-label"><strong>Documento</strong></label>
+                            <input type="text" class="form-control" id="documento" placeholder="Ej. SASE09038ID8">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="nit" class="text-dark col-form-label"><strong>RFC</strong></label>
+                            <input type="text" class="form-control" id="nit" placeholder="RFC">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="direccion" class="text-dark col-form-label"><strong>Direccion</strong></label>
+                            <input type="text" class="form-control" id="direccion" placeholder="Puede ser solo ciudad">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="correo">Correo</label>
+                            <input type="email" class="form-control" id="correo" placeholder="correo@ejemplo.com">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="telefono">Telefono</label>
+                            <input type="text" class="form-control" id="telefono">
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <label for="correo">Correo</label>
-                    <input type="email" class="form-control" id="correo" placeholder="correo@ejemplo.com">
-                </div>
-                <div class="row">
-                    <label for="telefono">Telefono</label>
-                    <input type="text" class="form-control" id="telefono">
-                </div>
             </div>
-        </div>
-    </div>
+         </div>
+
+
     <div class="col-lg-6">
         <div class="card card-success card-outline">
         <div class="card-header">
