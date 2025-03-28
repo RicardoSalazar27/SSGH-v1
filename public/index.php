@@ -51,6 +51,7 @@ $router->get('/admin/clientes', [ClientesController::class, 'index']);
 $router->get('/admin/puntodeventa/catalogo', [CatalogoProductosController::class, 'index']);
 $router->get('/admin/reservaciones', [ReservacionesController::class, 'index']);
 $router->get('/admin/recepcion', [RecepcionController::class, 'index']);
+$router->get('/admin/recepcion/habitacion', [RecepcionController::class, 'checkin']);
 
 
 // API'S

@@ -58,7 +58,7 @@
                                                 <div class="icon">
                                                     <i class="fas fa-<?php echo $habitacion->id_estado_habitacion->icono;?>"></i>
                                                 </div>
-                                                <a href="#" class="small-box-footer" data-id="<?php echo $habitacion->id;?>">
+                                                <a href="/admin/recepcion/habitacion?id=<?php echo $habitacion->id; ?>" class="small-box-footer" data-id="<?php echo $habitacion->id;?>">
                                                     <?php echo $habitacion->id_estado_habitacion->descripcion; ?> <i class="fas fa-arrow-circle-right"></i>
                                                 </a>
                                             </div>
@@ -105,5 +105,5 @@
 </section>
 <?php //debuguear($habitaciones);?>
 <!-- Modal -->
-<?php include_once __DIR__ . '/modal.php'; ?>
+<?php //include_once __DIR__ . '/checkin.php'; ?>
 <?php //include_once __DIR__ . '/modalEditar.php'; ?>

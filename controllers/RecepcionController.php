@@ -38,4 +38,31 @@ class RecepcionController
             'habitaciones' => $habitaciones
         ]);
     }
+
+    public static function checkin(Router $router){
+
+        is_auth();
+        $usuario = Usuario::where('email', $_SESSION['email']);
+        $hotel = Hotel::get(1);
+
+        $idHabitacion = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+        if ($idHabitacion <= 0) {
+            // Manejar el caso en que el ID no sea válido
+            die("ID inválido");
+        }
+
+        $habitacion = Habitacion::find($idHabitacion);
+        $habitacion->id_nivel = Nivel::find($habitacion->id_nivel);
+        $habitacion->id_categoria = EstadoCategoria::find($habitacion->id_categoria);
+        $habitacion->id_estado_habitacion = EstadoHabitacion::find($habitacion->id_estado_habitacion);
+    
+        // Render a la vista 
+        $router->render('admin/recepcion/checkin', [
+            'titulo' => 'Procesar Habitacion',
+            'usuario' => $usuario,
+            'hotel' => $hotel,
+            'habitacion' => $habitacion
+        ]);
+    }
 }
