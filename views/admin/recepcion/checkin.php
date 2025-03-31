@@ -78,9 +78,10 @@
                         <div class="col-12">
                             <label for="correo" class="text-dark col-form-label"><strong>Correo</strong></label>
                             <div class="input-group">
-                                <input type="email" class="form-control" id="correo" placeholder="Busca cliente por correo aquí">
+                                <input type="email" class="form-control" id="correo" placeholder="Busca cliente por correo aquí"
+                                    value="<?php echo isset($reservacion) ? $reservacion->correo : 'no hay nada en reservacion'; ?>" readonly>
                                 <button class="btn btn-primary" data-toggle="modal" data-target="#modalCrearCliente" type="button">
-                                    <i class="fa-solid fa-user-plus text-white"></i> <!-- Cambiar el color del ícono si es necesario -->
+                                    <i class="fa-solid fa-user-plus text-white"></i>
                                 </button>
                             </div>
                         </div>
@@ -88,41 +89,34 @@
                     <div class="row">
                         <div class="col-12">
                             <label for="nombre">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" placeholder="" readonly> <!--quitar readonly para editar-->
+                            <input type="text" class="form-control" id="nombre" placeholder=""
+                                value="<?php echo isset($reservacion) ? $reservacion->cliente_nombre . ' ' . $reservacion->cliente_apellidos : ''; ?>" readonly>
                         </div>
                     </div>
                     <div class="row">
-                        <!-- Primera columna-->
-                        <div class="col-md-6">
-                            <label for="tipo_documento" class="text-dark col-form-label"><strong>Tipo Documento</strong></label>
-                            <input type="text" class="form-control" id="tipo_documento" placeholder="Ej. DNI" readonly>
-                        </div>
                         <div class="col-md-6">
                             <label for="documento" class="text-dark col-form-label"><strong>Documento</strong></label>
-                            <input type="text" class="form-control" id="documento" placeholder="Ej. SASE09038ID8" readonly>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="nit" class="text-dark col-form-label"><strong>RFC</strong></label>
-                            <input type="text" class="form-control" id="nit" placeholder="RFC" readonly>
+                            <input type="text" class="form-control" id="documento" placeholder="Ej. SASE09038ID8"
+                                value="<?php echo isset($reservacion) ? $reservacion->documento_identidad : ''; ?>" readonly>
                         </div>
                         <div class="col-md-6">
-                            <label for="telefono" class="text-dark col-form-label"><strong>Telefono</strong></label>
-                            <input type="text" class="form-control" id="telefono" placeholder="Ej. 78192374848" readonly>
+                            <label for="telefono" class="text-dark col-form-label"><strong>Teléfono</strong></label>
+                            <input type="text" class="form-control" id="telefono" placeholder="Ej. 78192374848"
+                                value="<?php echo isset($reservacion) ? $reservacion->telefono : ''; ?>" readonly>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <label for="direccion">Direccion</label>
-                            <input type="text" class="form-control" id="direccion" placeholder="Puede ser solo ciudad" readonly>
+                            <label for="direccion">Dirección</label>
+                            <input type="text" class="form-control" id="direccion" placeholder="Puede ser solo ciudad"
+                                value="<?php echo isset($reservacion) ? $reservacion->direccion : ''; ?>" readonly>
                         </div>
                     </div>
                 </div>
             </div>
          </div>
          <!-- Tarjeta : Datos del ALOJAMIENTO -->
-        <div class="col-lg-6">
+         <div class="col-lg-6">
             <div class="card card-success card-outline">
                 <div class="card-header">
                     <h5 class="card-title m-0">Datos del alojamiento</h5>
@@ -131,12 +125,14 @@
                     <div class="row">
                         <!-- Primera columna FECHAS-->
                         <div class="col-md-6">
-                            <label for="fechaEntrada" class="form-label">Fecha y hora de Entrada</label>
-                            <input type="date" id="fechaEntrada" class="form-control" value="<?php echo $date;?>">
+                            <label for="fechaEntrada" class="form-label">Fecha de Entrada</label>
+                            <input type="date" id="fechaEntrada" class="form-control" 
+                            value="<?php echo isset($reservacion) ? $reservacion->fecha_entrada : $date; ?>">
                         </div>
                         <div class="col-md-6">
-                            <label for="fechaSalida" class="form-label">Fecha y hora de Salida</label>
-                            <input type="date" id="fechaSalida" class="form-control" value="<?php echo $nextday;?>">
+                            <label for="fechaSalida" class="form-label">Fecha de Salida</label>
+                            <input type="date" id="fechaSalida" class="form-control"
+                            value="<?php echo isset($reservacion) ? $reservacion->fecha_salida : $nextday; ?>">
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -144,22 +140,27 @@
                             <div class="d-flex justify-content-between">
                                 <label class="form-label me-2">Descuento:</label>
                                 <div>
-                                    <input type="radio" name="tipoDescuento" value="PORCENTAJE" id="descuentoPorcentaje">
+                                    <input type="radio" name="tipoDescuento" value="PORCENTAJE" id="descuentoPorcentaje" 
+                                    <?php echo isset($reservacion) && $reservacion->tipo_descuento === "PORCENTAJE" ? "checked" : ""; ?>>
                                     <label for="descuentoPorcentaje" class="ms-1 me-2">%</label>
-                                    <input type="radio" name="tipoDescuento" value="MONTO" id="descuentoMonto" checked>
+                                    
+                                    <input type="radio" name="tipoDescuento" value="MONTO" id="descuentoMonto"
+                                    <?php echo isset($reservacion) && $reservacion->tipo_descuento === "MONTO" ? "checked" : ""; ?>>
                                     <label for="descuentoMonto" class="ms-1 fw-bold">MXN$</label>
                                 </div>
                             </div>
                             <div class="input-group">
                                 <span class="input-group-text"> % | MXN$</span>
-                                <input type="number" id="descuento" class="form-control" value="0">
+                                <input type="number" id="descuento" class="form-control" 
+                                value="<?php echo isset($reservacion) ? $reservacion->descuento_aplicado : 0; ?>">
                             </div> 
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Cobro extra:</label>
                             <div class="input-group">
                                 <span class="input-group-text">+MXN$</span>
-                                <input type="number" id="cobroExtra" class="form-control" value="0">
+                                <input type="number" id="cobroExtra" class="form-control" 
+                                value="<?php echo isset($reservacion) ? $reservacion->cobro_extra : 0; ?>">
                             </div>
                         </div>
                     </div>
@@ -168,14 +169,16 @@
                             <label class="form-label">Adelanto:</label>
                             <div class="input-group">
                                 <span class="input-group-text">MXN$</span>
-                                <input type="number" id="adelanto" class="form-control" value="0">
+                                <input type="number" id="adelanto" class="form-control" 
+                                value="<?php echo isset($reservacion) ? $reservacion->adelanto : 0; ?>">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Total a pagar:</label>
                             <div class="input-group">
                                 <span class="input-group-text">MXN$</span>
-                                <input type="number" id="totalPagar" class="form-control" value="360" readonly>
+                                <input type="number" id="totalPagar" class="form-control" 
+                                value="<?php echo isset($reservacion) ? $reservacion->precio_total : 360; ?>" readonly>
                             </div>
                         </div>
                     </div>
@@ -184,14 +187,14 @@
                         <div class="col-md-6">
                             <label class="form-label">Método de pago:</label>
                             <select id="metodoPago" class="form-control">
-                                <option value="Efectivo">Efectivo</option>
-                                <option value="Tarjeta">Tarjeta</option>
-                                <option value="Transferencia">Transferencia</option>
+                                <option value="Efectivo" <?php echo isset($reservacion) && $reservacion->metodo_pago === "Efectivo" ? "selected" : ""; ?>>Efectivo</option>
+                                <option value="Tarjeta" <?php echo isset($reservacion) && $reservacion->metodo_pago === "Tarjeta" ? "selected" : ""; ?>>Tarjeta</option>
+                                <option value="Transferencia" <?php echo isset($reservacion) && $reservacion->metodo_pago === "Transferencia" ? "selected" : ""; ?>>Transferencia</option>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Observaciones:</label>
-                            <textarea id="observaciones" class="form-control" rows="2"></textarea>
+                            <textarea id="observaciones" class="form-control" rows="2"><?php echo isset($reservacion) ? $reservacion->observaciones : ""; ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -205,5 +208,5 @@
   </div><!-- /.container-fluid -->
 </div>
 <!-- /.content -->
-<?php //debuguear($habitacion); ?>
+<?php //debuguear($reservacion); ?>
 <?php include_once __DIR__ . '/modalCrearCliente.php'; ?>

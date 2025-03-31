@@ -2,11 +2,13 @@
 
 namespace Controllers;
 
+use DateTime;
 use Model\EstadoCategoria;
 use Model\EstadoHabitacion;
 use Model\Habitacion;
 use Model\Hotel;
 use Model\Nivel;
+use Model\Reservacion;
 use Model\Usuario;
 use MVC\Router;
 
@@ -66,6 +68,13 @@ class RecepcionController
         $date = date('Y-m-d');
         $nextday = date('Y-m-d', strtotime('+1 day'));
 
+        // Si la habitación está reservada, obtener la primera reservación
+        $reservacion = array_shift(Reservacion::obtenerReservaPorHabitacionYFecha($idHabitacion));
+
+        if ($reservacion) { // Verificar que se obtuvo una reservación válida
+            $reservacion->fecha_entrada = (new DateTime($reservacion->fecha_entrada))->format('Y-m-d');
+            $reservacion->fecha_salida = (new DateTime($reservacion->fecha_salida))->format('Y-m-d');
+        }
 
         // Render a la vista 
         $router->render('admin/recepcion/checkin', [
@@ -74,7 +83,8 @@ class RecepcionController
             'hotel' => $hotel,
             'habitacion' => $habitacion,
             'date' => $date,
-            'nextday' => $nextday
+            'nextday' => $nextday,
+            'reservacion' => $reservacion
         ]);
     }
 }

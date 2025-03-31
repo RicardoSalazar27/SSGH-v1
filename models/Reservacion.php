@@ -149,5 +149,26 @@ class Reservacion extends ActiveRecord {
             ORDER BY r.ID_reserva;
         ";
         return self::consultarSQL($query);
+    }
+    
+    //Se usa en RecepcionController, por si una habitacion tiene una reservacion en el dia de hoy
+    public static function obtenerReservaPorHabitacionYFecha($idHabitacion) {
+        $query = "
+            SELECT 
+                r.*, 
+                c.nombre AS cliente_nombre,
+                c.apellidos AS cliente_apellidos,
+                c.documento_identidad,
+                c.telefono,
+                c.direccion,
+                c.correo
+            FROM Reservas r
+            JOIN Reservas_Habitaciones rh ON r.ID_reserva = rh.ID_reserva
+            JOIN Clientes c ON r.ID_cliente = c.id
+            WHERE rh.ID_habitacion = '$idHabitacion'
+            AND NOW() BETWEEN r.fecha_entrada AND r.fecha_salida;
+        ";
+    
+        return self::consultarSQL($query);
     }    
 }
