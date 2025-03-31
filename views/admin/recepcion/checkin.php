@@ -50,7 +50,7 @@
                     <p><strong class="text-primary">Categoria</strong></p>
                     <p><?php echo $habitacion->id_categoria->nombre ?></p>
                     <p><strong class="text-primary">Estado</strong></p>
-                    <span class="badge bg-success"><?php echo $habitacion->id_estado_habitacion->nombre;?></span>
+                    <span class="badge bg-<?php echo $habitacion->id_estado_habitacion->color;?>"><?php echo $habitacion->id_estado_habitacion->nombre;?></span>
                 </div>
 
                 <!-- Cuarta columna -->
@@ -76,46 +76,46 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <label for="nombre" class="text-dark col-form-label"><strong>Nombre</strong></label>
+                            <label for="correo" class="text-dark col-form-label"><strong>Correo</strong></label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="nombre" placeholder="Nombre del huésped">
-                                <button class="btn btn-primary" type="button">
+                                <input type="email" class="form-control" id="correo" placeholder="Busca cliente por correo aquí">
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#modalCrearCliente" type="button">
                                     <i class="fa-solid fa-user-plus text-white"></i> <!-- Cambiar el color del ícono si es necesario -->
                                 </button>
                             </div>
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-12">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" placeholder="" readonly> <!--quitar readonly para editar-->
+                        </div>
+                    </div>
+                    <div class="row">
                         <!-- Primera columna-->
                         <div class="col-md-6">
                             <label for="tipo_documento" class="text-dark col-form-label"><strong>Tipo Documento</strong></label>
-                            <input type="text" class="form-control" id="tipo_documento" placeholder="Ej. DNI">
+                            <input type="text" class="form-control" id="tipo_documento" placeholder="Ej. DNI" readonly>
                         </div>
                         <div class="col-md-6">
                             <label for="documento" class="text-dark col-form-label"><strong>Documento</strong></label>
-                            <input type="text" class="form-control" id="documento" placeholder="Ej. SASE09038ID8">
+                            <input type="text" class="form-control" id="documento" placeholder="Ej. SASE09038ID8" readonly>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <label for="nit" class="text-dark col-form-label"><strong>RFC</strong></label>
-                            <input type="text" class="form-control" id="nit" placeholder="RFC">
+                            <input type="text" class="form-control" id="nit" placeholder="RFC" readonly>
                         </div>
                         <div class="col-md-6">
-                            <label for="direccion" class="text-dark col-form-label"><strong>Direccion</strong></label>
-                            <input type="text" class="form-control" id="direccion" placeholder="Puede ser solo ciudad">
+                            <label for="telefono" class="text-dark col-form-label"><strong>Telefono</strong></label>
+                            <input type="text" class="form-control" id="telefono" placeholder="Ej. 78192374848" readonly>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <label for="correo">Correo</label>
-                            <input type="email" class="form-control" id="correo" placeholder="correo@ejemplo.com">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <label for="telefono">Telefono</label>
-                            <input type="text" class="form-control" id="telefono">
+                            <label for="direccion">Direccion</label>
+                            <input type="text" class="form-control" id="direccion" placeholder="Puede ser solo ciudad" readonly>
                         </div>
                     </div>
                 </div>
@@ -132,11 +132,11 @@
                         <!-- Primera columna FECHAS-->
                         <div class="col-md-6">
                             <label for="fechaEntrada" class="form-label">Fecha y hora de Entrada</label>
-                            <input type="date" id="fechaEntrada" class="form-control">
+                            <input type="date" id="fechaEntrada" class="form-control" value="<?php echo $date;?>">
                         </div>
                         <div class="col-md-6">
                             <label for="fechaSalida" class="form-label">Fecha y hora de Salida</label>
-                            <input type="date" id="fechaSalida" class="form-control">
+                            <input type="date" id="fechaSalida" class="form-control" value="<?php echo $nextday;?>">
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -205,3 +205,5 @@
   </div><!-- /.container-fluid -->
 </div>
 <!-- /.content -->
+<?php //debuguear($habitacion); ?>
+<?php include_once __DIR__ . '/modalCrearCliente.php'; ?>
