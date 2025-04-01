@@ -86,7 +86,7 @@
                                                     <div class="icon">
                                                         <i class="fas fa-<?php echo $habitacion->id_estado_habitacion->icono;?>"></i>
                                                     </div>
-                                                    <a href="#" class="small-box-footer" data-id="<?php echo $habitacion->id;?>">
+                                                    <a href="/admin/recepcion/habitacion?id=<?php echo $habitacion->id; ?>" class="small-box-footer" data-id="<?php echo $habitacion->id;?>" data-estado="<?php echo $habitacion->id_estado_habitacion->id;?>">
                                                         <?php echo $habitacion->id_estado_habitacion->descripcion; ?> <i class="fas fa-arrow-circle-right"></i>
                                                     </a>
                                                 </div>
