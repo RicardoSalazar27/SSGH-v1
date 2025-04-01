@@ -123,7 +123,6 @@ class ActiveRecord {
         return self::consultarSQL($query);
     }
 
-
     // Busca un registro por su id
     public static function find($id) {
         $query = "SELECT * FROM " . static::$tabla  ." WHERE id = $id";
@@ -136,6 +135,76 @@ class ActiveRecord {
         $query = "SELECT * FROM " . static::$tabla . " ORDER BY id DESC LIMIT $limite";
         $resultado = self::consultarSQL($query);
         return array_shift( $resultado ) ;
+    }
+
+    // Busqueda Where con Múltiples opciones
+    public static function whereArray($array = []) {
+        $query = "SELECT * FROM " . static::$tabla . " WHERE ";
+        foreach($array as $key => $value) {
+            if($key == array_key_last($array)) {
+                $query .= " $key = '$value'";
+            } else {
+                $query .= " $key = '$value' AND ";
+            }
+        }
+        $resultado = self::consultarSQL($query);
+        return $resultado;
+    }
+
+    // Traer un total de registros (admite la busqueda por columna-solo 1)
+    public static function total($columna = '', $valor = '') {
+        $query = "SELECT COUNT(*) FROM " . static::$tabla;
+        if($columna) {
+            $query .= " WHERE $columna = $valor";
+        }
+        $resultado = self::$db->query($query);
+        $total = $resultado->fetch_array();
+
+        return array_shift($total);
+    }
+
+    // Total de Registros con un Array Where (varias columas con un valor en especifico)
+    public static function totalArray($array = []) {
+        $query = "SELECT COUNT(*) FROM " . static::$tabla . " WHERE ";
+        foreach($array as $key => $value) {
+            if($key == array_key_last($array)) {
+                $query .= " $key = '$value' ";
+            } else {
+                $query .= " $key = '$value' AND ";
+            }
+        }
+        //debuguear($query);
+        $resultado = self::$db->query($query);
+        $total = $resultado->fetch_array();
+        return array_shift($total);
+    }
+
+    // Total de registros con un Array Where IN (misma columna diferentes valores)
+    public static function totalArrayIn($array = []) {
+        $query = "SELECT COUNT(*) FROM " . static::$tabla . " WHERE ";
+
+        $conditions = [];
+        foreach($array as $key => $value) {
+            // Si el valor es un array, usamos el operador IN
+            if (is_array($value)) {
+                $conditions[] = "$key IN (" . implode(',', array_map(function($v) { return "'$v'"; }, $value)) . ")";
+            } else {
+                // Si no es un array, usamos la comparación estándar
+                $conditions[] = "$key = '$value'";
+            }
+        }
+
+        // Unir todas las condiciones con 'AND'
+        $query .= implode(' AND ', $conditions);
+
+        //debuguear($query);
+
+        // Ejecutar la consulta
+        $resultado = self::$db->query($query);
+        $total = $resultado->fetch_array();
+
+        // Devolver el total
+        return array_shift($total);
     }
 
     // Busqueda Where con Columna 

@@ -170,5 +170,19 @@ class Reservacion extends ActiveRecord {
         ";
     
         return self::consultarSQL($query);
-    }    
+    }
+    
+    // Método para contar las habitaciones reservadas hoy
+    public static function contarHabitacionesReservadasHoy() {
+        $query = "
+            SELECT COUNT(DISTINCT rh.ID_habitacion) AS total_habitaciones_reservadas
+            FROM Reservas r
+            JOIN Reservas_Habitaciones rh ON r.ID_reserva = rh.ID_reserva
+            WHERE CURDATE() BETWEEN DATE(r.fecha_entrada) AND DATE(r.fecha_salida);
+        ";
+        // Ejecutar la consulta y devolver el resultado
+        $resultado = self::$db->query($query);
+        $total = $resultado->fetch_array();
+        return $total['total_habitaciones_reservadas'];  // Retornar el número de habitaciones reservadas
+    }
 }
