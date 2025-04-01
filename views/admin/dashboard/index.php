@@ -105,12 +105,34 @@
 
       <!-- Segunda mitad de la pantalla -->
       <div class="col-lg-6 col-12">
-        <div class="card">
+        <div class="card card-success">
           <div class="card-header">
-            <h3 class="card-title">Sección 2</h3>
+            <h3 class="card-title">Reservaciones para Hoy</h3>
           </div>
           <div class="card-body">
-            Contenido de la segunda mitad.
+            <!-- Contenedor con scroll -->
+            <div style="max-height: 300px; overflow-y: auto;">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Cliente</th>
+                    <th>Habitaciones</th>
+                    <th>Fecha de Entrada</th>
+                    <th>Fecha de Salida</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($reservas as $reserva): ?>
+                    <tr>
+                      <td><?= $reserva->cliente_nombre . ' ' . $reserva->cliente_apellidos ?></td>
+                      <td><?= $reserva->habitaciones ?></td>
+                      <td><?= date('d/m/Y', strtotime($reserva->fecha_entrada)) ?></td>
+                      <td><?= date('d/m/Y', strtotime($reserva->fecha_salida)) ?></td>
+                    </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

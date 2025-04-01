@@ -185,4 +185,33 @@ class Reservacion extends ActiveRecord {
         $total = $resultado->fetch_array();
         return $total['total_habitaciones_reservadas'];  // Retornar el número de habitaciones reservadas
     }
+
+    public static function detallesHabitacionesReservadasHoy(){
+        $query = "
+            SELECT 
+                r.*, 
+                GROUP_CONCAT(h.numero ORDER BY h.numero) AS habitaciones,  -- Concatenamos los números de las habitaciones
+                c.nombre AS cliente_nombre, 
+                c.apellidos AS cliente_apellidos,
+                c.telefono, 
+                c.correo, 
+                r.fecha_entrada, 
+                r.fecha_salida, 
+                r.precio_total
+            FROM 
+                Reservas r
+            JOIN 
+                Reservas_Habitaciones rh ON r.ID_reserva = rh.ID_reserva
+            JOIN 
+                Habitaciones h ON rh.ID_habitacion = h.id
+            JOIN 
+                Clientes c ON r.ID_cliente = c.id
+            WHERE 
+                CURDATE() BETWEEN DATE(r.fecha_entrada) AND DATE(r.fecha_salida)
+            GROUP BY 
+                r.ID_reserva;  -- Agrupamos por ID_reserva para tener un único registro por reserva
+        ";
+        // Ejecutar la consulta y devolver el resultado
+        return self::consultarSQL($query);
+    }       
 }

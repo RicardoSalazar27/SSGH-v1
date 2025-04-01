@@ -21,7 +21,9 @@ class DashboardController {
         $totalHabitacionesDisponibles = Habitacion::totalArrayIn(['id_estado_habitacion' => [1, 6]]);
         $totalHabitacionesOcupadas = Habitacion::totalArrayIn(['id_estado_habitacion' => [2, 3, 4, 5, 7, 8]]);
         $totalHabitacionesReservadasHoy = Reservacion::contarHabitacionesReservadasHoy();
-        
+
+        $reservas = Reservacion::detallesHabitacionesReservadasHoy();
+
         // Render a la vista 
         $router->render('admin/dashboard/index', [
             'titulo' => 'Panel de control',
@@ -30,7 +32,8 @@ class DashboardController {
             'totalHabitaciones' => $totalHabitaciones,
             'totalHabitacionesDisponibles' => $totalHabitacionesDisponibles,
             'totalHabitacionesOcupadas' => $totalHabitacionesOcupadas,
-            'totalHabitacionesReservadasHoy' => $totalHabitacionesReservadasHoy
+            'totalHabitacionesReservadasHoy' => $totalHabitacionesReservadasHoy,
+            'reservas' => $reservas
         ]);
     }
 }
