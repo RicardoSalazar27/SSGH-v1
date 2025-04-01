@@ -25,8 +25,12 @@
     
     <!-- Bootstrap 4 (Local) -->
     <link rel="stylesheet" href="/build/adminlte/plugins/bootstrap/css/bootstrap.min.css">
-
+    
+    <!-- Choices JS, permite un select muntilple-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+    
+    <!-- Ionicons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 </head>
 
 <body class="hold-transition sidebar-mini">
