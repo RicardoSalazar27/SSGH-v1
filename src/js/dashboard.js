@@ -7,7 +7,7 @@ if(window.location.pathname === '/admin/index'){
     var barChart = new Chart(ctx, {
         type: 'bar', // Tipo de gráfico (en este caso es un gráfico de barras)
         data: {
-            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'], // Etiquetas para el eje X
+            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'], // Etiquetas para el eje X
             datasets: [{
                 label: 'Ventas Mensuales',
                 data: [120, 150, 180, 130, 200], // Los datos que se mostrarán en el gráfico

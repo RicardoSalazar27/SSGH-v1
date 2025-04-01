@@ -37,11 +37,25 @@ class Habitacion extends ActiveRecord{
         //   WHERE eh.id = 1  
         //   AND (rh.ID_habitacion IS NULL OR r.ID_reserva IS NULL)";
 
+        // $query = "
+        //             SELECT DISTINCT h.id, h.numero, h.id_categoria, h.id_nivel, h.detalles_personalizados
+        //             FROM Habitaciones h
+        //             JOIN EstadoHabitacion eh ON h.id_estado_habitacion = eh.id
+        //             WHERE eh.id = 1
+        //             AND NOT EXISTS (
+        //                 SELECT 1
+        //                 FROM Reservas_Habitaciones rh
+        //                 JOIN Reservas r ON rh.ID_reserva = r.ID_reserva
+        //                 WHERE rh.ID_habitacion = h.id
+        //                 AND r.fecha_entrada < '$fechaFin'
+        //                 AND r.fecha_salida > '$fechaInicio'
+        //                 AND r.ID_estado != 4
+        //             )
+        //         ";
         $query = "
                     SELECT DISTINCT h.id, h.numero, h.id_categoria, h.id_nivel, h.detalles_personalizados
                     FROM Habitaciones h
                     JOIN EstadoHabitacion eh ON h.id_estado_habitacion = eh.id
-                    WHERE eh.id = 1
                     AND NOT EXISTS (
                         SELECT 1
                         FROM Reservas_Habitaciones rh
@@ -49,7 +63,6 @@ class Habitacion extends ActiveRecord{
                         WHERE rh.ID_habitacion = h.id
                         AND r.fecha_entrada < '$fechaFin'
                         AND r.fecha_salida > '$fechaInicio'
-                        AND r.ID_estado != 4
                     )
                 ";
         //debuguear($query);
