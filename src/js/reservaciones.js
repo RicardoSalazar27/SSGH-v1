@@ -288,10 +288,11 @@ if(window.location.pathname === '/admin/reservaciones'){
             total -= adelanto;  // Restar el adelanto del total
     
             // Asegurarse de que el total no sea negativo
-            total = total < 0 ? 0 : total;
+            //total = total < 0 ? 0 : total;
+            //console.log(total); este totak esta de mas y los calculos al dar confirmar
     
             // Actualizar el total en el campo correspondiente
-            totalPagarInput.value = total.toFixed(2);
+            //totalPagarInput.value = total.toFixed(2);
     
             // Obtener el cliente
             let clienteFinal = {};
@@ -314,7 +315,9 @@ if(window.location.pathname === '/admin/reservaciones'){
             // Enviar los datos al servidor
             const url = '/api/reservaciones';  // URL de la API de reservaciones
             const datos = new FormData();
-    
+            
+            const totalPendiente = document.getElementById('totalPagar').value;
+            //console.log(totalPendiente);
             // Crear la estructura de datos
             const datosReserva = {
                 cliente: {
@@ -331,7 +334,7 @@ if(window.location.pathname === '/admin/reservaciones'){
                 },
                 habitaciones: habitacionesSeleccionadas,  // Array de habitaciones seleccionadas
                 pago: {
-                    totalPagar: total.toFixed(2),
+                    totalPagar: totalPendiente,
                     totalPagarOriginal: totalPagarOriginal.toFixed(2),
                     descuento: tipoDescuento === 'PORCENTAJE' ? (totalPagarOriginal * descuento) / 100 : descuento,
                     tipoDescuento: tipoDescuento,
@@ -341,7 +344,9 @@ if(window.location.pathname === '/admin/reservaciones'){
                 observaciones: document.getElementById('observaciones').value.trim(),
                 metodo_pago: document.getElementById('metodoPago').value
             };
-    
+            
+            // console.log(datosReserva);
+            // return;
             // Convertirlo a JSON para enviar al servidor
             const jsonDatosReserva = JSON.stringify(datosReserva);
     
