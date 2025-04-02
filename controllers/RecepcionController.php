@@ -67,6 +67,9 @@ class RecepcionController
         date_default_timezone_set('America/El_Salvador');
         $date = date('Y-m-d');
         $nextday = date('Y-m-d', strtotime('+1 day'));
+        
+        //Obtener la fecha de su proxima reservacion para no tener inconvenientes con las habitaciones
+        $fechaMax = date('Y-m-d', strtotime('+3 day'));
 
         // Si la habitación está reservada, obtener la primera reservación
         $reservacion = array_shift(Reservacion::obtenerReservaPorHabitacionYFecha($idHabitacion));
@@ -84,7 +87,8 @@ class RecepcionController
             'habitacion' => $habitacion,
             'date' => $date,
             'nextday' => $nextday,
-            'reservacion' => $reservacion
+            'reservacion' => $reservacion,
+            'fechaMax' => $fechaMax
         ]);
     }
 }

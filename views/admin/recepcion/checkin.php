@@ -79,11 +79,12 @@
                             <label for="correo" class="text-dark col-form-label"><strong>Correo</strong></label>
                             <div class="input-group">
                                 <input type="email" class="form-control" id="correo" placeholder="Busca cliente por correo aquí"
-                                    value="<?php echo isset($reservacion) ? $reservacion->correo : 'no hay nada en reservacion'; ?>" readonly>
+                                    value="<?php echo isset($reservacion) ? $reservacion->correo : ''; ?>">
                                 <button class="btn btn-primary" data-toggle="modal" data-target="#modalCrearCliente" type="button">
                                     <i class="fa-solid fa-user-plus text-white"></i>
                                 </button>
                             </div>
+                            <ul id="sugerenciaCorreo" class="list-group position-absolute d-none w-100" style="z-index: 1000;"></ul>
                         </div>
                     </div>
                     <div class="row">
@@ -126,12 +127,15 @@
                         <!-- Primera columna FECHAS-->
                         <div class="col-md-6">
                             <label for="fechaEntrada" class="form-label">Fecha de Entrada</label>
-                            <input type="date" id="fechaEntrada" class="form-control" 
-                            value="<?php echo isset($reservacion) ? $reservacion->fecha_entrada : $date; ?>">
+                            <input type="date" id="fechaEntrada" class="form-control" min="<?php echo isset($reservacion) ? $reservacion->fecha_entrada : $date; ?>"
+                            max="<?php echo isset($reservacion) ? $reservacion->fecha_entrada : $date; ?>" 
+                            value="<?php echo isset($reservacion) ? $reservacion->fecha_entrada : $date; ?>" readonly>
                         </div>
                         <div class="col-md-6">
                             <label for="fechaSalida" class="form-label">Fecha de Salida</label>
                             <input type="date" id="fechaSalida" class="form-control"
+                            min="<?php echo isset($reservacion) ? $reservacion->fecha_entrada : $nextday; ?>"
+                            max="<?php echo isset($reservacion) ? $reservacion->fecha_entrada : $fechaMax; ?>"
                             value="<?php echo isset($reservacion) ? $reservacion->fecha_salida : $nextday; ?>">
                         </div>
                     </div>
