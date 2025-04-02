@@ -23,6 +23,7 @@ class DashboardController {
         $totalHabitacionesReservadasHoy = Reservacion::contarHabitacionesReservadasHoy();
 
         $reservas = Reservacion::detallesHabitacionesReservadasHoy();
+        //debuguear($reservas);
 
         // Render a la vista 
         $router->render('admin/dashboard/index', [

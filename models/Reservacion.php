@@ -178,7 +178,8 @@ class Reservacion extends ActiveRecord {
             SELECT COUNT(DISTINCT rh.ID_habitacion) AS total_habitaciones_reservadas
             FROM Reservas r
             JOIN Reservas_Habitaciones rh ON r.ID_reserva = rh.ID_reserva
-            WHERE CURDATE() BETWEEN DATE(r.fecha_entrada) AND DATE(r.fecha_salida);
+            WHERE CURDATE() BETWEEN DATE(r.fecha_entrada) AND DATE(r.fecha_salida)
+            AND NOW() < r.fecha_salida;
         ";
         // Ejecutar la consulta y devolver el resultado
         $resultado = self::$db->query($query);
@@ -209,6 +210,9 @@ class Reservacion extends ActiveRecord {
                 Clientes c ON r.ID_cliente = c.id
             WHERE 
                 CURDATE() BETWEEN DATE(r.fecha_entrada) AND DATE(r.fecha_salida)
+            AND 
+                NOW() < r.fecha_salida
+
             GROUP BY 
                 r.ID_reserva;  -- Agrupamos por ID_reserva para tener un único registro por reserva
         ";
