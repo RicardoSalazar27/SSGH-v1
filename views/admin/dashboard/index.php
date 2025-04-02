@@ -97,6 +97,10 @@
           </div>
           <div class="card-body">
             <div class="chart">
+            <select id="periodoSelect" class="form-control">
+    <option value="enero-junio">Enero - Junio</option>
+    <option value="julio-diciembre">Julio - Diciembre</option>
+</select>
               <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
             </div>
           </div>

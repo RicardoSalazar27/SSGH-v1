@@ -8,7 +8,7 @@ use Model\Hotel;
 use Model\Reservacion;
 use Model\Usuario;
 use MVC\Router;
-use Model\ActiveRecord;
+use Model\GananciaMensual;
 
 class DashboardController {
     public static function index(Router $router) {

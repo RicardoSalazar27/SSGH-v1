@@ -186,6 +186,7 @@ class Reservacion extends ActiveRecord {
         return $total['total_habitaciones_reservadas'];  // Retornar el número de habitaciones reservadas
     }
 
+    //Llena la tabla del dashboard con las reservaciones del dia
     public static function detallesHabitacionesReservadasHoy(){
         $query = "
             SELECT 
@@ -213,5 +214,5 @@ class Reservacion extends ActiveRecord {
         ";
         // Ejecutar la consulta y devolver el resultado
         return self::consultarSQL($query);
-    }       
+    }
 }
