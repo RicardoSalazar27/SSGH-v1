@@ -21,24 +21,21 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
 
     const inputFechaEntrada = document.getElementById("fechaEntrada");
     const inputFechaSalida = document.getElementById("fechaSalida");
-
     const inputTipoDescuento = document.querySelectorAll("input[name='tipoDescuento']");
     const inputDescuento = document.getElementById("descuento");
     const inputCobroExtra = document.getElementById("cobroExtra");
     const inputAdelanto = document.getElementById("adelanto");
     const inputTotalPagar = document.getElementById("totalPagar");
-
-    // Obtener precio base de la habitación
-    let precioHabitacion = parseFloat(document.getElementById("precio_habitacion").textContent.trim()) || 0;
-    let noches = 1;
-    let totalOriginal = 0; //se obtiene al multiplicar el costo de la habitacion por noches 
-    let totalPendiente = 0; // despues de aplicarle descuento, cobro extra y adelanto
+    const precioHabitacion = parseFloat(document.getElementById("precio_habitacion").textContent.trim()) || 0;
     
+    let noches = 1;
+    let totalOriginal = noches * precioHabitacion;
+    let totalPendiente = totalOriginal;
     let descuento = 0;
     let tipoDescuento = '';
     let cobroExtra = 0;
     let adelanto = 0;
-
+    
     // Función para buscar clientes por correo en la API
     async function buscarClientes(correo) {
         if (correo.length < 3) {
@@ -134,45 +131,52 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
         mostrarAlerta('Huesped Agregado','Datos capturados con exito','info');
     })
 
-    inputFechaSalida.addEventListener("change", () => {
-        calcularNoches();
-        calcularTotalPagar();
-    });
-    
+    /////////////////////////////
     function calcularNoches() {
         const fechaEntrada = new Date(inputFechaEntrada.value);
         const fechaSalida = new Date(inputFechaSalida.value);
     
-        if (isNaN(fechaEntrada) || isNaN(fechaSalida)) {
-            console.log("Fechas inválidas");
-            return;
+        if (isNaN(fechaEntrada) || isNaN(fechaSalida) || fechaSalida <= fechaEntrada) {
+            noches = 1;
+        } else {
+            noches = (fechaSalida - fechaEntrada) / (1000 * 60 * 60 * 24);
         }
+    }
     
-        // Calcular la diferencia en días
-        noches = (fechaSalida - fechaEntrada) / (1000 * 60 * 60 * 24);
-    }
-
-    //llenar total pendiente en base a las noches
-    totalOriginal = noches * precioHabitacion;
-    totalPendiente = noches * precioHabitacion;
-    inputTotalPagar.value = totalPendiente;
-
-    function calcularTotalPagar(){
+    function calcularTotalPagar() {
         totalOriginal = noches * precioHabitacion;
-        totalPendiente = noches * precioHabitacion - descuento + cobroExtra - adelanto;
-        inputTotalPagar.value = totalPendiente;
+        
+        descuento = parseFloat(inputDescuento.value) || 0;
+        cobroExtra = parseFloat(inputCobroExtra.value) || 0;
+        adelanto = parseFloat(inputAdelanto.value) || 0;
+        
+        const tipoDescuentoSeleccionado = document.querySelector("input[name='tipoDescuento']:checked");
+        tipoDescuento = tipoDescuentoSeleccionado ? tipoDescuentoSeleccionado.value : '';
+        
+        let totalConDescuento = totalOriginal;
+        if (tipoDescuento === "PORCENTAJE") {
+            totalConDescuento -= totalOriginal * (descuento / 100);
+        } else if (tipoDescuento === "MONTO") {
+            totalConDescuento -= descuento;
+        }
+        
+        totalPendiente = totalConDescuento + cobroExtra - adelanto;
+        inputTotalPagar.value = totalPendiente.toFixed(2);
     }
-
-    //totalOriginal = noches * precioHabitacion
-    //descuento = inputDescuento
-    //tipoDescuento = inputTipoDescuento
-    //cobroExtra = inputCobroExtra
-    //adelanto = inputAdelanto
-    //totalPendiente = totalOriginal - descuento + cobroExtra - adelanto
-
-    //si el inputradio tipoDescuento = PORCENTAJE
-    //entomces totalPendiente = totalOriginal-(totalOriginal*descuento)
-
-    //si es MONTO ENTONCES:
-    //totalPendinte = totalOriginal-descuento
+    
+    function actualizarCalculo() {
+        calcularNoches();
+        calcularTotalPagar();
+    }
+    
+    [inputFechaEntrada, inputFechaSalida, inputDescuento, inputCobroExtra, inputAdelanto].forEach(input => {
+        input.addEventListener("input", actualizarCalculo);
+    });
+    
+    inputTipoDescuento.forEach(radio => {
+        radio.addEventListener("change", actualizarCalculo);
+    });
+    
+    // Calcular total inicial al cargar la página
+    actualizarCalculo();
 }
