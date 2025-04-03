@@ -17,6 +17,15 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
     const inputAdelanto = document.getElementById("adelanto");
     const inputTotalPagar = document.getElementById("totalPagar");
 
+    //Modal para crear cliente si es nuevo
+    const btnCrearCliente = document.querySelector(".btnCrearCliente");
+    const inputNombreClienteNuevo = document.getElementById("nombreNuevoCliente");
+    const inputApellidosClienteNuevo = document.getElementById("apellidosNuevoCliente");
+    const inputCorreoClienteNuevo = document.getElementById("correoNuevoCliente");
+    const inputTelefonoClienteNuevo = document.getElementById("telefonoNuevoCliente");
+    const inputDocumentoClienteNuevo = document.getElementById("documento_identidadNuevoCliente");
+    const inputDireccionClienteNuevo = document.getElementById("direccionNuevoCliente");
+
     let totalOriginal = 0; //se obtiene al multiplicar el costo de la habitacion por noches 
     let totalPendiente = 0; // despues de aplicarle descuento, cobro extra y adelanto
 
@@ -85,5 +94,33 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
             listaSugerencias.classList.add("d-none");
         }
     });
-    
+
+    //Crear cliente nuevo si no esta registrado
+    btnCrearCliente.addEventListener("click", (event) =>{
+        event.preventDefault();
+
+        const clienteNuevo = {
+            nombre: inputNombreClienteNuevo.value.trim(),
+            apellidos: inputApellidosClienteNuevo.value.trim(),
+            correo: inputCorreoClienteNuevo.value.trim(),
+            telefono: inputTelefonoClienteNuevo.value.trim(),
+            documento_identidad: inputDocumentoClienteNuevo.value.trim(), // Tenías un error en "identad"
+            direccion: inputDireccionClienteNuevo.value.trim()
+        };
+        
+        //Validar los datos del cliente nuevo
+        if(!clienteNuevo.nombre || !clienteNuevo.apellidos || !clienteNuevo.telefono){
+            mostrarAlerta2('Datos Incompletos: El nombre, apellidos y telefono son obligatorios', 'error')
+            return;
+        }
+
+        // Llenar los inputs principales con los datos del nuevo cliente
+        inputNombreCliente.value = clienteNuevo.nombre + " " + clienteNuevo.apellidos;
+        inputCorreoCliente.value = clienteNuevo.correo ?? '';
+        inputDocumentoCliente.value = clienteNuevo.documento_identidad ?? '';
+        inputTelefonoCliente.value = clienteNuevo.telefono;
+        inputDireccionCliente.value = clienteNuevo.direccion ?? '';
+        
+        mostrarAlerta('Huesped Agregado','Datos capturados con exito','info');
+    })
 }

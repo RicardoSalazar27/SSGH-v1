@@ -9,13 +9,14 @@
         </button>
       </div>
       <div class="modal-body">
+            <div id="mensaje-resultado"></div>
             <form id="formEditarCliente">
                 <div class="form-group">
                     <label for="nombre">Nombre</label>
                     <input 
                         type="text"
                         class="form-control"
-                        id="nombre"
+                        id="nombreNuevoCliente"
                         name="nombre"
                         placeholder="Tu Nombre"
                     />
@@ -25,7 +26,7 @@
                     <input 
                         type="text"
                         class="form-control"
-                        id="apellidos"
+                        id="apellidosNuevoCliente"
                         name="apellidos"
                         placeholder="Tus Apellidos"
                     />
@@ -35,7 +36,7 @@
                     <input 
                         type="email"
                         class="form-control"
-                        id="correo"
+                        id="correoNuevoCliente"
                         name="correo"
                         placeholder="Tu Correo"
                     />
@@ -45,7 +46,7 @@
                     <input 
                         type="text"
                         class="form-control"
-                        id="telefono"
+                        id="telefonoNuevoCliente"
                         name="telefono"
                         placeholder="Tu Telefono"
                     />
@@ -55,7 +56,7 @@
                     <input 
                         type="text"
                         class="form-control"
-                        id="documento_identidad"
+                        id="documento_identidadNuevoCliente"
                         name="documento_identidad"
                         placeholder=""
                     />
@@ -64,7 +65,7 @@
                     <label for="direccion">Dirección</label>
                     <textarea 
                         class="form-control"
-                        id="direccion"
+                        id="direccionNuevoCliente"
                         name="direccion"
                         placeholder="Ingresa tu dirección completa"
                         rows="2"
@@ -74,7 +75,7 @@
                 <!-- Botones en el formulario -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary btnActualizarCliente">Guardar</button>
+                    <button type="submit" class="btn btn-primary btnCrearCliente">Guardar</button>
                 </div>
             </form>
       </div>
