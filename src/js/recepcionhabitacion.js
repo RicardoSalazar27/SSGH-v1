@@ -26,6 +26,8 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
     const inputDocumentoClienteNuevo = document.getElementById("documento_identidadNuevoCliente");
     const inputDireccionClienteNuevo = document.getElementById("direccionNuevoCliente");
 
+    let clienteNuevo = '';
+
     let totalOriginal = 0; //se obtiene al multiplicar el costo de la habitacion por noches 
     let totalPendiente = 0; // despues de aplicarle descuento, cobro extra y adelanto
 
@@ -95,11 +97,11 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
         }
     });
 
-    //Crear cliente nuevo si no esta registrado
+    //Crear cliente nuevo si no esta registrado y llenar la reserva con sus datos
     btnCrearCliente.addEventListener("click", (event) =>{
         event.preventDefault();
 
-        const clienteNuevo = {
+        clienteNuevo = {
             nombre: inputNombreClienteNuevo.value.trim(),
             apellidos: inputApellidosClienteNuevo.value.trim(),
             correo: inputCorreoClienteNuevo.value.trim(),
@@ -107,7 +109,7 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
             documento_identidad: inputDocumentoClienteNuevo.value.trim(), // Tenías un error en "identad"
             direccion: inputDireccionClienteNuevo.value.trim()
         };
-        
+
         //Validar los datos del cliente nuevo
         if(!clienteNuevo.nombre || !clienteNuevo.apellidos || !clienteNuevo.telefono){
             mostrarAlerta2('Datos Incompletos: El nombre, apellidos y telefono son obligatorios', 'error')
