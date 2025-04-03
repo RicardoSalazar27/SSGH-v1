@@ -88,10 +88,15 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-md-6">
                             <label for="nombre">Nombre</label>
                             <input type="text" class="form-control" id="nombre" placeholder=""
-                                value="<?php echo isset($reservacion) ? $reservacion->cliente_nombre . ' ' . $reservacion->cliente_apellidos : ''; ?>" readonly>
+                                value="<?php echo isset($reservacion) ? $reservacion->cliente_nombre : ''; ?>" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="apellidos">Apellidos</label>
+                            <input type="text" class="form-control" id="nombre" placeholder=""
+                                value="<?php echo isset($reservacion) ? $reservacion->cliente_apellidos : ''; ?>" readonly>
                         </div>
                     </div>
                     <div class="row">
@@ -198,7 +203,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Observaciones:</label>
-                            <textarea id="observaciones" class="form-control" rows="2"><?php echo isset($reservacion) ? $reservacion->observaciones : ""; ?></textarea>
+                            <textarea id="observaciones" class="form-control" rows="2"><?php echo isset($reservacion) ? $reservacion->observaciones : "sin"; ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -207,7 +212,7 @@
     </div>
     <div class="row justify-content-between">
         <a href="/admin/recepcion" class="btn btn-danger">Regresar</a>
-        <button class="btn btn-success">Agregar Registro</button>
+        <button id="reservarHabitacion" class="btn btn-success">Agregar Registro</button>
     </div>
   </div><!-- /.container-fluid -->
 </div>

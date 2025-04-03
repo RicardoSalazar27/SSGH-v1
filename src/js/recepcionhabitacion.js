@@ -4,6 +4,7 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
     const listaSugerencias = document.getElementById("sugerenciaCorreo"); // ID corregido
     const inputCorreoCliente = document.getElementById("correo");
     const inputNombreCliente = document.getElementById("nombre");
+    const inputApellidosCliente = document.getElementById("apellidos");
     const inputDocumentoCliente = document.getElementById("documento");
     const inputTelefonoCliente = document.getElementById("telefono");
     const inputDireccionCliente = document.getElementById("direccion");
@@ -27,6 +28,8 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
     const inputAdelanto = document.getElementById("adelanto");
     const inputTotalPagar = document.getElementById("totalPagar");
     const precioHabitacion = parseFloat(document.getElementById("precio_habitacion").textContent.trim()) || 0;
+    const inputMetodoPago = document.getElementById("metodoPago");
+    const inputObservaciones = document.getElementById("observaciones");
     
     let noches = 1;
     let totalOriginal = noches * precioHabitacion;
@@ -35,7 +38,7 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
     let tipoDescuento = '';
     let cobroExtra = 0;
     let adelanto = 0;
-    
+
     // Función para buscar clientes por correo en la API
     async function buscarClientes(correo) {
         if (correo.length < 3) {
@@ -82,7 +85,8 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
     // Función para llenar los campos con la información del cliente seleccionado
     function seleccionarCliente(cliente) {
         inputCorreoCliente.value = cliente.correo;
-        inputNombreCliente.value = cliente.nombre + " " + cliente.apellidos;
+        inputNombreCliente.value = cliente.nombre;
+        inputApellidosCliente.value = cliente.apellidos;
         inputDocumentoCliente.value = cliente.documento_identidad;
         inputTelefonoCliente.value = cliente.telefono;
         inputDireccionCliente.value = cliente.direccion;
@@ -179,4 +183,15 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
     
     // Calcular total inicial al cargar la página
     actualizarCalculo();
+
+    //Obtener datos y enviar datos de la reserva de la habitacion al servidor
+    const metodoPago = inputMetodoPago.value;
+    const observaciones = inputObservaciones.value.trim();
+    document.getElementById("reservarHabitacion").addEventListener('click', (e) => {
+        
+        e.preventDefault();
+        alert('haciendo reservacion');
+
+        
+    })
 }
