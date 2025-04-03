@@ -42,7 +42,7 @@
                     <p><strong class="text-primary">Piso</strong></p>
                     <p><?php echo $habitacion->id_nivel->nombre;?></p>
                     <p><strong class="text-primary">Precio</strong></p>
-                    <p><?php echo $habitacion->id_categoria->precio_base;?></p>
+                    <p id="precio_habitacion"><?php echo $habitacion->id_categoria->precio_base;?></p>
                 </div>
 
                 <!-- Tercera columna -->
@@ -182,7 +182,7 @@
                             <div class="input-group">
                                 <span class="input-group-text">MXN$</span>
                                 <input type="number" id="totalPagar" class="form-control" 
-                                value="<?php echo isset($reservacion) ? $reservacion->precio_total : 360; ?>" readonly>
+                                value="<?php echo isset($reservacion) ? $reservacion->precio_total : 0; ?>" readonly>
                             </div>
                         </div>
                     </div>
