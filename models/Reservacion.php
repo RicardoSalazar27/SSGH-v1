@@ -29,7 +29,8 @@ class Reservacion extends ActiveRecord {
         'cobro_extra',
         'descuento_aplicado',
         'tipo_descuento',
-        'metodo_pago'
+        'metodo_pago',
+        'proxima_reserva'
     ];
 
     public $ID_reserva;
@@ -57,6 +58,7 @@ class Reservacion extends ActiveRecord {
     public $descuento_aplicado;
     public $tipo_descuento;
     public $metodo_pago;
+    public $proxima_reserva;
 
     public function __construct($args = []) {
         $this->ID_reserva = $args['ID_reserva'] ?? null;
@@ -84,6 +86,7 @@ class Reservacion extends ActiveRecord {
         $this->descuento_aplicado = $args['descuento_aplicado'] ?? 0.0;
         $this->tipo_descuento = $args['tipo_descuento'] ?? 'MONTO';
         $this->metodo_pago = $args['metodo_pago'] ?? '';
+        $this->proxima_reserva = $args['proxima_reserva'] ?? '';
     }        
 
     public static function obtenerReservasConHabitaciones() {
@@ -168,7 +171,7 @@ class Reservacion extends ActiveRecord {
             WHERE rh.ID_habitacion = '$idHabitacion'
             AND NOW() BETWEEN r.fecha_entrada AND r.fecha_salida;
         ";
-    
+        //debuguear($query);
         return self::consultarSQL($query);
     }
     
@@ -218,5 +221,17 @@ class Reservacion extends ActiveRecord {
         ";
         // Ejecutar la consulta y devolver el resultado
         return self::consultarSQL($query);
+    }
+
+    public static function proximaReserva($idHabitacion){
+        $query = "
+            SELECT MIN(r.fecha_entrada) AS proxima_reserva
+            FROM Reservas r
+            JOIN Reservas_Habitaciones rh ON r.ID_reserva = rh.ID_reserva
+            WHERE rh.ID_habitacion = $idHabitacion
+            AND r.fecha_entrada > NOW();
+        ";
+        //debuguear($query);
+        return array_shift(self::consultarSQL($query));
     }
 }

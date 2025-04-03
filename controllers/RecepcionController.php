@@ -67,17 +67,19 @@ class RecepcionController
         date_default_timezone_set('America/El_Salvador');
         $date = date('Y-m-d');
         $nextday = date('Y-m-d', strtotime('+1 day'));
-        
-        //Obtener la fecha de su proxima reservacion para no tener inconvenientes con las habitaciones
-        $fechaMax = date('Y-m-d', strtotime('+3 day'));
 
         // Si la habitación está reservada, obtener la primera reservación
         $reservacion = array_shift(Reservacion::obtenerReservaPorHabitacionYFecha($idHabitacion));
-
+        //debuguear($reservacion);
         if ($reservacion) { // Verificar que se obtuvo una reservación válida
             $reservacion->fecha_entrada = (new DateTime($reservacion->fecha_entrada))->format('Y-m-d');
             $reservacion->fecha_salida = (new DateTime($reservacion->fecha_salida))->format('Y-m-d');
         }
+
+        $ultimaReservacion = Reservacion::proximaReserva($idHabitacion);
+        $fechaMax = new DateTime($ultimaReservacion->proxima_reserva);
+        $fechaMax->modify('-1 day'); // Restar un día
+        $fechaMax = $fechaMax->format('Y-m-d'); // Formato para input date
 
         // Render a la vista 
         $router->render('admin/recepcion/checkin', [

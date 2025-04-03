@@ -85,10 +85,5 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
             listaSugerencias.classList.add("d-none");
         }
     });
-
-    // // Definir la fecha máxima permitida (3 de abril de 2025)
-    // const fechaMaxima = "2025-04-03";  
-
-    // // Bloquear todas las fechas posteriores al 3 de abril de 2025
-    // inputFechaSalida.setAttribute("max", fechaMaxima);
+    
 }
