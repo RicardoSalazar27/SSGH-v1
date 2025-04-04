@@ -95,7 +95,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="apellidos">Apellidos</label>
-                            <input type="text" class="form-control" id="nombre" placeholder=""
+                            <input type="text" class="form-control" id="apellidos" placeholder=""
                                 value="<?php echo isset($reservacion) ? $reservacion->cliente_apellidos : ''; ?>" readonly>
                         </div>
                     </div>

@@ -54,7 +54,7 @@ class ReservacionesController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Decodificar el JSON recibido bajo la clave 'reserva'
             $datos_json = json_decode($_POST['reserva'], true); // true para convertirlo a un array asociativo
-    
+            //debuguear($datos_json);
             // Recoger los datos del cliente y la reservación desde el JSON decodificado
             $datos = [
                 'cliente' => [
@@ -82,7 +82,7 @@ class ReservacionesController {
                 'observaciones' => $datos_json['observaciones'] ?? '',
                 'usuario_id' => (int) ($datos_json['usuario_id'] ?? 1) // Convertir ID usuario a entero
             ];            
-             //debuguear($datos);
+            //debuguear($datos);
              //return;
             // Llamar al modelo para crear la reservación
             $resultado = Crear_Reservacion::crearReservacion($datos);

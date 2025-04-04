@@ -372,7 +372,7 @@ if(window.location.pathname === '/admin/reservaciones'){
                 console.error('Error en la solicitud:', error);
             // Puedes agregar aquí un mensaje de error al usuario si es necesario
             mostrarAlerta('Error', 'Hubo un problema al procesar la solicitud', 'error');
-        }
+            }
     });
     // Agregar listeners para actualizar en tiempo real el total cuando haya cambios
     descuentoInput.addEventListener('input', calcularTotalPagar);

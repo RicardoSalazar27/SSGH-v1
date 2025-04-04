@@ -187,11 +187,63 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
     //Obtener datos y enviar datos de la reserva de la habitacion al servidor
     const metodoPago = inputMetodoPago.value;
     const observaciones = inputObservaciones.value.trim();
-    document.getElementById("reservarHabitacion").addEventListener('click', (e) => {
+    document.getElementById("reservarHabitacion").addEventListener('click', async (e) => {
         
         e.preventDefault();
-        alert('haciendo reservacion');
-
         
+        //mostrar alertas o alerta si faltan datos
+        if(!inputNombreCliente.value.trim() || !inputApellidosCliente.value.trim() || !inputTelefonoCliente.value.trim()){
+            mostrarAlerta('Faltan datos del Huesped', 'El nombre, apellidos y telefono son obligatorios', 'warning');
+            return;
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const idHabitacion = params.get("id");
+
+        const reserva = {
+            cliente: {
+                correo : inputCorreoCliente.value.trim(),
+                nombre : inputNombreCliente.value.trim(),
+                apellidos : inputApellidosCliente.value.trim(),
+                documento_identidad : inputDocumentoCliente.value.trim(),
+                telefono : inputTelefonoCliente.value.trim(),
+                direccion : inputDireccionCliente.value.trim()
+            },
+            fechas : {
+                entrada: `${inputFechaEntrada.value} 14:00:00`,
+                salida: `${inputFechaSalida.value} 12:00:00`
+            },
+            habitaciones: [idHabitacion],
+            pago: {
+                totalPagar: parseFloat(totalPendiente),
+                totalPagarOriginal: parseFloat(totalOriginal),
+                descuento: parseFloat(descuento),
+                tipoDescuento: tipoDescuento,
+                cobroExtra: parseFloat(cobroExtra),
+                adelanto: parseFloat(adelanto),
+                metodo_pago: metodoPago // METODO de PAGO va aquí si el backend lo espera dentro de pago
+            },
+            observaciones: observaciones
+        };
+        
+        // ✅ NO sobreescribas el FormData
+        const formData = new FormData();
+        formData.append('reserva', JSON.stringify(reserva));
+        
+        // ✅ Enviar correctamente el FormData
+        try {
+            const respuesta = await fetch('/api/reservaciones', {
+                method: 'POST',
+                body: formData
+            });
+        
+            if (!respuesta.ok) throw new Error('Error en la respuesta del servidor');
+        
+            const resultado = await respuesta.json();
+            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+        } catch (error) {
+            console.error('Error:', error);
+            mostrarAlerta('Error', 'No se pudo enviar la reserva', 'error');
+        }        
     })
 }
