@@ -15,6 +15,8 @@ use Controllers\NivelesController;
 use Controllers\RecepcionController;
 use Controllers\ReservacionesController;
 use Controllers\UsuariosController;
+use Controllers\VenderProductosController;
+use Controllers\VerificacionSalidasController;
 
 $router = new Router();
 
@@ -50,6 +52,8 @@ $router->get('/admin/configuracion/niveles', [NivelesController::class, 'index']
 $router->get('/admin/usuarios', [UsuariosController::class, 'index']);
 $router->get('/admin/clientes', [ClientesController::class, 'index']);
 $router->get('/admin/puntodeventa/catalogo', [CatalogoProductosController::class, 'index']);
+$router->get('/admin/puntodeventa/vender', [VenderProductosController::class, 'index']);
+$router->get('/admin/salidas', [VerificacionSalidasController::class, 'index']);
 $router->get('/admin/reservaciones', [ReservacionesController::class, 'index']);
 $router->get('/admin/recepcion', [RecepcionController::class, 'index']);
 $router->get('/admin/recepcion/habitacion', [RecepcionController::class, 'checkin']);
