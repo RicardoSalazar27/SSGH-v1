@@ -89,7 +89,7 @@ class Reservacion extends ActiveRecord {
         $this->proxima_reserva = $args['proxima_reserva'] ?? '';
     }        
 
-    public static function obtenerReservasConHabitaciones() {
+    public static function obtenerReservasConHabitaciones() { //trae todas las reservas
         $query = "
             SELECT 
                 r.*, 
@@ -121,7 +121,7 @@ class Reservacion extends ActiveRecord {
         return self::consultarSQL($query);
     }
     
-    public static function obtenerReservaConHabitaciones($id) {
+    public static function obtenerReservaConHabitaciones($id) { //trae una vista de la reserva en base al id
         $query = "
             SELECT 
                 r.*, 
