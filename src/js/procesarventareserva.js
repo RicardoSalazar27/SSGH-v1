@@ -65,10 +65,11 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
                 codigo_barras: producto.codigo_barras,
                 nombre: producto.nombre,  // Agregamos el nombre del producto
                 proveedor: producto.proveedor,  // Agregamos el proveedor
-                precio: parseFloat(producto.precio),  // Precio unitario
+                precio: producto.precio,  // Precio unitario
                 foto: producto.foto,  // Foto del producto
                 cantidad: 1,
-                total: precioUnitario
+                total: precioUnitario,
+                stock: producto.stock  // Agregar stock al producto
             });
         }
     
@@ -91,7 +92,7 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
                     <div class="d-flex justify-content-center align-items-center gap-2">
                         <button class="btn btn-sm btn-outline-secondary btn-restar" data-id="${servicio.codigo_barras}">-</button>
                         <span class="cantidad">${servicio.cantidad}</span>
-                        <button class="btn btn-sm btn-outline-secondary btn-sumar" data-id="${servicio.codigo_barras}">+</button>
+                        <button class="btn btn-sm btn-outline-secondary btn-sumar" data-id="${servicio.codigo_barras}" ${servicio.cantidad >= servicio.stock ? 'disabled' : ''}>+</button>
                     </div>
                 </td>
                 <td>$${parseFloat(servicio.precio).toFixed(2)}</td>
@@ -101,7 +102,7 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
             `;
             tablaVenta.appendChild(fila);
         });
-        console.log(serviciosVendidos);
+    
         // Agregar los eventos de eliminar, sumar y restar después de que la tabla haya sido actualizada
         agregarEventosEliminar();
         agregarEventosContador();
@@ -139,7 +140,7 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
                 const codigoBarras = this.getAttribute('data-id');
                 const producto = serviciosVendidos.find(p => p.codigo_barras === codigoBarras);
     
-                if (producto) {
+                if (producto && producto.cantidad < producto.stock) {
                     producto.cantidad++;
                     producto.total = producto.cantidad * parseFloat(producto.precio);
                 }
@@ -165,7 +166,7 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
             });
         });
     }
-        
+            
     // Cerrar la lista si haces clic fuera
     document.addEventListener('click', function (e) {
         const isClickInside = inputBuscador.contains(e.target) || listaSugerencias.contains(e.target);

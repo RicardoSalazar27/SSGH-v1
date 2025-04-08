@@ -111,7 +111,7 @@
                     <th>Tipo</th>
                     <th>Cantidad</th>
                     <th>Precio Unit.</th>
-                    <th>Codigo de barras</th>
+                    <th>Precio Total</th>
                     <th>Imagen</th>
                     <th>Acciones</th>
                 </tr>
