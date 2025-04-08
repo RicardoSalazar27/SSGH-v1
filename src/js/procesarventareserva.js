@@ -65,7 +65,7 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
                 codigo_barras: producto.codigo_barras,
                 nombre: producto.nombre,  // Agregamos el nombre del producto
                 proveedor: producto.proveedor,  // Agregamos el proveedor
-                precio: producto.precio,  // Precio unitario
+                precio: parseFloat(producto.precio),  // Precio unitario
                 foto: producto.foto,  // Foto del producto
                 cantidad: 1,
                 total: precioUnitario
@@ -87,7 +87,13 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
             fila.innerHTML = `
                 <td>${servicio.nombre}</td>
                 <td>${servicio.proveedor}</td>
-                <td>${servicio.cantidad}</td>
+                <td>
+                    <div class="d-flex justify-content-center align-items-center gap-2">
+                        <button class="btn btn-sm btn-outline-secondary btn-restar" data-id="${servicio.codigo_barras}">-</button>
+                        <span class="cantidad">${servicio.cantidad}</span>
+                        <button class="btn btn-sm btn-outline-secondary btn-sumar" data-id="${servicio.codigo_barras}">+</button>
+                    </div>
+                </td>
                 <td>$${parseFloat(servicio.precio).toFixed(2)}</td>
                 <td>$${servicio.total.toFixed(2)}</td>
                 <td><img src="/build/img/${servicio.foto}.png" alt="Foto" width="50" height="50"></td>
@@ -95,9 +101,10 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
             `;
             tablaVenta.appendChild(fila);
         });
-    
-        // Agregar los eventos de eliminar después de que la tabla haya sido actualizada
+        console.log(serviciosVendidos);
+        // Agregar los eventos de eliminar, sumar y restar después de que la tabla haya sido actualizada
         agregarEventosEliminar();
+        agregarEventosContador();
     }
     
     // Función para agregar eventos de eliminación
@@ -121,6 +128,44 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
         actualizarTabla();
     }
     
+    // Función para agregar eventos de incremento (+) y decremento (-)
+    function agregarEventosContador() {
+        const btnSumar = document.querySelectorAll('.btn-sumar');
+        const btnRestar = document.querySelectorAll('.btn-restar');
+    
+        // Evento de Sumar
+        btnSumar.forEach(btn => {
+            btn.addEventListener('click', function () {
+                const codigoBarras = this.getAttribute('data-id');
+                const producto = serviciosVendidos.find(p => p.codigo_barras === codigoBarras);
+    
+                if (producto) {
+                    producto.cantidad++;
+                    producto.total = producto.cantidad * parseFloat(producto.precio);
+                }
+    
+                // Actualizamos la tabla con los productos
+                actualizarTabla();
+            });
+        });
+    
+        // Evento de Restar
+        btnRestar.forEach(btn => {
+            btn.addEventListener('click', function () {
+                const codigoBarras = this.getAttribute('data-id');
+                const producto = serviciosVendidos.find(p => p.codigo_barras === codigoBarras);
+    
+                if (producto && producto.cantidad > 1) {
+                    producto.cantidad--;
+                    producto.total = producto.cantidad * parseFloat(producto.precio);
+                }
+    
+                // Actualizamos la tabla con los productos
+                actualizarTabla();
+            });
+        });
+    }
+        
     // Cerrar la lista si haces clic fuera
     document.addEventListener('click', function (e) {
         const isClickInside = inputBuscador.contains(e.target) || listaSugerencias.contains(e.target);
