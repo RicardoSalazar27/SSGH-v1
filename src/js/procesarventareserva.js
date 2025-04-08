@@ -91,10 +91,34 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
                 <td>$${parseFloat(servicio.precio).toFixed(2)}</td>
                 <td>$${servicio.total.toFixed(2)}</td>
                 <td><img src="/build/img/${servicio.foto}.png" alt="Foto" width="50" height="50"></td>
-                <td><button class="btn btn-danger btn-sm">Eliminar</button></td>
+                <td><button class="btn btn-danger btn-sm" data-id="${servicio.codigo_barras}" id="eliminarProducto">Eliminar</button></td>
             `;
             tablaVenta.appendChild(fila);
         });
+    
+        // Agregar los eventos de eliminar después de que la tabla haya sido actualizada
+        agregarEventosEliminar();
+    }
+    
+    // Función para agregar eventos de eliminación
+    function agregarEventosEliminar() {
+        const botonesEliminar = document.querySelectorAll('#eliminarProducto');
+    
+        botonesEliminar.forEach(boton => {
+            boton.addEventListener('click', function () {
+                const codigoBarras = this.getAttribute('data-id');
+                eliminarProducto(codigoBarras);
+            });
+        });
+    }
+    
+    // Función para eliminar un producto de serviciosVendidos
+    function eliminarProducto(codigoBarras) {
+        // Filtrar el producto que queremos eliminar
+        serviciosVendidos = serviciosVendidos.filter(servicio => servicio.codigo_barras !== codigoBarras);
+    
+        // Volver a actualizar la tabla
+        actualizarTabla();
     }
     
     // Cerrar la lista si haces clic fuera
