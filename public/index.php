@@ -104,6 +104,8 @@ $router->post('/api/productos/{id}', [CatalogoProductosController::class, 'actua
 $router->delete('/api/productos/{id}', [CatalogoProductosController::class, 'eliminar']);
 $router->post('/api/productos', [CatalogoProductosController::class, 'crear']);
 
+$router->get('/api/productos/codigo/{codigo_barras}', [VenderProductosController::class, 'obtenerProducto']);
+
 $router->post('/api/reservaciones', [ReservacionesController::class, 'crear']);
 $router->get('/api/reservaciones', [ReservacionesController::class, 'listar']);
 $router->get('/api/reservaciones/{id}', [ReservacionesController::class, 'obtener']);

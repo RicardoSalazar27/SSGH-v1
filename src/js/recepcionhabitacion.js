@@ -1,7 +1,7 @@
 if (window.location.pathname === "/admin/recepcion/habitacion") {
 
     // Elementos del DOM
-    const listaSugerencias = document.getElementById("sugerenciaCorreo"); // ID corregido
+    const listaSugerencias = document.getElementById("sugerenciaCorreo");
     const inputCorreoCliente = document.getElementById("correo");
     const inputNombreCliente = document.getElementById("nombre");
     const inputApellidosCliente = document.getElementById("apellidos");

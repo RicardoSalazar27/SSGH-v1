@@ -75,11 +75,12 @@
     <div class="row">
         <div class="col-12">
             <div class="card bg-dark text-white mb-2">
-                <div class="card-body">
+                <div class="card-body" style="overflow: visible;">
                     <div class="row g-2 align-items-center">
                     <!-- Input de búsqueda de producto -->
-                    <div class="col-md-6 col-lg-4">
-                        <input type="text" class="form-control" placeholder="Escriba código o nombre del producto">
+                    <div class="col-md-6 col-lg-4 position-relative">
+                        <input type="text" class="form-control" id="inputBuscarProducto" placeholder="Escriba código o nombre del producto">
+                        <ul id="listaSugerencias" class="list-group position-absolute d-none w-100" style="z-index: 1000;"></ul>
                     </div>
                     <!-- Botón agregar -->
                     <div class="col-auto">
@@ -110,10 +111,9 @@
                     <th>Tipo</th>
                     <th>Cantidad</th>
                     <th>Precio Unit.</th>
-                    <th>Precio Total</th>
-                    <th>
-                        <button id="eliminarProductoTotal">Eliminar</button>
-                    </th>
+                    <th>Codigo de barras</th>
+                    <th>Imagen</th>
+                    <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody id="tablaVentaProductos">
