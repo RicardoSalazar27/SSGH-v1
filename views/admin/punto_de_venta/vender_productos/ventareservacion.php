@@ -97,33 +97,75 @@
     </div>
     <!-- Card que contiene la tabla de productos -->
     <div class="row">
-    <div class="col-12">
-        <div class="card shadow-sm">
-        <div class="card-header bg-gradient-success text-white">
-            <h6 class="mb-0">Productos agregados</h6>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-            <table class="table table-bordered table-hover text-center mb-0">
-                <thead class="">
-                <tr>
-                    <th>Nombre</th>
-                    <th>Tipo</th>
-                    <th>Cantidad</th>
-                    <th>Precio Unit.</th>
-                    <th>Precio Total</th>
-                    <th>Imagen</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody id="tablaVentaProductos">
-                <!-- Aquí van los productos agregados dinámicamente -->
-                </tbody>
-            </table>
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-gradient-success text-white">
+                    <h6 class="mb-0">Productos agregados</h6>
+                </div>
+                <div class="card-body">
+                    <!-- Tabla de productos -->
+                    <div class="table-responsive mb-3">
+                        <table class="table table-bordered table-hover text-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Tipo</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unit.</th>
+                                    <th>Precio Total</th>
+                                    <th>Imagen</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaVentaProductos">
+                                <!-- Productos agregados dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Sección de totales y métodos de pago -->
+                    <div class="row">
+                        <!-- Total a pagar -->
+                        <div class="col-md-4 d-flex align-items-center mb-2">
+                            <label for="totalPagarVenta" class="mr-2 font-weight-bold mb-0">TOTAL A PAGAR:</label>
+                            <input id="totalPagarVenta" type="text" readonly class="form-control w-auto">
+                        </div>
+
+                        <!-- Cuándo pagar -->
+                        <div class="col-md-4 mb-2">
+                            <label for="cuandoPagar" class="font-weight-bold">¿Cuándo desea pagar?</label>
+                            <select name="cuandoPagar" id="cuandoPagar" class="form-control">
+                                <option value="" disabled selected>Selecciona una opción</option>
+                                <option value="1">Pagar Ahora</option>
+                                <option value="2">Pagar Después</option>
+                            </select>
+                        </div>
+
+                        <!-- Método de pago -->
+                        <div class="col-md-4 mb-2 d-none" id="grupoMetodoPago">
+                            <label for="metodoPago" class="font-weight-bold">Método de Pago</label>
+                            <select name="metodoPago" id="metodoPago" class="form-control">
+                                <option value="1">Efectivo</option>
+                                <option value="2">Tarjeta</option>
+                                <option value="3">Transferencia</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Sección de efectivo y feria -->
+                    <div class="row d-none mt-2" id="grupoEfectivo">
+                        <div class="col-md-4">
+                            <label for="cantidadEfectivo" class="font-weight-bold">Cantidad con la que paga</label>
+                            <input type="number" class="form-control" id="cantidadEfectivo" placeholder="Ej. 100">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="feriaCalculada" class="font-weight-bold">Feria</label>
+                            <input type="text" class="form-control" id="feriaCalculada" readonly>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        </div>
-    </div>
     </div>
     <!-- Fin de la nueva sección -->
 

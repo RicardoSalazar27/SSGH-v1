@@ -3,8 +3,17 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
     const listaSugerencias = document.getElementById('listaSugerencias');
     const tablaVenta = document.getElementById('tablaVentaProductos');
 
+    const cuandoPagar = document.getElementById('cuandoPagar');
+    const grupoMetodoPago = document.getElementById('grupoMetodoPago');
+    const grupoEfectivo = document.getElementById('grupoEfectivo');
+    const metodoPago = document.getElementById('metodoPago');
+    const cantidadEfectivo = document.getElementById('cantidadEfectivo');
+    const feriaCalculada = document.getElementById('feriaCalculada');
+    const inputTotalPagar = document.getElementById('totalPagarVenta');
+
     let serviciosVendidos = [];
     let productosDisponibles = []; // Para guardar los productos obtenidos de la búsqueda
+    let total = 0;
 
     inputBuscador.addEventListener('input', async (e) => {
         const query = e.target.value.trim();
@@ -102,10 +111,11 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
             `;
             tablaVenta.appendChild(fila);
         });
-    
+        console.log(serviciosVendidos);
         // Agregar los eventos de eliminar, sumar y restar después de que la tabla haya sido actualizada
         agregarEventosEliminar();
         agregarEventosContador();
+        calcularTotal();
     }
     
     // Función para agregar eventos de eliminación
@@ -166,12 +176,61 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
             });
         });
     }
+
+    function calcularTotal() {
+        total = 0; // Reiniciar el total antes de empezar a sumar
+    
+        serviciosVendidos.forEach(servicio => {
+            total += servicio.total;
+        });
+    
+        const inputTotalPagar = document.getElementById('totalPagarVenta');
+        inputTotalPagar.value = `${total.toFixed(2)}`;
+    }    
             
-    // Cerrar la lista si haces clic fuera
+    // Cerrar la lista si hace clic fuera
     document.addEventListener('click', function (e) {
         const isClickInside = inputBuscador.contains(e.target) || listaSugerencias.contains(e.target);
         if (!isClickInside) {
             limpiarLista();
         }
     });
+
+    // Mostrar u ocultar método de pago y efectivo
+    cuandoPagar.addEventListener('change', () => {
+        if (cuandoPagar.value === '1') {
+            grupoMetodoPago.classList.remove('d-none');//mostrar
+            grupoEfectivo.classList.remove('d-none');
+        } else {
+            grupoMetodoPago.classList.add('d-none');
+            grupoEfectivo.classList.add('d-none');
+            cantidadEfectivo.value = '';
+            feriaCalculada.value = '';
+        }
+    });
+
+    metodoPago.addEventListener('change', () => {
+        if( metodoPago.value === '2'){
+            grupoEfectivo.classList.add('d-none')
+        }
+        if( metodoPago.value === '3'){
+            grupoEfectivo.classList.add('d-none')
+        }
+        if( metodoPago.value === '1'){
+            grupoEfectivo.classList.remove('d-none');
+        }
+    })
+
+    // Calcular feria cuando se ingresa efectivo
+    cantidadEfectivo.addEventListener('input', () => {
+        // Eliminar cualquier carácter que no sea número o punto decimal
+        const totalRaw = inputTotalPagar.value;
+        const total = parseFloat(totalRaw) || 0;
+        //console.log(total);
+        const efectivo = parseFloat(cantidadEfectivo.value) || 0;
+        console.log(efectivo);
+        const feria = total - efectivo;
+        feriaCalculada.value = feria ;
+    });
+    
 }
