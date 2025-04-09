@@ -241,7 +241,7 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
     });
     
     //enviar datos de la venta al servidor
-    btnTerminarVenta.addEventListener('click', () => {
+    btnTerminarVenta.addEventListener('click',async () => {
 
         if (serviciosVendidos.length === 0) {
             mostrarAlerta('Opps.', 'El carrito está vacío', 'warning');
@@ -258,14 +258,37 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
                 const ventas = serviciosVendidos.map(producto => ({
                     reservacion_id: idReserva,
                     producto_id: producto.id_producto,
-                    cantidad: producto.cantidad,
                     monto: parseFloat(producto.cantidad * producto.precio),
                     fecha_pago: obtenerFechaFormateada(),
                     tipo_pago: 'Huésped',
                     descripcion: producto.nombre,
-                    estado : 1
+                    estado: 1
                 }));
-                console.log(ventas);
+                
+                const productos = serviciosVendidos.map(producto => ({
+                    producto_id: producto.id_producto,
+                    cantidad: producto.cantidad
+                }));
+                
+                const datos = JSON.stringify({
+                    ventas,
+                    productos
+                });                
+                const url = '/api/productos/reservacion/vender';
+
+                try {
+                    const respuesta = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: datos
+                    });
+
+                    const resultado = await respuesta.json();
+                } catch (error) {
+                    console.error(error);
+                }
         } else{ //si se paga despues
             //arreglo de objetos
             const ventas = serviciosVendidos.map(producto => ({

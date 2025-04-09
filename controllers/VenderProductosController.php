@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Exception;
 use Model\Hotel;
+use Model\Pago;
 use Model\Producto;
 use Model\Reservacion;
 use Model\Usuario;
@@ -85,6 +86,53 @@ class VenderProductosController {
                 'message' => 'No se pudo hacer la búsqueda, contacta a soporte.'
                 // 'error' => $e->getMessage() // Puedes quitar esto en producción
             ]);
+        }
+    }
+
+    public static function registarVentasPorReservacion(){
+        is_auth();
+        // Establecer los headers al inicio
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: POST, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+            $body = json_decode(file_get_contents('php://input'), true);
+    
+            $ventas = $body['ventas'];
+            $productos = $body['productos'];
+            
+
+            // // Auditoría de la acción
+            // $usuarioId = $_SESSION['id'];  
+            // // Definir la zona horaria
+            // date_default_timezone_set("America/Mexico_City");
+            // $fechaHora = date('Y-m-d H:i:s'); 
+            // $datosAuditoria = [
+            //     'id_usuario' => $usuarioId,
+            //     'accion' => 'CREAR',
+            //     'tabla_afectada' => 'Niveles',
+            //     'id_registro_afectado' => $resultado ? $nivel->id : 'NULL',
+            //     'detalle' => "Creó Nivel con número {$_POST['numero']}",
+            //     'fecha_hora' => $fechaHora
+            // ];
+    
+            // $auditoria = new Auditoria();
+            // $auditoria->sincronizar($datosAuditoria);
+            // $auditoria->guardar();
+    
+            // // Responder según el resultado de la creación del nivel
+            // if ($resultado) {
+            //     http_response_code(201);
+            //     echo json_encode(respuesta('success', 'Creado', 'Nivel Creado correctamente'));
+            // } else {
+            //     http_response_code(500);
+            //     echo json_encode(respuesta('error', 'Error', 'Hubo un problema al crear el Nivel'));
+            // }
+    
+            // exit;
         }
     }
 }
