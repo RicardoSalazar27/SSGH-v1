@@ -83,12 +83,12 @@
                         <ul id="listaSugerencias" class="list-group position-absolute d-none w-100" style="z-index: 1000;"></ul>
                     </div>
                     <!-- Botón agregar -->
-                    <div class="col-auto">
+                    <!-- <div class="col-auto">
                         <button class="btn btn-primary">Agregar</button>
-                    </div>
+                    </div> -->
                     <!-- Botón terminar venta alineado a la derecha -->
                     <div class="col text-end">
-                        <button class="btn btn-warning">Terminar venta</button>
+                        <button id="terminarVenta" class="btn btn-warning">Terminar venta</button>
                     </div>
                     </div>
                 </div>

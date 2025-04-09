@@ -1,4 +1,8 @@
 if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
+
+    const params = new URLSearchParams(window.location.search);
+    const idReserva = params.get("id");
+
     const inputBuscador = document.getElementById('inputBuscarProducto');
     const listaSugerencias = document.getElementById('listaSugerencias');
     const tablaVenta = document.getElementById('tablaVentaProductos');
@@ -10,6 +14,8 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
     const cantidadEfectivo = document.getElementById('cantidadEfectivo');
     const feriaCalculada = document.getElementById('feriaCalculada');
     const inputTotalPagar = document.getElementById('totalPagarVenta');
+
+    const btnTerminarVenta = document.getElementById('terminarVenta');
 
     let serviciosVendidos = [];
     let productosDisponibles = []; // Para guardar los productos obtenidos de la búsqueda
@@ -71,10 +77,11 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
         } else {
             // Si el producto no existe, lo agregamos a la lista
             serviciosVendidos.push({
+                id_producto: producto.id,
                 codigo_barras: producto.codigo_barras,
                 nombre: producto.nombre,  // Agregamos el nombre del producto
                 proveedor: producto.proveedor,  // Agregamos el proveedor
-                precio: producto.precio,  // Precio unitario
+                precio: parseFloat(producto.precio),  // Precio unitario
                 foto: producto.foto,  // Foto del producto
                 cantidad: 1,
                 total: precioUnitario,
@@ -111,7 +118,7 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
             `;
             tablaVenta.appendChild(fila);
         });
-        console.log(serviciosVendidos);
+        //console.log(serviciosVendidos);
         // Agregar los eventos de eliminar, sumar y restar después de que la tabla haya sido actualizada
         agregarEventosEliminar();
         agregarEventosContador();
@@ -228,9 +235,50 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
         const total = parseFloat(totalRaw) || 0;
         //console.log(total);
         const efectivo = parseFloat(cantidadEfectivo.value) || 0;
-        console.log(efectivo);
+        //console.log(efectivo);
         const feria = total - efectivo;
         feriaCalculada.value = Math.abs(feria);
     });
     
+    //enviar datos de la venta al servidor
+    btnTerminarVenta.addEventListener('click', () => {
+
+        if (serviciosVendidos.length === 0) {
+            mostrarAlerta('Opps.', 'El carrito está vacío', 'warning');
+            return;
+        }        
+        if(!cuandoPagar.value){
+            mostrarAlerta('Opps.', 'Falta seleccionar metodo de pago', 'warning');
+            return;
+        }
+
+        //SI SE PAGA EN EL MOMENTO
+        if(cuandoPagar.value === '1'){
+                //arreglo de objetos
+                const ventas = serviciosVendidos.map(producto => ({
+                    reservacion_id: idReserva,
+                    producto_id: producto.id_producto,
+                    cantidad: producto.cantidad,
+                    monto: parseFloat(producto.cantidad * producto.precio),
+                    fecha_pago: obtenerFechaFormateada(),
+                    tipo_pago: 'Huésped',
+                    descripcion: producto.nombre,
+                    estado : 1
+                }));
+                console.log(ventas);
+        } else{ //si se paga despues
+            //arreglo de objetos
+            const ventas = serviciosVendidos.map(producto => ({
+                reservacion_id: idReserva,
+                producto_id: producto.id_producto,
+                cantidad: producto.cantidad,
+                monto: parseFloat(producto.cantidad * producto.precio),
+                fecha_pago: obtenerFechaFormateada(),
+                tipo_pago: 'Huésped',
+                descripcion: producto.nombre,
+                estado : 2
+            }));
+            console.log(ventas);
+        }
+    })
 }
