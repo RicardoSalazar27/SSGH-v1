@@ -230,7 +230,7 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
         const efectivo = parseFloat(cantidadEfectivo.value) || 0;
         console.log(efectivo);
         const feria = total - efectivo;
-        feriaCalculada.value = feria ;
+        feriaCalculada.value = Math.abs(feria);
     });
     
 }
