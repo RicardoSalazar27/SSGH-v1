@@ -271,8 +271,8 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
                 }));
                 
                 const datos = JSON.stringify({
-                    ventas,
-                    productos
+                    ventas,     // ← Arreglo de objetos
+                    productos   // ← Arreglo de objetos
                 });                
                 const url = '/api/productos/reservacion/vender';
 
@@ -292,18 +292,43 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
                     console.error(error);
                 }
         } else{ //si se paga despues
-            //arreglo de objetos
-            const ventas = serviciosVendidos.map(producto => ({
-                reservacion_id: idReserva,
-                producto_id: producto.id_producto,
-                cantidad: producto.cantidad,
-                monto: parseFloat(producto.cantidad * producto.precio),
-                fecha_pago: obtenerFechaFormateada(),
-                tipo_pago: 'Huésped',
-                descripcion: producto.nombre,
-                estado : 2
-            }));
-            console.log(ventas);
+                
+                const ventas = serviciosVendidos.map(producto => ({
+                    reservacion_id: idReserva,
+                    producto_id: producto.id_producto,
+                    monto: parseFloat(producto.cantidad * producto.precio),
+                    fecha_pago: obtenerFechaFormateada(),
+                    tipo_pago: 'Huésped',
+                    descripcion: producto.nombre,
+                    estado: 0
+                }));
+
+                const productos = serviciosVendidos.map(producto => ({
+                    producto_id: producto.id_producto,
+                    cantidad: producto.cantidad
+                }));
+
+                const datos = JSON.stringify({
+                    ventas,     // ← Arreglo de objetos
+                    productos   // ← Arreglo de objetos
+                });                
+                const url = '/api/productos/reservacion/vender';
+
+                try {
+                    const respuesta = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: datos
+                    });
+
+                    const resultado = await respuesta.json();
+                    mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo, '/admin/puntodeventa/vender');
+
+                } catch (error) {
+                    console.error(error);
+                }
         }
     })
 }

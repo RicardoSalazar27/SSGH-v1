@@ -90,50 +90,56 @@ class VenderProductosController {
         }
     }
 
-    public static function registarVentasPorReservacion(){
+    public static function registarVentasPorReservacion() {
         is_auth();
-        // Establecer los headers al inicio
+    
+        // Establecer los headers para CORS y tipo de contenido
         header('Content-Type: application/json');
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: POST, OPTIONS');
         header('Access-Control-Allow-Headers: Content-Type, Authorization');
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $body = json_decode(file_get_contents('php://input'), true); // Arreglo asociativo
     
-            $body = json_decode(file_get_contents('php://input'), true);
+            // Validación mínima
+            if (!isset($body['ventas']) || !is_array($body['ventas']) || empty($body['ventas'])) {
+                http_response_code(400);
+                echo json_encode(respuesta('error', 'Datos incompletos', 'No se recibieron ventas válidas.'));
+                return;
+            }
     
             $ventas = $body['ventas'];
-            // $productos = $body['productos'];
-            
-            //$resultado = Pago::insertarVentasYActualizarStock($body);
-            $resultado = true;
-            if($resultado){
-                
-                // Auditoría de la acción
-                $usuarioId = $_SESSION['id'];  
-                // Definir la zona horaria
-                date_default_timezone_set("America/Mexico_City");
-                $fechaHora = date('Y-m-d H:i:s'); 
-                $datosAuditoria = [
-                    'id_usuario' => $usuarioId,
-                    'accion' => 'Venta',
-                    'tabla_afectada' => 'Pagos',
-                    'id_registro_afectado' => $resultado ? $ventas['reservacion_id'] : 'NULL',//no me obtieneel ID REVISAR
-                    'detalle' => "Vendio Producto o servicio",
-                    'fecha_hora' => $fechaHora
-                ];
-                debuguear($datosAuditoria);
-                $auditoria = new Auditoria();
-                $auditoria->sincronizar($datosAuditoria);
-                $auditoria->guardar();
-                
-                http_response_code(201); 
-                echo json_encode(respuesta('success', 'Guardardo', 'Venta Terminada correctamente'));
-            
-            } else{
+            $resultado = Pago::insertarVentasYActualizarStock($body);
+    
+            if ($resultado) {
+                // Auditoría
+                $usuarioId = $_SESSION['id'] ?? null;
+    
+                if ($usuarioId) {
+                    date_default_timezone_set("America/Mexico_City");
+                    $fechaHora = date('Y-m-d H:i:s');
+    
+                    $datosAuditoria = [
+                        'id_usuario' => $usuarioId,
+                        'accion' => 'VENTA',
+                        'tabla_afectada' => 'Pagos',
+                        'id_registro_afectado' => $ventas[0]['reservacion_id'] ?? 'NULL',
+                        'detalle' => "Vendió producto(s) o servicio(s)",
+                        'fecha_hora' => $fechaHora
+                    ];
+    
+                    $auditoria = new Auditoria();
+                    $auditoria->sincronizar($datosAuditoria);
+                    $auditoria->guardar();
+                }
+    
+                http_response_code(201);
+                echo json_encode(respuesta('success', 'Guardado', 'Venta terminada correctamente'));
+            } else {
                 http_response_code(500);
-                echo json_encode(respuesta('error', 'Error', 'Hubo un problema al al guardar la venta intente de nuevo'));
-            } 
+                echo json_encode(respuesta('error', 'Error', 'Hubo un problema al guardar la venta, intente de nuevo.'));
+            }
         }
-    }
+    }    
 }
