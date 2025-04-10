@@ -286,6 +286,8 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
                     });
 
                     const resultado = await respuesta.json();
+                    mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo, '/admin/puntodeventa/vender');
+
                 } catch (error) {
                     console.error(error);
                 }

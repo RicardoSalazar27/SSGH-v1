@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Exception;
+use Model\Auditoria;
 use Model\Hotel;
 use Model\Pago;
 use Model\Producto;
@@ -102,37 +103,37 @@ class VenderProductosController {
             $body = json_decode(file_get_contents('php://input'), true);
     
             $ventas = $body['ventas'];
-            $productos = $body['productos'];
+            // $productos = $body['productos'];
             
-
-            // // Auditoría de la acción
-            // $usuarioId = $_SESSION['id'];  
-            // // Definir la zona horaria
-            // date_default_timezone_set("America/Mexico_City");
-            // $fechaHora = date('Y-m-d H:i:s'); 
-            // $datosAuditoria = [
-            //     'id_usuario' => $usuarioId,
-            //     'accion' => 'CREAR',
-            //     'tabla_afectada' => 'Niveles',
-            //     'id_registro_afectado' => $resultado ? $nivel->id : 'NULL',
-            //     'detalle' => "Creó Nivel con número {$_POST['numero']}",
-            //     'fecha_hora' => $fechaHora
-            // ];
-    
-            // $auditoria = new Auditoria();
-            // $auditoria->sincronizar($datosAuditoria);
-            // $auditoria->guardar();
-    
-            // // Responder según el resultado de la creación del nivel
-            // if ($resultado) {
-            //     http_response_code(201);
-            //     echo json_encode(respuesta('success', 'Creado', 'Nivel Creado correctamente'));
-            // } else {
-            //     http_response_code(500);
-            //     echo json_encode(respuesta('error', 'Error', 'Hubo un problema al crear el Nivel'));
-            // }
-    
-            // exit;
+            //$resultado = Pago::insertarVentasYActualizarStock($body);
+            $resultado = true;
+            if($resultado){
+                
+                // Auditoría de la acción
+                $usuarioId = $_SESSION['id'];  
+                // Definir la zona horaria
+                date_default_timezone_set("America/Mexico_City");
+                $fechaHora = date('Y-m-d H:i:s'); 
+                $datosAuditoria = [
+                    'id_usuario' => $usuarioId,
+                    'accion' => 'Venta',
+                    'tabla_afectada' => 'Pagos',
+                    'id_registro_afectado' => $resultado ? $ventas['reservacion_id'] : 'NULL',//no me obtieneel ID REVISAR
+                    'detalle' => "Vendio Producto o servicio",
+                    'fecha_hora' => $fechaHora
+                ];
+                debuguear($datosAuditoria);
+                $auditoria = new Auditoria();
+                $auditoria->sincronizar($datosAuditoria);
+                $auditoria->guardar();
+                
+                http_response_code(201); 
+                echo json_encode(respuesta('success', 'Guardardo', 'Venta Terminada correctamente'));
+            
+            } else{
+                http_response_code(500);
+                echo json_encode(respuesta('error', 'Error', 'Hubo un problema al al guardar la venta intente de nuevo'));
+            } 
         }
     }
 }

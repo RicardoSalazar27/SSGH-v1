@@ -2,7 +2,7 @@
 
 namespace Model;
 
-class Pago extends ActiveRecord{
+class Pago extends ActiveRecord {
 
     public static $tabla = 'Pagos';
     public static $columnasDB = ['id_pago', 'reservacion_id', 'producto_id', 'monto', 'fecha_pago', 'tipo_pago', 'descripcion', 'estado'];
@@ -25,5 +25,16 @@ class Pago extends ActiveRecord{
         $this->tipo_pago = $args['tipo_pago'] ?? 'Huespéd';
         $this->descripcion = $args['descripcion'] ?? 'sin descripcion';
         $this->estado = $args['estado'] ?? 1;
-    }   
+    }
+
+    public static function insertarVentasYActualizarStock($datos) {
+        $nombreProcedimiento = "insertar_ventas_y_actualizar_stock";
+
+        $params = [
+            json_encode($datos['ventas']),
+            json_encode($datos['productos'])
+        ];
+
+        return self::ejecutarProcedimiento($nombreProcedimiento, $params);
+    }
 }

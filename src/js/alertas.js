@@ -1,14 +1,17 @@
 // src/js/alertas.js
 (function() {
-    function mostrarAlerta(titulo, mensaje, tipo) {
+    function mostrarAlerta(titulo, mensaje, tipo, urlRedireccion = null) {
         Swal.fire({
             icon: tipo,
             title: titulo,
             text: mensaje,
         }).then(() => {
             $('.modal').modal('hide'); 
+            if (urlRedireccion) {
+                window.location.href = urlRedireccion;
+            }
         });
-    }
+    }    
 
     function mostrarAlerta2(mensaje, tipo) {
         const mensajeResultado = document.getElementById('mensaje-resultado');
