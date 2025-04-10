@@ -54,6 +54,7 @@ $router->get('/admin/clientes', [ClientesController::class, 'index']);
 $router->get('/admin/puntodeventa/catalogo', [CatalogoProductosController::class, 'index']);
 $router->get('/admin/puntodeventa/vender', [VenderProductosController::class, 'index']);
 $router->get('/admin/puntodeventa/vender/reserva', [VenderProductosController::class, 'ventaReservacion']);
+$router->get('/admin/puntodeventa/venta/directa', [VenderProductosController::class, 'ventaDirectaIndex']);
 $router->get('/admin/salidas', [VerificacionSalidasController::class, 'index']);
 $router->get('/admin/reservaciones', [ReservacionesController::class, 'index']);
 $router->get('/admin/recepcion', [RecepcionController::class, 'index']);

@@ -19,7 +19,6 @@ class VenderProductosController {
         $hotel = Hotel::get(1);
 
         $reservaciones = Reservacion::detallesHabitacionesReservadasHoy();
-        //debuguear($reservas);
         
         // Render a la vista 
         $router->render('admin/punto_de_venta/vender_productos/index', [
@@ -28,7 +27,7 @@ class VenderProductosController {
             'hotel' => $hotel,
             'reservaciones' => $reservaciones
         ]);
-    }
+    } 
 
     public static function ventaReservacion(Router $router){
         is_auth();
@@ -57,6 +56,19 @@ class VenderProductosController {
             'usuario' => $usuario,
             'hotel' => $hotel,
             'reservacion' => $reservacion
+        ]);
+    }
+
+    public static function ventaDirectaIndex(Router $router){
+        is_auth();
+        $usuario = Usuario::where('email', $_SESSION['email']);
+        $hotel = Hotel::get(1);
+
+        // Render a la vista 
+        $router->render('admin/punto_de_venta/vender_productos/ventadirecta', [
+            'titulo' => 'Proceso De Venta',
+            'usuario' => $usuario,
+            'hotel' => $hotel
         ]);
     }
 
@@ -110,8 +122,9 @@ class VenderProductosController {
             }
     
             $ventas = $body['ventas'];
+            //debuguear($body);
             $resultado = Pago::insertarVentasYActualizarStock($body);
-    
+
             if ($resultado) {
                 // Auditoría
                 $usuarioId = $_SESSION['id'] ?? null;
@@ -128,7 +141,7 @@ class VenderProductosController {
                         'detalle' => "Vendió producto(s) o servicio(s)",
                         'fecha_hora' => $fechaHora
                     ];
-    
+
                     $auditoria = new Auditoria();
                     $auditoria->sincronizar($datosAuditoria);
                     $auditoria->guardar();
