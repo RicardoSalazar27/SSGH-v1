@@ -17,7 +17,24 @@ class VerificacionSalidasController {
 
         $reservasHoy = VistaReservasTerminanHoy::ReservacionesTerminanHoy();
         debuguear($reservasHoy);
-        //falta revisar la vista que las habitaciones me las de agrupadas
+        //devuelve
+        // array(1) {
+        //     [0]=>
+        //     object(Model\VistaReservasTerminanHoy)#21 (6) {
+        //       ["ID_reserva"]=>
+        //       string(2) "73"
+        //       ["cliente_nombre"]=>
+        //       string(12) "Ivana Amante"
+        //       ["habitacion_numero"]=>
+        //       string(7) "202,203"
+        //       ["color_estado_habitacion"]=>
+        //       string(7) "warning"
+        //       ["icono_estado_habitacion"]=>
+        //       string(5) "clock"
+        //       ["nombre_estado_habitacion"]=>
+        //       string(7) "Ocupada"
+        //     }
+        //   }
         
         // Render a la vista 
         $router->render('admin/verificacion_salidas/index', [
