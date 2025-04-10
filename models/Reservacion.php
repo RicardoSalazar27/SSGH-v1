@@ -193,7 +193,7 @@ class Reservacion extends ActiveRecord {
     //Llena la tabla del dashboard con las reservaciones del dia
     public static function detallesHabitacionesReservadasHoy(){
         $query = "
-            SELECT 
+           SELECT 
                 r.*, 
                 GROUP_CONCAT(h.numero ORDER BY h.numero) AS habitaciones,  -- Concatenamos los números de las habitaciones
                 c.nombre AS cliente_nombre, 
@@ -201,7 +201,7 @@ class Reservacion extends ActiveRecord {
                 c.telefono, 
                 c.correo, 
                 r.fecha_entrada, 
-                r.fecha_salida, 
+                r.fecha_salida,  
                 r.precio_total
             FROM 
                 Reservas r
