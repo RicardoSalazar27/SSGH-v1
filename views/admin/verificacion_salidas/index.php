@@ -10,7 +10,7 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="/admin/index">Inicio</a></li>
-                    <li class="breadcrumb-item active">Checkin</li>
+                    <li class="breadcrumb-item active">Checkout</li>
                 </ol>
             </div>
         </div>
@@ -44,24 +44,30 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody_reservacionesHoy">
-                                    <?php foreach ($reservasHoy as $reserva): ?>
+                                    <?php if (!empty($reservasHoy)): ?>
+                                        <?php foreach ($reservasHoy as $reserva): ?>
+                                            <tr>
+                                                <td><?php echo $reserva->ID_reserva; ?></td>
+                                                <td><?php echo $reserva->cliente_nombre; ?></td>
+                                                <td><?php echo $reserva->habitacion_numero; ?></td>
+                                                <td>
+                                                    <span class="badge bg-<?php echo $reserva->color_estado_habitacion; ?>">
+                                                        <i class="fas fa-<?php echo $reserva->icono_estado_habitacion; ?>"></i>
+                                                        <?php echo $reserva->nombre_estado_habitacion; ?>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a href="/admin/salidas/checkout?id=<?php echo $reserva->ID_reserva; ?>" class="btn btn-success btn-sm">
+                                                        Detalles
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
                                         <tr>
-                                            <td><?php echo $reserva->ID_reserva; ?></td>
-                                            <td><?php echo $reserva->cliente_nombre; ?></td>
-                                            <td><?php echo $reserva->habitacion_numero; ?></td>
-                                            <td>
-                                                <span class="badge bg-<?php echo $reserva->color_estado_habitacion; ?>">
-                                                    <i class="fas fa-<?php echo $reserva->icono_estado_habitacion; ?>"></i>
-                                                    <?php echo $reserva->nombre_estado_habitacion; ?>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <a href="/admin/salidas/checkin?id=<?php echo $reserva->ID_reserva; ?>" class="btn btn-success btn-sm">
-                                                    Detalles
-                                                </a>
-                                            </td>
+                                            <td colspan="5">No hay reservaciones que terminen hoy.</td>
                                         </tr>
-                                    <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div> <!-- /.table-responsive -->
