@@ -31,19 +31,19 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <p class=""><strong>Habitación(es):</strong></p>
-                        <p class="text-primary">202,205</p>
+                        <p class="text-primary"><?php echo $reservaConHabitacionClienteHospedaje->numeros_habitaciones;?></p>
                     </div>
                     <div class="d-flex justify-content-between">
                         <p class=""><strong>Tipo:</strong></p>
-                        <p class="">Sencilla - Doble</p>
+                        <p class=""><?php echo $reservaConHabitacionClienteHospedaje->categorias;?></p>
                     </div>
                     <div class="d-flex justify-content-between">
                         <p class=""><strong>Costo:</strong></p>
-                        <p class="">MXN$360 - MXN$530</p>
+                        <p class=""><?php echo $reservaConHabitacionClienteHospedaje->precios_base;?></p>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <p class=""><strong>Descuento:</strong></p>
-                        <p class="">MXN$360</p>
+                        <p class=""><strong>Capacidad Maxima:</strong></p>
+                        <p class=""><?php echo $reservaConHabitacionClienteHospedaje->capacidades_maximas;?></p>
                     </div>
                 </div>
             </div>
@@ -57,19 +57,19 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <p class=""><strong>Nombre:</strong></p>
-                            <p class="text-primary">ALEMINERO CASTELLNAOS UTURIBIDE</p>
+                            <p class="text-primary"><?php echo $reservaConHabitacionClienteHospedaje->nombre . ' ' . $reservaConHabitacionClienteHospedaje->apellidos;?></p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <p class=""><strong>Documento:</strong></p>
-                            <p class="">1004380120</p>
+                            <p class=""><?php echo $reservaConHabitacionClienteHospedaje->documento_identidad ?? ' Sin documento';?></p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <p class=""><strong>Telefono:</strong></p>
-                            <p class="">782480120</p>
+                            <p class=""><?php echo $reservaConHabitacionClienteHospedaje->telefono;?></p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <p class=""><strong>Correo:</strong></p>
-                            <p class="">correo@correo.com</p>
+                            <p class=""><?php echo $reservaConHabitacionClienteHospedaje->correo ?? 'sin correo';?></p>
                         </div>
                     </div>
                 </div>
@@ -83,19 +83,24 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <p class=""><strong>Fecha Entrada:</strong></p>
-                            <p class="text-primary">10-04-2025</p>
+                            <p class="text-primary"><?php echo $reservaConHabitacionClienteHospedaje->fecha_entrada;?></p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <p class=""><strong>Fecha Salida:</strong></p>
-                            <p class="text-primary">11-04-2025</p>
+                            <p class="text-primary"><?php echo $reservaConHabitacionClienteHospedaje->fecha_salida;?></p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <p class=""><strong>Noches:</strong></p>
-                            <p class="">1</p>
+                            <p class=""><?php echo $reservaConHabitacionClienteHospedaje->noches;?></p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <p class=""><strong>Tiempo Rebasado:</strong></p>
-                            <p class="text-success">Sin tiempo rebasado</p>
+                            <?php 
+                            $t_rebasado = $reservaConHabitacionClienteHospedaje->tiempo_rebasado;
+                            $clase = $t_rebasado ? 'text-warning' : 'text-success';
+                            $mensaje = $t_rebasado ?? 'SIN TIEMPO REBASADO';
+                            ?>
+                            <p class="<?php echo $clase; ?>"><?php echo $mensaje; ?></p>
                         </div>
                     </div>
                 </div>
@@ -109,12 +114,12 @@
                 <table class="table table-bordered m-0 text-center">
                     <thead class="thead-light">
                         <tr>
-                            <th>Dinero extra</th>
-                            <th>Costo calculado</th>
+                            <th>Costo Calculado</th>
+                            <th>Descuento</th>
+                            <th>Corbro Extra</th>
                             <th>Dinero adelantado</th>
                             <th>Mora/Penalidad</th>
                             <th>Por pagar</th>
-                            <th>Responsable</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -122,9 +127,9 @@
                             <td>MXN$0</td>
                             <td>MXN$360</td>
                             <td>MXN$0</td>
+                            <td>MXN$29</td>
                             <td><input type="text" class="form-control form-control-sm" placeholder="—"></td>
                             <td>MXN$360</td>
-                            <td>dayana</td>
                         </tr>
                     </tbody>
                 </table>

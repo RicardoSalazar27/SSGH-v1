@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Model\Checkout;
 use Model\Hotel;
 use Model\Reservacion;
 use Model\Usuario;
@@ -32,14 +33,18 @@ class VerificacionSalidasController {
         $idReserva = $_GET['id'];
         $usuario = Usuario::where('email', $_SESSION['email']);
         $hotel = Hotel::get(1);
-
-        //$reservasHoy = VistaReservasTerminanHoy::ReservacionesTerminanHoy();
+        $reservaConHabitacionClienteHospedaje = Checkout::DatosHabitacionClienteHospedaje($idReserva);
+        
+        // if(empty($reservaConHabitacionClienteHospedaje->tiempo_rebasado)){
+        //     $reservaConHabitacionClienteHospedaje->tiempo_rebasado = 'Sin tiempo Rebasado';
+        // }
         
         // Render a la vista 
         $router->render('admin/verificacion_salidas/checkout', [
             'titulo' => 'Proceso de salida',
             'usuario' => $usuario,
-            'hotel' => $hotel
+            'hotel' => $hotel,
+            'reservaConHabitacionClienteHospedaje' => $reservaConHabitacionClienteHospedaje
         ]);
     }
 }
