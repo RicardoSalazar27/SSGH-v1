@@ -34,7 +34,7 @@ class VerificacionSalidasController {
         $usuario = Usuario::where('email', $_SESSION['email']);
         $hotel = Hotel::get(1);
         $reservaConHabitacionClienteHospedaje = Checkout::DatosHabitacionClienteHospedaje($idReserva);
-        
+        //debuguear($reservaConHabitacionClienteHospedaje);
         // if(empty($reservaConHabitacionClienteHospedaje->tiempo_rebasado)){
         //     $reservaConHabitacionClienteHospedaje->tiempo_rebasado = 'Sin tiempo Rebasado';
         // }

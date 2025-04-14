@@ -124,12 +124,12 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>MXN$0</td>
-                            <td>MXN$360</td>
-                            <td>MXN$0</td>
-                            <td>MXN$29</td>
+                            <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->precio_total;?></td>
+                            <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->descuento_aplicado;?></td>
+                            <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->cobro_extra;?></td>
+                            <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->adelanto;?></td>
                             <td><input type="text" class="form-control form-control-sm" placeholder="—"></td>
-                            <td>MXN$360</td>
+                            <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->precio_pendiente;?></td>
                         </tr>
                     </tbody>
                 </table>

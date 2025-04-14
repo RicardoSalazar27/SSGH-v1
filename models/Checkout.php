@@ -2,7 +2,7 @@
 
 namespace Model;
 
-class Checkout extends ActiveRecord{
+class Checkout extends ActiveRecord {
     public static $tabla = 'Reservas'; // tabla base
     public static $columnasDB = [
         'ID_reserva',
@@ -18,7 +18,12 @@ class Checkout extends ActiveRecord{
         'numeros_habitaciones',
         'categorias',
         'precios_base',
-        'capacidades_maximas'
+        'capacidades_maximas',
+        'precio_total',
+        'precio_pendiente',
+        'adelanto',
+        'cobro_extra',
+        'descuento_aplicado'
     ];
 
     public $ID_reserva;
@@ -35,6 +40,11 @@ class Checkout extends ActiveRecord{
     public $categorias;
     public $precios_base;
     public $capacidades_maximas;
+    public $precio_total;
+    public $precio_pendiente;
+    public $adelanto;
+    public $cobro_extra;
+    public $descuento_aplicado;
 
     public function __construct($args = []) {
         $this->ID_reserva = $args['ID_reserva'] ?? null;
@@ -51,6 +61,11 @@ class Checkout extends ActiveRecord{
         $this->categorias = $args['categorias'] ?? '';
         $this->precios_base = $args['precios_base'] ?? '';
         $this->capacidades_maximas = $args['capacidades_maximas'] ?? '';
+        $this->precio_total = $args['precio_total'] ?? 0.00;
+        $this->precio_pendiente = $args['precio_pendiente'] ?? 0.00;
+        $this->adelanto = $args['adelanto'] ?? 0.00;
+        $this->cobro_extra = $args['cobro_extra'] ?? 0.00;
+        $this->descuento_aplicado = $args['descuento_aplicado'] ?? 0.00;
     }
 
     public static function DatosHabitacionClienteHospedaje($id_reserva){
@@ -71,17 +86,24 @@ class Checkout extends ActiveRecord{
                 GROUP_CONCAT(h.numero ORDER BY h.numero SEPARATOR ',') AS numeros_habitaciones,
                 GROUP_CONCAT(cat.nombre ORDER BY h.numero SEPARATOR '-') AS categorias,
                 GROUP_CONCAT(cat.precio_base ORDER BY h.numero SEPARATOR ',') AS precios_base,
-                GROUP_CONCAT(cat.capacidad_maxima ORDER BY h.numero SEPARATOR ',') AS capacidades_maximas
+                GROUP_CONCAT(cat.capacidad_maxima ORDER BY h.numero SEPARATOR ',') AS capacidades_maximas,
 
-                FROM Reservas r
-                JOIN Clientes c ON r.ID_cliente = c.id
-                JOIN Reservas_Habitaciones rh ON r.ID_reserva = rh.ID_reserva
-                JOIN Habitaciones h ON rh.ID_habitacion = h.id
-                JOIN Categoria cat ON h.id_categoria = cat.id
+                r.precio_total,
+                r.precio_pendiente,
+                r.adelanto,
+                r.cobro_extra,
+                r.descuento_aplicado
 
-                WHERE r.ID_reserva = $id_reserva
-                GROUP BY r.ID_reserva;
-            ";
+            FROM Reservas r
+            JOIN Clientes c ON r.ID_cliente = c.id
+            JOIN Reservas_Habitaciones rh ON r.ID_reserva = rh.ID_reserva
+            JOIN Habitaciones h ON rh.ID_habitacion = h.id
+            JOIN Categoria cat ON h.id_categoria = cat.id
+
+            WHERE r.ID_reserva = $id_reserva
+            GROUP BY r.ID_reserva;
+        ";
+
         return array_shift(self::consultarSQL($query));
     }
 }
