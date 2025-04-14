@@ -23,9 +23,17 @@ class Checkout extends ActiveRecord {
         'precio_pendiente',
         'adelanto',
         'cobro_extra',
-        'descuento_aplicado'
+        'descuento_aplicado',
+        
+        // Nuevos campos para ServicioAlCuarto
+        'producto_nombre',
+        'producto_precio',
+        'producto_cantidad',
+        'producto_monto',
+        'producto_estado'
     ];
 
+    // Atributos
     public $ID_reserva;
     public $fecha_entrada;
     public $fecha_salida;
@@ -45,6 +53,13 @@ class Checkout extends ActiveRecord {
     public $adelanto;
     public $cobro_extra;
     public $descuento_aplicado;
+
+    // Nuevas propiedades para ventas
+    public $producto_nombre;
+    public $producto_precio;
+    public $producto_cantidad;
+    public $producto_monto;
+    public $producto_estado;
 
     public function __construct($args = []) {
         $this->ID_reserva = $args['ID_reserva'] ?? null;
@@ -66,6 +81,13 @@ class Checkout extends ActiveRecord {
         $this->adelanto = $args['adelanto'] ?? 0.00;
         $this->cobro_extra = $args['cobro_extra'] ?? 0.00;
         $this->descuento_aplicado = $args['descuento_aplicado'] ?? 0.00;
+
+        // Inicializar datos de productos
+        $this->producto_nombre = $args['producto_nombre'] ?? '';
+        $this->producto_precio = $args['producto_precio'] ?? 0.00;
+        $this->producto_cantidad = $args['producto_cantidad'] ?? 0;
+        $this->producto_monto = $args['producto_monto'] ?? 0.00;
+        $this->producto_estado = $args['producto_estado'] ?? 0;
     }
 
     public static function DatosHabitacionClienteHospedaje($id_reserva){
@@ -105,6 +127,23 @@ class Checkout extends ActiveRecord {
         ";
 
         return array_shift(self::consultarSQL($query));
+    }
+
+    public static function ServicioAlCuarto($id_reserva){
+        $query = "
+            SELECT 
+                p.nombre AS producto_nombre,
+                p.precio AS producto_precio,
+                (pg.monto / p.precio) AS producto_cantidad,
+                pg.monto AS producto_monto,
+                pg.estado AS producto_estado
+            FROM Pagos pg
+            JOIN Productos p ON pg.producto_id = p.id
+            WHERE pg.reservacion_id = $id_reserva
+              AND pg.producto_id IS NOT NULL        
+        ";
+
+        return self::consultarSQL($query);
     }
 }
 ?>

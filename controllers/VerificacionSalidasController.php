@@ -34,17 +34,25 @@ class VerificacionSalidasController {
         $usuario = Usuario::where('email', $_SESSION['email']);
         $hotel = Hotel::get(1);
         $reservaConHabitacionClienteHospedaje = Checkout::DatosHabitacionClienteHospedaje($idReserva);
-        //debuguear($reservaConHabitacionClienteHospedaje);
-        // if(empty($reservaConHabitacionClienteHospedaje->tiempo_rebasado)){
-        //     $reservaConHabitacionClienteHospedaje->tiempo_rebasado = 'Sin tiempo Rebasado';
-        // }
-        
+        $ventasReserva = Checkout::ServicioAlCuarto($idReserva);
+        $dineroventas = 0;
+
+        foreach ($ventasReserva as $venta) {
+            if ((int)$venta->producto_estado === 0) {
+                $dineroventas += (float) $venta->producto_monto;
+            }
+        }
+
+        $totalPagar = $dineroventas + $reservaConHabitacionClienteHospedaje->precio_pendiente;
+
         // Render a la vista 
         $router->render('admin/verificacion_salidas/checkout', [
             'titulo' => 'Proceso de salida',
             'usuario' => $usuario,
             'hotel' => $hotel,
-            'reservaConHabitacionClienteHospedaje' => $reservaConHabitacionClienteHospedaje
+            'reservaConHabitacionClienteHospedaje' => $reservaConHabitacionClienteHospedaje,
+            'ventasReserva' => $ventasReserva,
+            'totalPagar' => $totalPagar
         ]);
     }
 }

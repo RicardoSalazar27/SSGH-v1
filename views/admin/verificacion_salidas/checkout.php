@@ -148,29 +148,46 @@
                             <th>Cantidad</th>
                             <th>Estado</th>
                             <th>Subtotal</th>
-                            <th>Acciones</th>
+                            <!-- <th>Acciones</th> -->
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Agua</td>
-                            <td>MXN$15</td>
-                            <td>2</td>
-                            <td class="text-danger font-weight-bold">FALTA PAGAR</td>
-                            <td>MXN$30</td>
-                            <td><button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></td>
-                        </tr>
+                        <?php if (!empty($ventasReserva)) : ?>
+                            <?php foreach ($ventasReserva as $venta) : ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($venta->producto_nombre) ?></td>
+                                    <td>MXN$<?= number_format($venta->producto_precio, 2) ?></td>
+                                    <td><?= (int)$venta->producto_cantidad ?></td>
+                                    <td class="<?= $venta->producto_estado == 0 ? 'text-danger font-weight-bold' : 'text-success font-weight-bold' ?>">
+                                        <?= $venta->producto_estado == 0 ? 'FALTA PAGAR' : 'PAGADO' ?>
+                                    </td>
+                                    <td>MXN$<?= number_format($venta->producto_monto, 2) ?></td>
+                                    <!-- <td>
+                                        <form method="POST" action="/ruta/eliminar-producto">
+                                            <input type="hidden" name="id_reserva" value="<?= $idReserva ?>">
+                                            <input type="hidden" name="nombre_producto" value="<?= htmlspecialchars($venta->producto_nombre) ?>">
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td> -->
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <tr>
+                                <td colspan="6" class="text-center">No hay servicios al cuarto registrados.</td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
         </div>
-
         <!-- Total a pagar + Método de pago -->
         <div class="card mt-3">
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-md-4">
-                        <h5><strong>TOTAL A PAGAR:</strong> MXN$390</h5>
+                        <h5><strong>TOTAL A PAGAR:</strong> MXN$<?php echo number_format($totalPagar,2);?></h5>
                     </div>
                     <div class="col-md-4">
                         <select class="form-control" name="metodo_pago" required>
@@ -181,7 +198,7 @@
                         </select>
                     </div>
                     <div class="col-md-4 text-right">
-                        <button class="btn btn-success">Finalizar pago</button>
+                        <button class="btn btn-success">Finalizar Reservacion</button>
                     </div>
                 </div>
             </div>
