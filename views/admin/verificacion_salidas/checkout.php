@@ -128,7 +128,7 @@
                             <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->descuento_aplicado;?></td>
                             <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->cobro_extra;?></td>
                             <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->adelanto;?></td>
-                            <td><input type="text" class="form-control form-control-sm" placeholder="—"></td>
+                            <td><input id="inputPenalidad" type="text" class="form-control form-control-sm" placeholder="—"></td>
                             <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->precio_pendiente;?></td>
                         </tr>
                     </tbody>
@@ -186,11 +186,14 @@
         <div class="card mt-3">
             <div class="card-body">
                 <div class="row align-items-center">
+                <div class="col-md-4">
+                    <h5>
+                        <strong>TOTAL A PAGAR:</strong> MXN$
+                        <span id="totalPagar"><?php echo number_format($totalPagar, 2); ?></span>
+                    </h5>
+                </div>
                     <div class="col-md-4">
-                        <h5><strong>TOTAL A PAGAR:</strong> MXN$<?php echo number_format($totalPagar,2);?></h5>
-                    </div>
-                    <div class="col-md-4">
-                        <select class="form-control" name="metodo_pago" required>
+                        <select id="metodoPago" class="form-control" name="metodo_pago" required>
                             <option value="">Método de pago</option>
                             <option value="efectivo">Efectivo</option>
                             <option value="tarjeta">Tarjeta</option>
@@ -198,9 +201,20 @@
                         </select>
                     </div>
                     <div class="col-md-4 text-right">
-                        <button class="btn btn-success">Finalizar Reservacion</button>
+                        <button id="btnTerminarReservacion" class="btn btn-success">Finalizar Reservacion</button>
                     </div>
                 </div>
+                <!-- Sección de efectivo y feria -->
+                <div class="row d-none mt-2" id="grupoEfectivo">
+                        <div class="col-md-4">
+                            <label for="cantidadEfectivo" class="font-weight-bold">Cantidad con la que paga</label>
+                            <input type="number" class="form-control" id="cantidadEfectivo" placeholder="Ej. 100">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="feriaCalculada" class="font-weight-bold">Feria</label>
+                            <input type="text" class="form-control" id="feriaCalculada" readonly>
+                        </div>
+                    </div>
             </div>
         </div>
     </div>
