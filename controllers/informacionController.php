@@ -12,15 +12,11 @@ class informacionController {
         is_auth();
 
         $usuario = Usuario::where('email', $_SESSION['email']);
-
-        $alertas = [];
-
         $hotel = Hotel::get(1);
         
         // Render a la vista 
         $router->render('admin/configuracion/informacion/index', [
             'titulo' => 'Informacion Del Hotel',
-            'alertas' => $alertas,
             'usuario' => $usuario,
             'hotel' => $hotel
         ]);

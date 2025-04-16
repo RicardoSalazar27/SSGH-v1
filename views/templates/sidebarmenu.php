@@ -125,6 +125,14 @@
                         </a>
                     </li>
 
+                    <!-- Actividades -->
+                    <li class="nav-item">
+                        <a href="/admin/registro-actividades" class="nav-link">
+                            <i class="nav-icon fas fa-file-invoice"></i>
+                            <p>Registro de Actividades</p>
+                        </a>
+                    </li>
+
                     <!-- Configuración -->
                     <li class="nav-item">
                         <a href="#" class="nav-link">

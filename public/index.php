@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../includes/app.php';
 
 use Controllers\APIGananciasNetas;
+use Controllers\AuditoriaController;
 use MVC\Router;
 use Controllers\AuthController;
 use Controllers\CatalogoProductosController;
@@ -60,7 +61,7 @@ $router->get('/admin/salidas/checkout', [VerificacionSalidasController::class, '
 $router->get('/admin/reservaciones', [ReservacionesController::class, 'index']);
 $router->get('/admin/recepcion', [RecepcionController::class, 'index']);
 $router->get('/admin/recepcion/habitacion', [RecepcionController::class, 'checkin']);
-
+$router->get('/admin/registro-actividades', [AuditoriaController::class, 'index']);
 
 // API'S
 $router->get('/api/usuarios', [UsuariosController::class, 'listar']);
@@ -117,5 +118,7 @@ $router->patch('/api/reservaciones/{id}', [ReservacionesController::class, 'actu
 $router->get('/api/ganancias', [APIGananciasNetas::class, 'gananciasPorPeriodo']);
 
 $router->post('/api/reservacion/terminar', [VerificacionSalidasController::class,'terminarReservacion']);
+
+$router->get('/api/registro-actividades', [AuditoriaController::class, 'RegistroActividades']);
 
 $router->comprobarRutas();
