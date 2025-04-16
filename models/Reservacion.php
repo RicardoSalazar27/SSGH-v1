@@ -182,7 +182,8 @@ class Reservacion extends ActiveRecord {
             FROM Reservas r
             JOIN Reservas_Habitaciones rh ON r.ID_reserva = rh.ID_reserva
             WHERE CURDATE() BETWEEN DATE(r.fecha_entrada) AND DATE(r.fecha_salida)
-            AND NOW() < r.fecha_salida;
+            AND NOW() < r.fecha_salida
+            AND r.ID_estado != 5;
         ";
         // Ejecutar la consulta y devolver el resultado
         $resultado = self::$db->query($query);
@@ -190,10 +191,10 @@ class Reservacion extends ActiveRecord {
         return $total['total_habitaciones_reservadas'];  // Retornar el número de habitaciones reservadas
     }
 
-    //Llena la tabla del dashboard con las reservaciones del dia
+    // Llena la tabla del dashboard con las reservaciones del día
     public static function detallesHabitacionesReservadasHoy(){
         $query = "
-           SELECT 
+            SELECT 
                 r.*, 
                 GROUP_CONCAT(h.numero ORDER BY h.numero) AS habitaciones,  -- Concatenamos los números de las habitaciones
                 c.nombre AS cliente_nombre, 
@@ -213,9 +214,8 @@ class Reservacion extends ActiveRecord {
                 Clientes c ON r.ID_cliente = c.id
             WHERE 
                 CURDATE() BETWEEN DATE(r.fecha_entrada) AND DATE(r.fecha_salida)
-            AND 
-                NOW() < r.fecha_salida
-
+                AND NOW() < r.fecha_salida
+                AND r.ID_estado != 5  -- Excluir reservaciones terminadas
             GROUP BY 
                 r.ID_reserva;  -- Agrupamos por ID_reserva para tener un único registro por reserva
         ";
