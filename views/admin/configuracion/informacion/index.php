@@ -3,7 +3,7 @@
         <div class="row mb-2">
             <div class="col-sm-6">
                 <div class="d-flex align-items-center">
-                    <i class="nav-icon fas fa-users mr-2"></i>
+                    <i class="nav-icon fas fa-hotel mr-2"></i>
                     <h1 class="h4 mb-0"><?php echo $titulo; ?></h1>
                 </div>
             </div>
