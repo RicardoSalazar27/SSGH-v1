@@ -116,4 +116,6 @@ $router->patch('/api/reservaciones/{id}', [ReservacionesController::class, 'actu
 
 $router->get('/api/ganancias', [APIGananciasNetas::class, 'gananciasPorPeriodo']);
 
+$router->post('/api/reservacion/terminar', [VerificacionSalidasController::class,'terminarReservacion']);
+
 $router->comprobarRutas();

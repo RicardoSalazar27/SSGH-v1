@@ -74,7 +74,7 @@ if (window.location.pathname === '/admin/salidas/checkout') {
                 alert('Por favor, selecciona un método de pago.');
                 return;
             }
-
+    
             if (metodoPagoSelect.value === 'efectivo') {
                 const cantidad = parseFloat(cantidadEfectivoInput.value);
                 if (isNaN(cantidad) || cantidad < totalActual) {
@@ -83,21 +83,45 @@ if (window.location.pathname === '/admin/salidas/checkout') {
                     return;
                 }
             }
-            //Enviar datos al servidor, terminar reservacion y liquidar deudas
-            const url = '';
-            const datos = '';
-            const respuesta = await fetch(url,{
-                method : 'POST',
-                body : datos
-            })
+            
+            const penalidad = parseFloat(inputPenalidad.value) || 0;
+            
+            const datos = {
+                id_reserva: idReserva,
+                penalidad: penalidad,
+                deudas_liquidadas: true
+            };
+    
+            const respuesta = await fetch('/api/reservacion/terminar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datos)
+            });
+    
+            const resultado = await respuesta.json();
+            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo, '/admin/salidas');
+            return;
         }
-        // Si el total es 0, todo está bien sin método de pago, ENVIAR AL SERVIDOR QUE YA ACABO LA RESERVACION
-        const url = '';
-            const datos = '';
-            const respuesta = await fetch(url,{
-                method : 'POST',
-                body : datos
-            })
+    
+        // Total es 0, terminar reservación sin pago
+        const datos = {
+            id_reserva: idReserva,
+            penalidad: 0,
+            deudas_liquidadas: true
+        };
+    
+        const respuesta = await fetch('/api/reservacion/terminar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datos)
+        });
+    
+        const resultado = await respuesta.json();
+        mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo, '/admin/salidas');
     });
 
     // Ejecutar al cargar
