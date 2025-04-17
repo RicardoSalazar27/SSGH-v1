@@ -103,13 +103,13 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="./index.html" class="nav-link">
+                                <a href="/admin/reporte-diario" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Reporte Diario</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="./index2.html" class="nav-link">
+                                <a href="/admin/reporte-mensual" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Reporte Mensual</p>
                                 </a>

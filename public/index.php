@@ -14,6 +14,7 @@ use Controllers\HabitacionController;
 use Controllers\informacionController;
 use Controllers\NivelesController;
 use Controllers\RecepcionController;
+use Controllers\ReporteController;
 use Controllers\ReservacionesController;
 use Controllers\UsuariosController;
 use Controllers\VenderProductosController;
@@ -62,6 +63,8 @@ $router->get('/admin/reservaciones', [ReservacionesController::class, 'index']);
 $router->get('/admin/recepcion', [RecepcionController::class, 'index']);
 $router->get('/admin/recepcion/habitacion', [RecepcionController::class, 'checkin']);
 $router->get('/admin/registro-actividades', [AuditoriaController::class, 'index']);
+$router->get('/admin/reporte-diario', [ReporteController::class, 'indexReporteDiario']);
+$router->get('/admin/reporte-mensual', [ReporteController::class, 'indexReporteMensual']);
 
 // API'S
 $router->get('/api/usuarios', [UsuariosController::class, 'listar']);
