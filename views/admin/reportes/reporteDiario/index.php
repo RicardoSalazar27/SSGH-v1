@@ -27,10 +27,10 @@
                 <!-- Tabs -->
                 <ul class="nav nav-tabs" id="tabsReporte" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" id="tab-reservas-tab" data-toggle="tab" href="#tab-reservas" role="tab">Tabla alquiler</a>
+                        <a class="nav-link active" id="tab-reservas-tab" data-toggle="tab" href="#tab-reservas" role="tab">RESERVACIONES</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="tab-servicios-tab" data-toggle="tab" href="#tab-servicios" role="tab">Tabla servicio a la habitación y venta directa</a>
+                        <a class="nav-link" id="tab-servicios-tab" data-toggle="tab" href="#tab-servicios" role="tab">SERVICIOS/VENTAS A HABITACION Y VENTAS DIRECTAS</a>
                     </li>
                 </ul>
 
