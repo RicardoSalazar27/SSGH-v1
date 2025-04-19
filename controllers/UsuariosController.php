@@ -288,5 +288,42 @@ class UsuariosController {
             echo json_encode($respuesta);
             exit;
         }
-    }            
+    }
+    
+    public static function usuarioActivo() {
+        is_auth(); // Asegura que el usuario esté autenticado
+    
+        // Headers
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
+        // Obtener ID de usuario desde la sesión
+        $idUsuario = $_SESSION['id'] ?? null;
+    
+        if (!$idUsuario) {
+            http_response_code(401); // No autorizado
+            echo json_encode([
+                'tipo' => 'error',
+                'titulo' => 'No autorizado',
+                'mensaje' => 'No se pudo identificar al usuario.'
+            ]);
+            return;
+        }
+    
+        $usuario = Usuario::find($idUsuario);
+    
+        if (empty($usuario)) {
+            http_response_code(204); // No Content
+            return;
+        }
+        $usuario->img = '';
+        $usuario->password = '';
+        $usuario->email = '';
+        $usuario->direccion = '';
+
+        http_response_code(200); // OK
+        echo json_encode($usuario);
+    }
 }

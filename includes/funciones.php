@@ -26,3 +26,12 @@ function respuesta($tipo, $titulo, $mensaje){
     ];
 }
 
+function limpiarClavesRecursivamente($array) {
+    $nuevo = [];
+    foreach ($array as $clave => $valor) {
+        $claveLimpia = trim($clave);
+        $nuevo[$claveLimpia] = is_array($valor) ? limpiarClavesRecursivamente($valor) : $valor;
+    }
+    return $nuevo;
+}
+

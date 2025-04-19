@@ -71,6 +71,7 @@ $router->get('/api/usuarios', [UsuariosController::class, 'listar']);
 $router->post('/api/usuarios', [UsuariosController::class, 'crear']);
 $router->delete('/api/usuarios/{id}', [UsuariosController::class, 'eliminar']);
 $router->get('/api/usuarios/{id}', [UsuariosController::class, 'obtener']);
+$router->get('/api/usuario/activo', [UsuariosController::class, 'usuarioActivo']);
 $router->post('/api/usuarios/{id}', [UsuariosController::class, 'actualizar']);
 
 $router->get('/api/niveles', [NivelesController::class, 'listar']);

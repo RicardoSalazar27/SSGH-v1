@@ -27,14 +27,14 @@ class Pago extends ActiveRecord {
         $this->estado = $args['estado'] ?? 1;
     }
 
-    public static function insertarVentasYActualizarStock($datos) {
-        $nombreProcedimiento = "insertar_ventas_y_actualizar_stock";
+    // public static function insertarVentasYActualizarStock($datos) {
+    //     $nombreProcedimiento = "insertar_ventas_y_actualizar_stock";
 
-        $params = [
-            json_encode($datos['ventas']),
-            json_encode($datos['productos'])
-        ];
+    //     $params = [
+    //         json_encode($datos['ventas']),
+    //         json_encode($datos['productos'])
+    //     ];
 
-        return self::ejecutarProcedimiento($nombreProcedimiento, $params);
-    }
+    //     return self::ejecutarProcedimiento($nombreProcedimiento, $params);
+    // }
 }

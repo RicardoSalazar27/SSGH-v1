@@ -9,6 +9,7 @@ use Model\Pago;
 use Model\Producto;
 use Model\Reservacion;
 use Model\Usuario;
+use Model\Ventas;
 use MVC\Router;
 
 class VenderProductosController {
@@ -113,7 +114,7 @@ class VenderProductosController {
     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $body = json_decode(file_get_contents('php://input'), true); // Arreglo asociativo
-    
+            //debuguear($body);
             // Validación mínima
             if (!isset($body['ventas']) || !is_array($body['ventas']) || empty($body['ventas'])) {
                 http_response_code(400);
@@ -123,7 +124,7 @@ class VenderProductosController {
     
             $ventas = $body['ventas'];
             //debuguear($body);
-            $resultado = Pago::insertarVentasYActualizarStock($body);
+            $resultado = Ventas::insertarVentasYActualizarStock($body);
 
             if ($resultado) {
                 // Auditoría
