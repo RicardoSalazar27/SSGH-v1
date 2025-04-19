@@ -15,9 +15,11 @@ class ReporteController{
         is_auth();
 
         $usuario = Usuario::where('email', $_SESSION['email']);
+        $fecha_hoy = date("Y-m-d");
         $hotel = Hotel::get(1);
+        $usuarios = Usuario::all('ASC');
 
-        $reservas = ReporteReservas::obtenerReservasPorFechaYUsuario($usuario->id,'2025-04-16');
+        $reservas = ReporteReservas::obtenerReservasPorFechaYUsuario($usuario->id,$fecha_hoy);
         //debuguear($reservas);
         $ventasServicios = 0;
         $totalTablaAlquiler = 0;
@@ -27,9 +29,8 @@ class ReporteController{
             $totalTablaAlquiler += $reserva->Total;
             $totalReservaciones += ($reserva->Total - $reserva->Ventas_Servicios);
         }
-
         //SEGUNDO TAB
-        $ventas = ReporteVentas::obtenerVentasPorFechaYUsuario($usuario->id, '2025-04-16');
+        $ventas = ReporteVentas::obtenerVentasPorFechaYUsuario($usuario->id, $fecha_hoy);
         $ventasPublico = 0;
         foreach($ventas as $venta){
             if(strcasecmp($venta->Tipo, 'Público') === 0){
@@ -51,7 +52,9 @@ class ReporteController{
             'totalReservaciones' => $totalReservaciones,
             'ventas' => $ventas,
             'ventasPublico' => $ventasPublico,
-            'TotalVentasServiciosProductosDirectosOReservas' => $TotalVentasServiciosProductosDirectosOReservas
+            'TotalVentasServiciosProductosDirectosOReservas' => $TotalVentasServiciosProductosDirectosOReservas,
+            'usuarios' => $usuarios,
+            'fecha_hoy' => $fecha_hoy
         ]);
     }
 

@@ -24,6 +24,23 @@
         <div class="card">
             <div class="card-body">
 
+                <!-- Filtros: Usuario y Fecha -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="usuario">Seleccionar usuario:</label>
+                        <select id="usuario" name="usuario" class="form-control">
+                            <?php foreach($usuarios as $usuario): ?>
+                                <option value="<?= $usuario->id ?>"><?= $usuario->nombre . ' ' . $usuario->apellido;?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="fecha">Seleccionar fecha:</label>
+                        <input type="date" id="fecha" name="fecha" class="form-control" value="<?php echo $fecha_hoy;?>">
+                    </div>
+                </div>
+
+
                 <!-- Tabs -->
                 <ul class="nav nav-tabs" id="tabsReporte" role="tablist">
                     <li class="nav-item">
