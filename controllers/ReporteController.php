@@ -16,6 +16,7 @@ class ReporteController{
 
         $usuario = Usuario::where('email', $_SESSION['email']);
         $hotel = Hotel::get(1);
+
         $reservas = ReporteReservas::obtenerReservasPorFechaYUsuario($usuario->id,'2025-04-16');
         //debuguear($reservas);
         $ventasServicios = 0;
@@ -27,12 +28,12 @@ class ReporteController{
             $totalReservaciones += ($reserva->Total - $reserva->Ventas_Servicios);
         }
 
-        $ventas = ReporteVentas::obtenerVentasPorFechaYUsuario($usuario->id,'2025-04-16');
-    
+        //SEGUNDO TAB
+        $ventas = ReporteVentas::obtenerVentasPorFechaYUsuario($usuario->id, '2025-04-16');
         $ventasPublico = 0;
         foreach($ventas as $venta){
-            if($venta->Tipo == 'Publico'){
-                $ventasPublico += $venta->Total; 
+            if(strcasecmp($venta->Tipo, 'Público') === 0){
+                $ventasPublico += (float)$venta->Total;
             }
         }
 
