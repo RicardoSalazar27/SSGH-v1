@@ -23,7 +23,7 @@ class Ventas extends ActiveRecord{
         $this->cantidad = $args['cantidad'] ?? 1;
         $this->monto = $args['monto'] ?? '';
         $this->descripcion = $args['descripcion'] ?? '';
-        $this->reservacion_id = $args['reservacion_id'] ?? '';
+        $this->reservacion_id = $args['reservacion_id'] ?? null;
         $this->usuario_id = $args['usuario_id'] ?? '';
         $this->estado = $args['estado'] ?? 0;
         $this->fecha_venta = $args['fecha_venta'] ?? '';

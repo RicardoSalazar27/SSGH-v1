@@ -225,51 +225,57 @@ if (window.location.pathname === '/admin/puntodeventa/venta/directa') {
         feriaCalculada.value = Math.abs(feria);
     });
     
-    //enviar datos de la venta al servidor
-    btnTerminarVenta.addEventListener('click',async () => {
-
+    // Enviar datos de la venta directa al servidor
+    btnTerminarVenta.addEventListener('click', async () => {
         if (serviciosVendidos.length === 0) {
             mostrarAlerta('Opps.', 'El carrito está vacío', 'warning');
             return;
         }
-                
-        //arreglo de objetos
-                const ventas = serviciosVendidos.map(producto => ({
-                    reservacion_id: 0,
-                    producto_id: producto.id_producto,
-                    monto: parseFloat(producto.cantidad * producto.precio),
-                    fecha_pago: obtenerFechaFormateada(),
-                    tipo_pago: 'Publico',
-                    descripcion: producto.nombre,
-                    estado: 1
-                }));
-                
-                const productos = serviciosVendidos.map(producto => ({
-                    producto_id: producto.id_producto,
-                    cantidad: producto.cantidad
-                }));
-                
-                const datos = JSON.stringify({
-                    ventas,     // ← Arreglo de objetos
-                    productos   // ← Arreglo de objetos
-                });                
-                const url = '/api/productos/reservacion/vender';
 
-                try {
-                    const respuesta = await fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: datos
-                    });
+        const urlUsuario = '/api/usuario/activo';
+        let usuario_id = 0;
 
-                    const resultado = await respuesta.json();
-                    mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo, '/admin/puntodeventa/vender');
+        try {
+            const respuesta = await fetch(urlUsuario);
+            const usuario = await respuesta.json();
+            usuario_id = usuario.id;
+        } catch (error) {
+            console.error(error);
+        }
 
-                } catch (error) {
-                    console.error(error);
-                }
-        
-    })
+        // Preparar datos de ventas y productos (sin reservacion_id real)
+        const ventas = serviciosVendidos.map(producto => ({
+            producto_id: Number(producto.id_producto),
+            cantidad: Number(producto.cantidad),
+            monto: producto.cantidad * producto.precio,
+            descripcion: producto.nombre,
+            usuario_id: usuario_id,
+            estado: 1 // Estado 1: pagado al instante
+        }));
+
+        const productos = serviciosVendidos.map(producto => ({
+            producto_id: Number(producto.id_producto),
+            cantidad: Number(producto.cantidad)
+        }));
+
+        const datos = JSON.stringify({ ventas, productos });
+
+        const urlVenta = '/api/productos/reservacion/vender';
+
+        try {
+            const respuesta = await fetch(urlVenta, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: datos
+            });
+
+            const resultado = await respuesta.json();
+            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo, '/admin/puntodeventa/vender');
+
+        } catch (error) {
+            console.error(error);
+        }
+    });
 }

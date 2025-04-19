@@ -264,21 +264,36 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
         }
 
         // Preparar datos de ventas y productos
+        // const ventas = serviciosVendidos.map(producto => ({
+        //     reservacion_id: idReserva.toString(),
+        //     producto_id: producto.id_producto.toString(),
+        //     cantidad: producto.cantidad.toString(), // 👈 AGREGADO
+        //     monto: (producto.cantidad * producto.precio).toString(),
+        //     descripcion: producto.nombre.toString(),
+        //     usuario_id: usuario_id.toString(),
+        //     estado: cuandoPagar.value === '1' ? "1" : "0"
+        // }));
+        
+        // const productos = serviciosVendidos.map(producto => ({
+        //     producto_id: producto.id_producto.toString(),
+        //     cantidad: producto.cantidad.toString()
+        // }));
+
         const ventas = serviciosVendidos.map(producto => ({
-            reservacion_id: idReserva.toString(),
-            producto_id: producto.id_producto.toString(),
-            cantidad: producto.cantidad.toString(), // 👈 AGREGADO
-            monto: (producto.cantidad * producto.precio).toString(),
-            descripcion: producto.nombre.toString(),
-            usuario_id: usuario_id.toString(),
-            estado: cuandoPagar.value === '1' ? "1" : "0"
+            reservacion_id: Number(idReserva),
+            producto_id: Number(producto.id_producto),
+            cantidad: Number(producto.cantidad),
+            monto: producto.cantidad * producto.precio,
+            descripcion: producto.nombre,
+            usuario_id: usuario_id,
+            estado: cuandoPagar.value === '1' ? 1 : 0
         }));
         
         const productos = serviciosVendidos.map(producto => ({
-            producto_id: producto.id_producto.toString(),
-            cantidad: producto.cantidad.toString()
+            producto_id: Number(producto.id_producto),
+            cantidad: Number(producto.cantidad)
         }));
-
+        
         const datos = JSON.stringify({ ventas, productos });
         console.log(datos);
         const urlVenta = '/api/productos/reservacion/vender';
