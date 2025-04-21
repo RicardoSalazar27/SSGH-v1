@@ -34,7 +34,9 @@ class ReporteReservas extends ActiveRecord {
         $this->Tiempo_Rebasado = $args['Tiempo_Rebasado'] ?? 'No';
     }
 
-    public static function obtenerReservasPorFechaYUsuario($idUsuario, $fecha) {
+    public static function obtenerReservasPorFechaYUsuario($idUsuario = null, $fecha) {
+        $condicionUsuario = $idUsuario ? "AND r.ID_usuario = '$idUsuario'" : "";
+    
         $query = "
             SELECT
                 r.ID_reserva AS No_Reserva,
@@ -61,13 +63,14 @@ class ReporteReservas extends ActiveRecord {
             LEFT JOIN Habitaciones h ON h.id = rh.ID_habitacion
             LEFT JOIN Ventas v ON v.reservacion_id = r.ID_reserva AND v.estado = 1
             WHERE
-                (DATE(r.fecha_salida) = '$fecha' OR DATE(r.fecha_salida) = CURDATE()) 
-                AND r.ID_usuario = '$idUsuario'
+                (DATE(r.fecha_salida) = '$fecha' OR DATE(r.fecha_salida) = CURDATE())
+                $condicionUsuario
             GROUP BY
                 r.ID_reserva;
         ";
+    
         return self::consultarSQL($query);
-    }
+    }    
 
     public static function obtenerReservasPorMesYUsuario($mes, $anio, $usuarioId = null) {
         $condicionUsuario = $usuarioId ? "AND r.ID_usuario = '$usuarioId'" : "";

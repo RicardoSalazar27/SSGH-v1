@@ -29,6 +29,7 @@
                     <div class="col-md-6">
                         <label for="usuario">Seleccionar usuario:</label>
                         <select id="usuario" name="usuario" class="form-control">
+                            <option value="">Todos</option>
                             <?php foreach($usuariosReportes as $usuarioReporte): ?>
                                 <option value="<?= $usuarioReporte->id ?>"><?= $usuarioReporte->nombre . ' ' . $usuarioReporte->apellido;?></option>
                             <?php endforeach; ?>
@@ -57,21 +58,20 @@
                     <!-- Tab de Reservas -->
                     <div class="tab-pane fade show active" id="tab-reservas" role="tabpanel">
 
-                        <!-- Resumen Totales -->
-                        <div class="row text-center mb-3">
-                            <div class="col-md-4">
-                                <h6>TOTAL VENTAS/SERVICIOS</h6>
-                                <p><strong>MXN$</strong></p>
-                            </div>
-                            <div class="col-md-4">
-                                <h6>TOTAL RESERVACIÓN</h6>
-                                <p><strong>MXN$</strong></p>
-                            </div>
-                            <div class="col-md-4">
-                                <h6>TOTAL</h6>
-                                <p><strong>MXN$</strong></p>
-                            </div>
+                    <div class="row text-center mb-3">
+                        <div class="col-md-4">
+                            <h6>TOTAL VENTAS/SERVICIOS</h6>
+                            <p><strong id="totalVentas">MXN$</strong></p>
                         </div>
+                        <div class="col-md-4">
+                            <h6>TOTAL RESERVACIÓN</h6>
+                            <p><strong id="totalReservas">MXN$</strong></p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6>TOTAL</h6>
+                            <p><strong id="totalGeneral">MXN$</strong></p>
+                        </div>
+                    </div>
 
                         <div class="table-responsive">
                             <table id="tablaReservas" class="table table-bordered table-hover">
@@ -102,15 +102,15 @@
                         <div class="row text-center mb-3">
                             <div class="col-md-4">
                                 <h6>TOTAL VENTA DIRECTA</h6>
-                                <p><strong>MXN$</strong></p>
+                                <p><strong id="totalVentasDirecta">MXN$</strong></p>
                             </div>
                             <div class="col-md-4">
                                 <h6>TOTAL VENTA/SERVICIOS RESERVACION</h6>
-                                <p><strong>MXN$</strong></p>
+                                <p><strong id="totalVentasReservacion">MXN$</strong></p>
                             </div>
                             <div class="col-md-4">
                                 <h6>TOTAL</h6>
-                                <p><strong>MXN$</strong></p>
+                                <p><strong id="totalVentasGeneral">MXN$</strong></p>
                             </div>
                         </div>
 

@@ -32,7 +32,9 @@ class ReporteVentas extends ActiveRecord {
         $this->Responsable = $args['Responsable'] ?? '';
     }
 
-    public static function obtenerVentasPorFechaYUsuario($idUsuario, $fecha) {
+    public static function obtenerVentasPorFechaYUsuario($idUsuario = null, $fecha) {
+        $condicionUsuario = $idUsuario ? "AND v.usuario_id = '$idUsuario'" : "";
+    
         $query = "
             SELECT 
                 v.id AS Identificador,
@@ -53,14 +55,15 @@ class ReporteVentas extends ActiveRecord {
             WHERE 
                 DATE(v.fecha_venta) = '$fecha'
                 AND v.estado = 1
-                AND v.usuario_id = '$idUsuario'  -- Aquí está el cambio importante
+                $condicionUsuario
             GROUP BY 
                 v.id
             ORDER BY 
                 v.fecha_venta ASC
         ";
+    
         return self::consultarSQL($query);
-    }
+    }    
     
     public static function obtenerVentasPorMesYUsuario($mes, $anio, $usuarioId = null) {
         $condicionUsuario = $usuarioId ? "AND v.usuario_id = '$usuarioId'" : "";

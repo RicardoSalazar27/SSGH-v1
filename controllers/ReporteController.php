@@ -65,7 +65,7 @@ class ReporteController{
     }
     
 
-    public static function obtenerReporteDiario($usuario_id, $fecha) {
+    public static function obtenerReporteDiario($usuario_id = null, $fecha = null) {
         is_auth();
     
         header('Content-Type: application/json');
@@ -74,18 +74,22 @@ class ReporteController{
         header('Access-Control-Allow-Headers: Content-Type, Authorization');
     
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-            if (empty($usuario_id) || empty($fecha)) {
+            if (empty($fecha)) {
                 http_response_code(400);
                 echo json_encode([
                     'tipo' => 'error',
                     'titulo' => 'Datos insuficientes',
-                    'mensaje' => 'Faltan usuario_id o fecha'
+                    'mensaje' => 'Falta la fecha'
                 ]);
                 exit;
             }
+    
+            // Sanitizar y convertir
+            $usuario_id = !empty($usuario_id) ? intval($usuario_id) : null;
+    
             $ventas = ReporteVentas::obtenerVentasPorFechaYUsuario($usuario_id, $fecha);
-            $reservas = ReporteReservas::obtenerReservasPorFechaYUsuario($usuario_id, $fecha); // <- usa $usuario_id y $fecha
-
+            $reservas = ReporteReservas::obtenerReservasPorFechaYUsuario($usuario_id, $fecha);
+    
             http_response_code(200);
             echo json_encode([
                 'ventas' => $ventas,
@@ -93,7 +97,7 @@ class ReporteController{
             ]);
         }
     }
-
+    
     public static function obtenerReporteMensual($usuario_id = null, $mes = null, $anio = null) {
         is_auth();
     

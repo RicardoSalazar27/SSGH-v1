@@ -25,6 +25,14 @@ if (window.location.pathname === '/admin/reporte-diario') {
     const nombreArchivoReservas = `reservaciones_${fechaFormateada.replace(/[\s:]/g, '_')}`;
     const nombreArchivoServicios = `servicios_${fechaFormateada.replace(/[\s:]/g, '_')}`;
 
+    let totalVentaServicios = 0;
+    let totalReservaciones = 0;
+    let totalGeneral = 0;
+
+    let totalVentaDirecta = 0;
+    let totalVentaReservacion = 0;
+    let totalVentaGeneral = 0;
+
     const configBase = {
         responsive: true,
         paging: true,
@@ -105,8 +113,9 @@ if (window.location.pathname === '/admin/reporte-diario') {
     };
 
     async function initReportesDiarios() {
+
+        const usuarioId = document.getElementById('usuario').value || 'null';
         const fecha = document.getElementById('fecha').value;
-        const usuarioId = document.getElementById('usuario').value;
         const url = `/api/reporte-diario/${usuarioId}/${fecha}`;
 
         try {
@@ -133,6 +142,11 @@ if (window.location.pathname === '/admin/reporte-diario') {
         const tbody = document.querySelector('#tablaReservas tbody');
         tbody.innerHTML = '';
     
+        // Reiniciar totales antes de acumular
+        totalVentaServicios = 0;
+        totalReservaciones = 0;
+        totalGeneral = 0;
+    
         reservas.forEach((reserva, index) => {
             const row = `
                 <tr>
@@ -150,12 +164,30 @@ if (window.location.pathname === '/admin/reporte-diario') {
                 </tr>
             `;
             tbody.innerHTML += row;
+        
+            const ventasServicios = parseFloat(reserva.Ventas_Servicios || 0);
+            const total = parseFloat(reserva.Total || 0);
+        
+            totalVentaServicios += ventasServicios;
+            totalReservaciones += total - ventasServicios;
         });
-    }
+        
+        totalGeneral = totalVentaServicios + totalReservaciones;
+            
+        // Llenar <p> del resumen
+        document.getElementById('totalVentas').textContent = `MXN$${totalVentaServicios.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+        document.getElementById('totalReservas').textContent = `MXN$${totalReservaciones.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+        document.getElementById('totalGeneral').textContent = `MXN$${totalGeneral.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+    }    
     
     function llenarTablaServicios(ventas) {
         const tbody = document.querySelector('#tablaServicios tbody');
         tbody.innerHTML = '';
+    
+        // Reiniciamos totales por si se vuelve a llenar la tabla
+        totalVentaDirecta = 0;
+        totalVentaReservacion = 0;
+        totalVentaGeneral = 0;
     
         ventas.forEach((item, index) => {
             const row = `
@@ -166,13 +198,28 @@ if (window.location.pathname === '/admin/reporte-diario') {
                     <td>${item.Habitacion ?? '-'}</td>
                     <td>${item.Articulo}</td>
                     <td>${item.Cantidad}</td>
-                    <td>${item.Precio_Unitario}</td>
-                    <td>${item.Total}</td>
+                    <td>MXN$${item.Precio_Unitario}</td>
+                    <td>MXN$${item.Total}</td>
                     <td>${item.Hora}</td>
                 </tr>
             `;
             tbody.innerHTML += row;
+    
+            const total = parseFloat(item.Total || 0);
+    
+            if (item.Tipo.toLowerCase() === 'huésped' || item.Tipo.toLowerCase() === 'huesped') {
+                totalVentaReservacion += total;
+            } else if (item.Tipo.toLowerCase() === 'público' || item.Tipo.toLowerCase() === 'publico') {
+                totalVentaDirecta += total;
+            }
         });
+    
+        totalVentaGeneral = totalVentaReservacion + totalVentaDirecta;
+
+        document.getElementById('totalVentasDirecta').textContent = `MXN$${totalVentaDirecta.toFixed(2)}`;
+        document.getElementById('totalVentasReservacion').textContent = `MXN$${totalVentaReservacion.toFixed(2)}`;
+        document.getElementById('totalVentasGeneral').textContent = `MXN$${totalVentaGeneral.toFixed(2)}`;
+
     }        
 
     // 🔄 Ejecutar al cargar la página o cuando cambien filtros
