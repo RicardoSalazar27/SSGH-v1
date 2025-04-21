@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Model\Auditoria;
 use Model\Crear_Reservacion;
 use Model\Editar_Reservacion;
 use Model\EstadoReservacion;
@@ -81,15 +82,36 @@ class ReservacionesController {
                 'habitaciones' => array_map('intval', $datos_json['habitaciones'] ?? []), // Convertir habitaciones a enteros
                 'observaciones' => $datos_json['observaciones'] ?? '',
                 'usuario_id' => (int) ($datos_json['usuario_id'] ?? 1) // Convertir ID usuario a entero
-            ];            
-            //debuguear($datos);
-             //return;
+            ];
             // Llamar al modelo para crear la reservación
             $resultado = Crear_Reservacion::crearReservacion($datos);
-
+            // $resultado = true;
             if ($resultado) {
+                // Obtener el último registro insertado directamente
+                $query = "SELECT * FROM Reservas ORDER BY ID_reserva DESC LIMIT 1";
+                $resultadoUltimo = Reservacion::consultarSQL($query);
+                $ultimaReserva = array_shift($resultadoUltimo); // Obtener el primer resultado
+                $registro = isset($ultimaReserva->ID_reserva) ? $ultimaReserva->ID_reserva : 'NULL';
+                // Registrar en auditoría
+                $usuarioId = $_SESSION['id'];
+                $auditoria = new Auditoria();
+                date_default_timezone_set("America/Mexico_City");
+                $fechaHora = date('Y-m-d H:i:s');
+                $datosAuditoria = [
+                    'id_usuario' => $usuarioId,
+                    'accion' => 'CREAR',
+                    'tabla_afectada' => 'Reservas',
+                    'id_registro_afectado' => $registro,
+                    'detalle' => "Creo una nueva reservacion",
+                    'fecha_hora' => $fechaHora 
+                ];
+                
+                $auditoria->sincronizar($datosAuditoria);
+                $auditoria->guardar();
+            
                 echo json_encode(respuesta('success', 'Reserva Exitosa', 'La reservación se ha creado correctamente.'));
-            } else {
+            }
+             else {
                 echo json_encode(respuesta('error', 'Error', 'Hubo un problema al crear la reservación.'));
             }            
         }
@@ -202,22 +224,23 @@ class ReservacionesController {
     
             // Verificar si la actualización fue exitosa
             if ($resultado) {
-                // $usuarioId = $_SESSION['id'];  // Asegúrate que $_SESSION['id'] tenga un valor válido
-                // $auditoria = new Auditoria();
-                // $registro = 'NULL';  // Si id_registro_afectado es NULL, esto está bien
-                // date_default_timezone_set("America/Mexico_City");
-                // $fechaHora = date('Y-m-d H:i:s');  // Esto devuelve la fecha y hora actuales en formato "YYYY-MM-DD HH:MM:SS"
-                // $datosAuditoria = [
-                //     'id_usuario' => $usuarioId,
-                //     'accion' => 'EDITAR',
-                //     'tabla_afectada' => 'Niveles',
-                //     'id_registro_afectado' => $registro,
-                //     'detalle' => "Editó Nivel $id",
-                //     'fecha_hora' => $fechaHora 
-                // ];
-        
-                // $auditoria->sincronizar($datosAuditoria);
-                // $auditoria->guardar();
+                
+                $usuarioId = $_SESSION['id'];  // Asegúrate que $_SESSION['id'] tenga un valor válido
+                $auditoria = new Auditoria();
+                $registro = $id;  // Si id_registro_afectado es NULL, esto está bien
+                date_default_timezone_set("America/Mexico_City");
+                $fechaHora = date('Y-m-d H:i:s');  // Esto devuelve la fecha y hora actuales en formato "YYYY-MM-DD HH:MM:SS"
+                $datosAuditoria = [
+                    'id_usuario' => $usuarioId,
+                    'accion' => 'EDITAR',
+                    'tabla_afectada' => 'Reservas',
+                    'id_registro_afectado' => $registro,
+                    'detalle' => "Editó Reservacion $id",
+                    'fecha_hora' => $fechaHora 
+                ];
+
+                $auditoria->sincronizar($datosAuditoria);
+                $auditoria->guardar();
 
                 echo json_encode(respuesta('success', 'Actualización exitosa', 'La reservación se ha actualizado correctamente'));
             } else {

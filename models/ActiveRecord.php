@@ -151,6 +151,13 @@ class ActiveRecord {
         return $resultado;
     }
 
+    // Obtener el último registro creado
+    public static function ultimo() {
+        $query = "SELECT * FROM " . static::$tabla . " ORDER BY id DESC LIMIT 1";
+        $resultado = self::consultarSQL($query);
+        return array_shift($resultado);
+    }
+
     // Traer un total de registros (admite la busqueda por columna-solo 1)
     public static function total($columna = '', $valor = '') {
         $query = "SELECT COUNT(*) FROM " . static::$tabla;
