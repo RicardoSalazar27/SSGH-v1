@@ -53,15 +53,12 @@ class ReporteVentas extends ActiveRecord {
             WHERE 
                 DATE(v.fecha_venta) = '$fecha'
                 AND v.estado = 1
-                AND (
-                    (v.reservacion_id IS NOT NULL AND r.ID_usuario = '$idUsuario')
-                    OR v.reservacion_id IS NULL
-                )
+                AND v.usuario_id = '$idUsuario'  -- Aquí está el cambio importante
             GROUP BY 
                 v.id
             ORDER BY 
                 v.fecha_venta ASC
         ";
         return self::consultarSQL($query);
-    }
+    }    
 }

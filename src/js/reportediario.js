@@ -1,5 +1,10 @@
 if (window.location.pathname === '/admin/reporte-diario') {
-    // 🔧 Variables necesarias definidas manualmente
+
+    let dataTableReservas;
+    let dataTableServicios;
+    let dataTableReservasInit = false;
+    let dataTableServiciosInit = false;
+
     const nombreHotel = 'Hotel Paraíso Tropical';
 
     function obtenerFechaFormateada() {
@@ -14,16 +19,13 @@ if (window.location.pathname === '/admin/reporte-diario') {
     }
 
     const fechaFormateada = obtenerFechaFormateada();
-
+    const mensajeTopReporte = `Generado el: ${fechaFormateada}`;
     const tituloReporteReservas = `Reporte de Reservaciones - ${nombreHotel}`;
     const tituloReporteServicios = `Reporte de Ventas y Servicios - ${nombreHotel}`;
-    const mensajeTopReporte = `Generado el: ${fechaFormateada}`;
-
     const nombreArchivoReservas = `reservaciones_${fechaFormateada.replace(/[\s:]/g, '_')}`;
     const nombreArchivoServicios = `servicios_${fechaFormateada.replace(/[\s:]/g, '_')}`;
 
-    // ✅ Configuración para tabla de Reservas
-    const opcionesReservas = {
+    const configBase = {
         responsive: true,
         paging: true,
         ordering: true,
@@ -31,7 +33,11 @@ if (window.location.pathname === '/admin/reporte-diario') {
         language: {
             url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
         },
-        dom: '<"d-flex justify-content-between align-items-center mb-2"fB>rtip',
+        dom: '<"d-flex justify-content-between align-items-center mb-2"fB>rtip'
+    };
+
+    const opcionesReservas = {
+        ...configBase,
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -51,7 +57,10 @@ if (window.location.pathname === '/admin/reporte-diario') {
                 orientation: 'portrait',
                 pageSize: 'A4',
                 exportOptions: {
-                    columns: ':visible'
+                    columns: ':visible',
+                    modifier: {
+                        page: 'all'
+                    }
                 },
                 customize: function (doc) {
                     doc.defaultStyle.fontSize = 10;
@@ -61,9 +70,8 @@ if (window.location.pathname === '/admin/reporte-diario') {
         ]
     };
 
-    // ✅ Configuración para tabla de Servicios
     const opcionesServicios = {
-        ...opcionesReservas,
+        ...configBase,
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -83,7 +91,10 @@ if (window.location.pathname === '/admin/reporte-diario') {
                 orientation: 'portrait',
                 pageSize: 'A4',
                 exportOptions: {
-                    columns: ':visible'
+                    columns: ':visible',
+                    modifier: {
+                        page: 'all'
+                    }
                 },
                 customize: function (doc) {
                     doc.defaultStyle.fontSize = 10;
@@ -93,9 +104,83 @@ if (window.location.pathname === '/admin/reporte-diario') {
         ]
     };
 
-    // Inicializar tablas
-    $('#tablaReservas').DataTable(opcionesReservas);
-    $('#tablaServicios').DataTable(opcionesServicios);
+    async function initReportesDiarios() {
+        const fecha = document.getElementById('fecha').value;
+        const usuarioId = document.getElementById('usuario').value;
+        const url = `/api/reporte-diario/${usuarioId}/${fecha}`;
+
+        try {
+            const response = await fetch(url);
+            const { reservas, ventas } = await response.json();
+
+            if (dataTableReservasInit) dataTableReservas.destroy();
+            if (dataTableServiciosInit) dataTableServicios.destroy();
+
+            llenarTablaReservas(reservas);
+            llenarTablaServicios(ventas);
+
+            dataTableReservas = $('#tablaReservas').DataTable(opcionesReservas);
+            dataTableServicios = $('#tablaServicios').DataTable(opcionesServicios);
+
+            dataTableReservasInit = true;
+            dataTableServiciosInit = true;
+        } catch (error) {
+            console.error('Error al obtener reporte diario:', error);
+        }
+    }
+
+    function llenarTablaReservas(reservas) {
+        const tbody = document.querySelector('#tablaReservas tbody');
+        tbody.innerHTML = '';
+    
+        reservas.forEach((reserva, index) => {
+            const row = `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${reserva.No_Reserva}</td>
+                    <td>${reserva.Habitaciones}</td>
+                    <td>MXN$${reserva.Precio_Total}</td>
+                    <td>MXN$${reserva.Descuento}</td>
+                    <td>MXN$${reserva.Cobro_Extra}</td>
+                    <td>MXN$${reserva.Adelanto}</td>
+                    <td>MXN$${reserva.Penalidad}</td>
+                    <td>MXN$${reserva.Ventas_Servicios}</td>
+                    <td>MXN$${reserva.Total}</td>
+                    <td>${reserva.Tiempo_Rebasado}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+    }
+    
+    function llenarTablaServicios(ventas) {
+        const tbody = document.querySelector('#tablaServicios tbody');
+        tbody.innerHTML = '';
+    
+        ventas.forEach((item, index) => {
+            const row = `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${item.Identificador}</td>
+                    <td>${item.Tipo}</td>
+                    <td>${item.Habitacion ?? '-'}</td>
+                    <td>${item.Articulo}</td>
+                    <td>${item.Cantidad}</td>
+                    <td>${item.Precio_Unitario}</td>
+                    <td>${item.Total}</td>
+                    <td>${item.Hora}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+    }        
+
+    // 🔄 Ejecutar al cargar la página o cuando cambien filtros
+    document.addEventListener('DOMContentLoaded', initReportesDiarios);
+    document.getElementById('usuario').addEventListener('change', initReportesDiarios);
+    document.getElementById('fecha').addEventListener('change', initReportesDiarios);
+
+    //Llenar tabla
 
     // document.getElementById('usuario').addEventListener('change', () => {
     //     const usuarioId = document.getElementById('usuario').value;

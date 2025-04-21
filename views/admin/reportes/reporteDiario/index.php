@@ -30,7 +30,7 @@
                         <label for="usuario">Seleccionar usuario:</label>
                         <select id="usuario" name="usuario" class="form-control">
                             <?php foreach($usuariosReportes as $usuarioReporte): ?>
-                                <option value="<?= $usuarioReporte->id ?>"><?= $usuarioReporte->nombre . ' ' . $usuario->apellido;?></option>
+                                <option value="<?= $usuarioReporte->id ?>"><?= $usuarioReporte->nombre . ' ' . $usuarioReporte->apellido;?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -61,15 +61,15 @@
                         <div class="row text-center mb-3">
                             <div class="col-md-4">
                                 <h6>TOTAL VENTAS/SERVICIOS</h6>
-                                <p><strong>MXN$<?php echo $ventasServicios;?></strong></p>
+                                <p><strong>MXN$</strong></p>
                             </div>
                             <div class="col-md-4">
                                 <h6>TOTAL RESERVACIÓN</h6>
-                                <p><strong>MXN$<?php echo $totalReservaciones;?></strong></p>
+                                <p><strong>MXN$</strong></p>
                             </div>
                             <div class="col-md-4">
                                 <h6>TOTAL</h6>
-                                <p><strong>MXN$<?php echo $totalTablaAlquiler;?></strong></p>
+                                <p><strong>MXN$</strong></p>
                             </div>
                         </div>
 
@@ -80,6 +80,7 @@
                                         <th>#</th>
                                         <th>No. Reserva</th>
                                         <th>Habitación(es)</th>
+                                        <th>Total Neto</th>
                                         <th>Descuento</th>
                                         <th>Cobro Extra</th>
                                         <th>Adelanto</th>
@@ -90,20 +91,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($reservas as $i => $reserva): ?>
-                                        <tr class="text-center">
-                                            <td><?= $i + 1 ?></td>
-                                            <td><?= $reserva->No_Reserva ?></td>
-                                            <td><?= $reserva->Habitaciones ?></td>
-                                            <td>MXN$<?= $reserva->Descuento ?></td>
-                                            <td>MXN$<?= $reserva->Cobro_Extra ?></td>
-                                            <td>MXN$<?= $reserva->Adelanto ?></td>
-                                            <td>MXN$<?= $reserva->Penalidad ?></td>
-                                            <td>MXN$<?= $reserva->Ventas_Servicios ?></td>
-                                            <td><strong>MXN$<?= $reserva->Total ?></strong></td>
-                                            <td><?= $reserva->Tiempo_Rebasado ?></td>
-                                        </tr>
-                                    <?php endforeach ?>
                                 </tbody>
                             </table>
                         </div>
@@ -115,15 +102,15 @@
                         <div class="row text-center mb-3">
                             <div class="col-md-4">
                                 <h6>TOTAL VENTA DIRECTA</h6>
-                                <p><strong>MXN$<?php echo $ventasPublico;?></strong></p>
+                                <p><strong>MXN$</strong></p>
                             </div>
                             <div class="col-md-4">
                                 <h6>TOTAL VENTA/SERVICIOS RESERVACION</h6>
-                                <p><strong>MXN$<?php echo $ventasServicios;?></strong></p>
+                                <p><strong>MXN$</strong></p>
                             </div>
                             <div class="col-md-4">
                                 <h6>TOTAL</h6>
-                                <p><strong>MXN$<?php echo $TotalVentasServiciosProductosDirectosOReservas;?></strong></p>
+                                <p><strong>MXN$</strong></p>
                             </div>
                         </div>
 
@@ -134,7 +121,7 @@
                                         <th>#</th>
                                         <th>Pago No.</th>
                                         <th>Tipo</th>
-                                        <th>Habitación</th>
+                                        <th>Habitación(es)</th>
                                         <th>Artículo</th>
                                         <th>Cantidad</th>
                                         <th>Precio unitario</th>
@@ -143,26 +130,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <?php foreach($ventas as $index => $venta): ?>
-                                    <tr class="text-center">
-                                        <td><?= $index + 1 ?></td>
-                                        <td><?= $venta->Identificador ?></td>
-                                        <td><?= $venta->Tipo ?></td>
-                                        <td><?= $venta->Habitacion ?></td>
-                                        <td><?= $venta->Articulo ?></td>
-                                        <td><?= $venta->Cantidad ?></td>
-                                        <td>MXN$<?= number_format($venta->Precio_Unitario, 2) ?></td>
-                                        <td>MXN$<?= number_format($venta->Total, 2) ?></td>
-                                        <td><?= $venta->Hora ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
                 </div> <!-- /tab-content -->
-
             </div>
         </div>
     </div>
