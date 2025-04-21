@@ -24,7 +24,7 @@
         <div class="card">
             <div class="card-body">
 
-                <!-- Filtros: Usuario y Fecha -->
+                <!-- Filtros: Usuario y Mes y Año -->
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <label for="usuario">Seleccionar usuario:</label>
@@ -48,8 +48,8 @@
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label for="año">Seleccionar año:</label>
-                        <select id="año" name="año" class="form-control">
+                        <label for="anio">Seleccionar año:</label>
+                        <select id="anio" name="anio" class="form-control">
                             <?php foreach($anios as $anio): ?>
                                 <option value="<?= $anio ?>" <?= $anio == date('Y') ? 'selected' : '' ?>>
                                     <?= $anio ?>

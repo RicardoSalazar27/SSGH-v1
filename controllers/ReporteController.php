@@ -93,6 +93,41 @@ class ReporteController{
             ]);
         }
     }
+
+    public static function obtenerReporteMensual($usuario_id = null, $mes = null, $anio = null) {
+        is_auth();
+    
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if (empty($mes) || empty($anio)) {
+                http_response_code(400);
+                echo json_encode([
+                    'tipo' => 'error',
+                    'titulo' => 'Datos insuficientes',
+                    'mensaje' => 'Faltan mes o año'
+                ]);
+                exit;
+            }
+    
+            // Convertimos strings a enteros para seguridad
+            $mes = intval($mes);
+            $anio = intval($anio);
+            $usuario_id = !empty($usuario_id) ? intval($usuario_id) : null;
+    
+            $ventas = ReporteVentas::obtenerVentasPorMesYUsuario($mes, $anio, $usuario_id);
+            $reservas = ReporteReservas::obtenerReservasPorMesYUsuario($mes, $anio, $usuario_id);
+    
+            http_response_code(200);
+            echo json_encode([
+                'ventas' => $ventas,
+                'reservas' => $reservas
+            ]);
+        }
+    }    
     
     // public static function obtenerReporteDiario($usuario_id, $fecha) {
     //     is_auth();
