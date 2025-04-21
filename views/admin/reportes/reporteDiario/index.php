@@ -29,8 +29,8 @@
                     <div class="col-md-6">
                         <label for="usuario">Seleccionar usuario:</label>
                         <select id="usuario" name="usuario" class="form-control">
-                            <?php foreach($usuarios as $usuario): ?>
-                                <option value="<?= $usuario->id ?>"><?= $usuario->nombre . ' ' . $usuario->apellido;?></option>
+                            <?php foreach($usuariosReportes as $usuarioReporte): ?>
+                                <option value="<?= $usuarioReporte->id ?>"><?= $usuarioReporte->nombre . ' ' . $usuario->apellido;?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

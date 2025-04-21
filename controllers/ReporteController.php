@@ -17,7 +17,7 @@ class ReporteController{
         $usuario = Usuario::where('email', $_SESSION['email']);
         $fecha_hoy = date("Y-m-d");
         $hotel = Hotel::get(1);
-        $usuarios = Usuario::all('ASC');
+        $usuariosReportes = Usuario::all('ASC');
 
         $reservas = ReporteReservas::obtenerReservasPorFechaYUsuario($usuario->id,$fecha_hoy);
         //debuguear($reservas);
@@ -53,7 +53,7 @@ class ReporteController{
             'ventas' => $ventas,
             'ventasPublico' => $ventasPublico,
             'TotalVentasServiciosProductosDirectosOReservas' => $TotalVentasServiciosProductosDirectosOReservas,
-            'usuarios' => $usuarios,
+            'usuariosReportes' => $usuariosReportes,
             'fecha_hoy' => $fecha_hoy
         ]);
     }
@@ -72,6 +72,35 @@ class ReporteController{
             'hotel' => $hotel
         ]);
     }
+
+    public static function obtenerReporteDiario($usuario_id, $fecha) {
+        is_auth();
+    
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if (empty($usuario_id) || empty($fecha)) {
+                http_response_code(400);
+                echo json_encode([
+                    'tipo' => 'error',
+                    'titulo' => 'Datos insuficientes',
+                    'mensaje' => 'Faltan usuario_id o fecha'
+                ]);
+                exit;
+            }
+            $ventas = ReporteVentas::obtenerVentasPorFechaYUsuario($usuario_id, $fecha);
+            $reservas = ReporteReservas::obtenerReservasPorFechaYUsuario($usuario_id, $fecha); // <- usa $usuario_id y $fecha
+
+            http_response_code(200);
+            echo json_encode([
+                'ventas' => $ventas,
+                'reservas' => $reservas
+            ]);
+        }
+    }        
 }
 
 ?>

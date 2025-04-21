@@ -125,4 +125,6 @@ $router->post('/api/reservacion/terminar', [VerificacionSalidasController::class
 
 $router->get('/api/registro-actividades', [AuditoriaController::class, 'RegistroActividades']);
 
+$router->get('/api/reporte-diario/{usuario_id}/{fecha}', [ReporteController::class, 'obtenerReporteDiario']);
+
 $router->comprobarRutas();
