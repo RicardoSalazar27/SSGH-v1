@@ -1,0 +1,110 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    padding: 2rem;
+    color: #333;
+  }
+  
+  .receipt-container {
+    background: white;
+    padding: 2rem;
+    max-width: 800px;
+    margin: auto;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #000;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .logo img {
+    height: 120px;
+    object-fit: contain;
+  }  
+
+  .hotel-name {
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-align: right;
+    flex-grow: 1;
+    margin-left: 1rem;
+  }
+  
+  .guest-info {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+  
+  .date-time {
+    text-align: right;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+  
+  .details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+  }
+  
+  .details-table th,
+  .details-table td {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    text-align: center;
+  }
+  
+  .details-table th {
+    background-color: #dcdcdc; /* Gris claro para el fondo del encabezado */
+    color: #333; /* Color de texto más oscuro para mejor contraste */
+  }
+  
+  .details-table td {
+    text-align: center;
+  }
+    
+  .summary p {
+    margin: 0.3rem 0;
+    font-size: 1rem;
+  }
+  
+  .indicaciones {
+    background-color: #f9f9f9;
+    padding: 1rem;
+    border: 1px dashed #bbb;
+    border-radius: 6px;
+    margin-top: 2rem;
+  }
+  
+  .indicaciones h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: #444;
+  }
+  
+  .indicaciones ul {
+    padding-left: 1.2rem;
+    list-style-type: disc;
+    margin: 0.5rem 0 0 0;
+  }
+  
+  .indicaciones li {
+    margin-bottom: 0.3rem;
+    font-size: 0.95rem;
+  }
+  
+  footer {
+    border-top: 1px solid #ccc;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+    color: #555;
+  }
+  
