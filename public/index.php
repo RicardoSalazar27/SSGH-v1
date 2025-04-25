@@ -32,11 +32,13 @@ $router->post('/logout', [AuthController::class, 'logout']);
 $router->get('/registro', [AuthController::class, 'registro']);
 $router->post('/registro', [AuthController::class, 'registro']);
 
+//Olvide Contraseña
+$router->get('/olvide', [AuthController::class, 'mensaje2']);
+
 // Formulario de olvide mi password
 // $router->get('/olvide', [AuthController::class, 'olvide']);
 // $router->post('/olvide', [AuthController::class, 'olvide']);
 // Confirmación de Cuenta
-$router->get('/olvide', [AuthController::class, 'mensaje2']);
 
 // // Colocar el nuevo password
 // $router->get('/reestablecer', [AuthController::class, 'reestablecer']);
