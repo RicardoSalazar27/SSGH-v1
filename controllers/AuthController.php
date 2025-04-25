@@ -244,6 +244,15 @@ class AuthController {
         ]);
     }
 
+    public static function mensaje2(Router $router) {
+        $hotel = Hotel::get(1);
+
+        $router->render('auth/mensajeOlvide', [
+            'titulo' => 'Contacta al adminisrador del Hotel para que te genere una nueva contraseña',
+            'hotel' => $hotel
+        ]);
+    }
+
     public static function confirmar(Router $router) {
         
         $token = s($_GET['token']);
