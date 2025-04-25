@@ -35,7 +35,7 @@ class GananciaMensual extends ActiveRecord {
             SELECT
                 YEAR(fecha_entrada) AS anio,
                 MONTH(fecha_entrada) AS mes,
-                SUM(precio_total - descuento_aplicado + cobro_extra) AS ganancias
+                SUM(precio_total - descuento_aplicado + cobro_extra + penalidad) AS ganancias
             FROM Reservas
             WHERE YEAR(fecha_entrada) = {$anio} 
             AND MONTH(fecha_entrada) BETWEEN {$mesInicio} AND {$mesFin}
