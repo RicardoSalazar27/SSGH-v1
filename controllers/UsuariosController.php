@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use GuzzleHttp\Psr7\Header;
+use Model\Auditoria;
 use Model\Hotel;
 use Model\Usuario;
 use MVC\Router;
@@ -74,6 +75,23 @@ class UsuariosController {
 
             $resultado = $usuario->eliminar();
             if( $resultado ){
+
+                $usuarioId = $_SESSION['id'];  // Asegúrate que $_SESSION['id'] tenga un valor válido
+                $auditoria = new Auditoria();
+                $registro = NULL;  // Si id_registro_afectado es NULL, esto está bien
+                date_default_timezone_set("America/Mexico_City");
+                $fechaHora = date('Y-m-d H:i:s');  // Esto devuelve la fecha y hora actuales en formato "YYYY-MM-DD HH:MM:SS"
+                $datosAuditoria = [
+                    'id_usuario' => $usuarioId,
+                    'accion' => 'ELIMINAR',
+                    'tabla_afectada' => 'Usuarios',
+                    'id_registro_afectado' => $registro,
+                    'detalle' => "Elimino usuario $id",
+                    'fecha_hora' => $fechaHora 
+                ];
+        
+                $auditoria->sincronizar($datosAuditoria);
+                $auditoria->guardar();
                 // Ahora puedes usar el $id que viene de la URL
                 $respuesta = [
                     'tipo' => 'success',  // Cambié el tipo a 'success' porque el mensaje era de error
@@ -152,20 +170,46 @@ class UsuariosController {
     
             // Sincronizar datos EXCLUYENDO 'img' si no se subió una nueva imagen
             $datosActualizar = $_POST;
-    
+
             // Si la contraseña está vacía, no la actualizamos
             if (empty($_POST['password'])) {
                 unset($datosActualizar['password']);  // No actualizamos la contraseña si está vacía
             }
-    
+
+            // Si no se subió una nueva imagen, no actualizamos el campo 'img'
             if (empty($_FILES['img']['tmp_name'])) {
-                unset($datosActualizar['img']); // Elimina la clave 'img' para no modificar el campo en la BD
+                unset($datosActualizar['img']);
             }
-    
+
+            // Sincronizar los datos
             $usuario->sincronizar($datosActualizar);
+
+            // Solo hashear la contraseña si viene en $_POST
+            if (!empty($_POST['password'])) {
+                $usuario->hashPassword();
+            }
+
             $resultado = $usuario->guardar();
     
             if( $resultado ){
+
+                $usuarioId = $_SESSION['id'];  // Asegúrate que $_SESSION['id'] tenga un valor válido
+                $auditoria = new Auditoria();
+                $registro = $id;  // Si id_registro_afectado es NULL, esto está bien
+                date_default_timezone_set("America/Mexico_City");
+                $fechaHora = date('Y-m-d H:i:s');  // Esto devuelve la fecha y hora actuales en formato "YYYY-MM-DD HH:MM:SS"
+                $datosAuditoria = [
+                    'id_usuario' => $usuarioId,
+                    'accion' => 'EDITAR',
+                    'tabla_afectada' => 'Usuarios',
+                    'id_registro_afectado' => $registro,
+                    'detalle' => "Actualizo usuario con $id",
+                    'fecha_hora' => $fechaHora 
+                ];
+        
+                $auditoria->sincronizar($datosAuditoria);
+                $auditoria->guardar();
+
                 $respuesta = [
                     'tipo' => 'success',
                     'titulo' => 'Actualizado',
@@ -271,6 +315,24 @@ class UsuariosController {
     
             // Responder según el resultado de la creación del usuario
             if ($resultado) {
+
+                $usuarioId = $_SESSION['id'];  // Asegúrate que $_SESSION['id'] tenga un valor válido
+                $auditoria = new Auditoria();
+                $registro = NULL;  // Si id_registro_afectado es NULL, esto está bien
+                date_default_timezone_set("America/Mexico_City");
+                $fechaHora = date('Y-m-d H:i:s');  // Esto devuelve la fecha y hora actuales en formato "YYYY-MM-DD HH:MM:SS"
+                $datosAuditoria = [
+                    'id_usuario' => $usuarioId,
+                    'accion' => 'CREAR',
+                    'tabla_afectada' => 'Usuarios',
+                    'id_registro_afectado' => $registro,
+                    'detalle' => "Creo un nuevo usuario",
+                    'fecha_hora' => $fechaHora 
+                ];
+        
+                $auditoria->sincronizar($datosAuditoria);
+                $auditoria->guardar();                
+        
                 $respuesta = [
                     'tipo' => 'success',
                     'titulo' => 'Creado',

@@ -248,7 +248,7 @@ class NivelesController {
     
             $usuarioId = $_SESSION['id'];  // Asegúrate que $_SESSION['id'] tenga un valor válido
             $auditoria = new Auditoria();
-            $registro = 'NULL';  // Si id_registro_afectado es NULL, esto está bien
+            $registro = $id;  // Si id_registro_afectado es NULL, esto está bien
             date_default_timezone_set("America/Mexico_City");
             $fechaHora = date('Y-m-d H:i:s');  // Esto devuelve la fecha y hora actuales en formato "YYYY-MM-DD HH:MM:SS"
             $datosAuditoria = [

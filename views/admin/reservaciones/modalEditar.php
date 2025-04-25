@@ -115,6 +115,9 @@
                 <button id="btnEditar" class="btn btn-primary">
                     Guardar Cambios <span id="loadingSpinner" class="spinner-border spinner-border-sm d-none"></span>
                 </button>
+                <!-- <button id="btnObtenerReporte" class="btn btn-success">
+                    Descargar Comprobante <span id="loadingSpinner" class="spinner-border spinner-border-sm d-none"></span>
+                </button> -->
             </div>
         </div>
     </div>

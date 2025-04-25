@@ -131,55 +131,7 @@ class ReporteController{
                 'reservas' => $reservas
             ]);
         }
-    }    
-    
-    // public static function obtenerReporteDiario($usuario_id, $fecha) {
-    //     is_auth();
-    
-    //     header('Content-Type: application/json');
-    //     header('Access-Control-Allow-Origin: *');
-    //     header('Access-Control-Allow-Methods: GET, OPTIONS');
-    //     header('Access-Control-Allow-Headers: Content-Type, Authorization');
-    
-    //     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    //         if (empty($usuario_id) || empty($fecha)) {
-    //             http_response_code(400);
-    //             echo json_encode([
-    //                 'tipo' => 'error',
-    //                 'titulo' => 'Datos insuficientes',
-    //                 'mensaje' => 'Faltan usuario_id o fecha'
-    //             ]);
-    //             exit;
-    //         }
-    
-    //         $ventas = ReporteVentas::obtenerVentasPorFechaYUsuario($usuario_id, $fecha);
-    //         $reservas = ReporteReservas::obtenerReservasPorFechaYUsuario($usuario_id, $fecha);
-    
-    //         // Simular 500 registros
-    //         $ventas_simuladas = [];
-    //         $reservas_simuladas = [];
-    
-    //         // Repetir las ventas para obtener 500 registros
-    //         foreach (range(1, 50) as $i) { // 50 x 10 = 500
-    //             foreach ($ventas as $venta) {
-    //                 $ventas_simuladas[] = $venta; 
-    //             }
-    //         }
-    
-    //         // Repetir las reservas para obtener 500 registros
-    //         foreach (range(1, 50) as $i) { // 50 x 10 = 500
-    //             foreach ($reservas as $reserva) {
-    //                 $reservas_simuladas[] = $reserva; 
-    //             }
-    //         }
-    
-    //         http_response_code(200);
-    //         echo json_encode([
-    //             'ventas' => $ventas_simuladas,
-    //             'reservas' => $reservas_simuladas
-    //         ]);
-    //     }
-    // }    
+    }        
 }
 
 ?>
