@@ -75,7 +75,7 @@ if (window.location.pathname === '/admin/usuarios') {
             const row = `
                 <tr>
                     <td>${index + 1}</td>
-                    <td><img src="/build/img/${user.img}.png" alt="Descripción de la imagen" width="65"></td>
+                    <td><img src="/build/img/${user.img ? user.img : 'user'}.png" alt="Imagen-usuario" width="65"></td>
                     <td>${user.nombre}</td>
                     <td>${user.apellido}</td>
                     <td>${user.direccion}</td>
@@ -164,7 +164,7 @@ if (window.location.pathname === '/admin/usuarios') {
     
                 // Mostrar la imagen si existe
                 const imgElement = document.getElementById('imgEditar');
-                imgElement.src = usuario.img ? `/build/img/${usuario.img}.png` : '/build/img/default.png';                    
+                imgElement.src = usuario.img ? `/build/img/${usuario.img}.png` : '/build/img/user.png';                    
     
                 // Guardar el ID en el botón de actualización
                 document.querySelector('.btnActualizarUsuario').dataset.id = userId;

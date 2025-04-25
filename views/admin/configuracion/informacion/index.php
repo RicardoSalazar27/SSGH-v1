@@ -29,7 +29,7 @@
                         <div class="card-body">
                             <!-- Logo centrado con input para subir nuevo logo -->
                             <div class="form-group text-center">
-                                <img src="/build/img/<?php echo $hotel->img;?>.png" alt="Logo" class="img-fluid mb-2" style="height: 120px;">
+                                <img src="/build/img/<?php echo empty($hotel->img) ? 'tulogo' : $hotel->img; ?>.png" alt="Logo" class="img-fluid mb-2" style="height: 120px;">
                                 <input type="file" class="form-control-file" id="logo" name="logo">
                             </div>
 
