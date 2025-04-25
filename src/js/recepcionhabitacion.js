@@ -191,6 +191,16 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
         
         e.preventDefault();
         
+        // Obtener la hora actual con ceros asegurados
+        const ahora = new Date();
+        const horas = String(ahora.getHours()).padStart(2, '0');
+        const minutos = String(ahora.getMinutes()).padStart(2, '0');
+        const segundos = String(ahora.getSeconds()).padStart(2, '0');
+        const horaActual = `${horas}:${minutos}:${segundos}`;
+
+        // Concatenar con la fecha de entrada
+        const fechaEntrada = `${inputFechaEntrada.value} ${horaActual}`;
+        
         //mostrar alertas o alerta si faltan datos
         if(!inputNombreCliente.value.trim() || !inputApellidosCliente.value.trim() || !inputTelefonoCliente.value.trim()){
             mostrarAlerta('Faltan datos del Huesped', 'El nombre, apellidos y telefono son obligatorios', 'warning');
@@ -210,7 +220,8 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
                 direccion : inputDireccionCliente.value.trim()
             },
             fechas : {
-                entrada: `${inputFechaEntrada.value} 14:00:00`,
+                // entrada: `${inputFechaEntrada.value} 14:00:00`,
+                entrada: fechaEntrada,
                 salida: `${inputFechaSalida.value} 12:00:00`
             },
             habitaciones: [idHabitacion],
@@ -220,12 +231,12 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
                 descuento: parseFloat(descuento),
                 tipoDescuento: tipoDescuento,
                 cobroExtra: parseFloat(cobroExtra),
-                adelanto: parseFloat(adelanto),
-                metodo_pago: metodoPago // METODO de PAGO va aquí si el backend lo espera dentro de pago
+                adelanto: parseFloat(adelanto)
             },
-            observaciones: observaciones
+            observaciones: observaciones,
+            metodo_pago: metodoPago // METODO de PAGO va aquí si el backend lo espera dentro de pago
         };
-        
+
         // ✅ NO sobreescribas el FormData
         const formData = new FormData();
         formData.append('reserva', JSON.stringify(reserva));
@@ -240,7 +251,7 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
             if (!respuesta.ok) throw new Error('Error en la respuesta del servidor');
         
             const resultado = await respuesta.json();
-            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo);
+            mostrarAlerta(resultado.titulo, resultado.mensaje, resultado.tipo , '/admin/recepcion');
         } catch (error) {
             console.error('Error:', error);
             mostrarAlerta('Error', 'No se pudo enviar la reserva', 'error');

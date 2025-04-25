@@ -3,10 +3,12 @@
 namespace Controllers;
 
 use Classes\Recibo;
+use DateTime;
 use Model\Auditoria;
 use Model\Crear_Reservacion;
 use Model\Editar_Reservacion;
 use Model\EstadoReservacion;
+use Model\Habitacion;
 use Model\Hotel;
 use Model\Reservacion;
 use Model\Usuario;
@@ -58,60 +60,78 @@ class ReservacionesController {
             $datos_json = json_decode($_POST['reserva'], true); // true para convertirlo a un array asociativo
             //debuguear($datos_json);
             // Recoger los datos del cliente y la reservación desde el JSON decodificado
-            // $datos = [
-            //     'cliente' => [
-            //         'correo' => $datos_json['cliente']['correo'] ?? '',
-            //         'nombre' => $datos_json['cliente']['nombre'] ?? '',
-            //         'apellidos' => $datos_json['cliente']['apellidos'] ?? '',
-            //         'documento_identidad' => $datos_json['cliente']['documento_identidad'] ?? '',
-            //         'telefono' => $datos_json['cliente']['telefono'] ?? '',
-            //         'direccion' => $datos_json['cliente']['direccion'] ?? ''
-            //     ],
-            //     'fechas' => [
-            //         'entrada' => $datos_json['fechas']['entrada'] ?? '',
-            //         'salida' => $datos_json['fechas']['salida'] ?? ''
-            //     ],
-            //     'pago' => [
-            //         'totalPagar' => (float) ($datos_json['pago']['totalPagar'] ?? 0),
-            //         'adelanto' => (float) ($datos_json['pago']['adelanto'] ?? 0),
-            //         'descuento' => (float) ($datos_json['pago']['descuento'] ?? 0),
-            //         'cobroExtra' => (float) ($datos_json['pago']['cobroExtra'] ?? 0),
-            //         'totalPagarOriginal' => (float) ($datos_json['pago']['totalPagarOriginal'] ?? 0),
-            //         'tipoDescuento' => $datos_json['pago']['tipoDescuento'] ?? 'MONTO', // MONTO o PORCENTAJE
-            //         'metodo_pago' => $datos_json['metodo_pago'] ?? '' // Agregar metodoPago dentro de 'pago'
-            //     ],
-            //     'habitaciones' => array_map('intval', $datos_json['habitaciones'] ?? []), // Convertir habitaciones a enteros
-            //     'observaciones' => $datos_json['observaciones'] ?? '',
-            //     'usuario_id' => (int) ($datos_json['usuario_id'] ?? 1) // Convertir ID usuario a entero
-            // ];
+            $datos = [
+                'cliente' => [
+                    'correo' => $datos_json['cliente']['correo'] ?? '',
+                    'nombre' => $datos_json['cliente']['nombre'] ?? '',
+                    'apellidos' => $datos_json['cliente']['apellidos'] ?? '',
+                    'documento_identidad' => $datos_json['cliente']['documento_identidad'] ?? '',
+                    'telefono' => $datos_json['cliente']['telefono'] ?? '',
+                    'direccion' => $datos_json['cliente']['direccion'] ?? ''
+                ],
+                'fechas' => [
+                    'entrada' => $datos_json['fechas']['entrada'] ?? '',
+                    'salida' => $datos_json['fechas']['salida'] ?? ''
+                ],
+                'pago' => [
+                    'totalPagar' => (float) ($datos_json['pago']['totalPagar'] ?? 0),
+                    'adelanto' => (float) ($datos_json['pago']['adelanto'] ?? 0),
+                    'descuento' => (float) ($datos_json['pago']['descuento'] ?? 0),
+                    'cobroExtra' => (float) ($datos_json['pago']['cobroExtra'] ?? 0),
+                    'totalPagarOriginal' => (float) ($datos_json['pago']['totalPagarOriginal'] ?? 0),
+                    'tipoDescuento' => $datos_json['pago']['tipoDescuento'] ?? 'MONTO', // MONTO o PORCENTAJE
+                    'metodo_pago' => $datos_json['metodo_pago'] ?? '' // Agregar metodoPago dentro de 'pago'
+                ],
+                'habitaciones' => array_map('intval', $datos_json['habitaciones'] ?? []), // Convertir habitaciones a enteros
+                'observaciones' => $datos_json['observaciones'] ?? '',
+                'usuario_id' => (int) ($datos_json['usuario_id'] ?? 1) // Convertir ID usuario a entero
+            ];
             // Llamar al modelo para crear la reservación
-            //$resultado = Crear_Reservacion::crearReservacion($datos);
-            $resultado = true;
+            $resultado = Crear_Reservacion::crearReservacion($datos);
+            //$resultado = true;
+            
             if ($resultado) {
-                // Obtener el último registro insertado directamente
-                // $query = "SELECT * FROM Reservas ORDER BY ID_reserva DESC LIMIT 1";
-                // $resultadoUltimo = Reservacion::consultarSQL($query);
-                // $ultimaReserva = array_shift($resultadoUltimo); // Obtener el primer resultado
-                // $registro = isset($ultimaReserva->ID_reserva) ? $ultimaReserva->ID_reserva : 'NULL';
-                // // Registrar en auditoría
-                // $usuarioId = $_SESSION['id'];
-                // $auditoria = new Auditoria();
-                // date_default_timezone_set("America/Mexico_City");
-                // $fechaHora = date('Y-m-d H:i:s');
-                // $datosAuditoria = [
-                //     'id_usuario' => $usuarioId,
-                //     'accion' => 'CREAR',
-                //     'tabla_afectada' => 'Reservas',
-                //     'id_registro_afectado' => $registro,
-                //     'detalle' => "Creo una nueva reservacion",
-                //     'fecha_hora' => $fechaHora 
-                // ];
+                //Obtener el último registro insertado directamente
+                $query = "SELECT * FROM Reservas ORDER BY ID_reserva DESC LIMIT 1";
+                $resultadoUltimo = Reservacion::consultarSQL($query);
+                $ultimaReserva = array_shift($resultadoUltimo); // Obtener el primer resultado
+                $registro = isset($ultimaReserva->ID_reserva) ? $ultimaReserva->ID_reserva : 'NULL';
+
+                $fechaEntrada = new DateTime($datos['fechas']['entrada']);
+                $fechaActual = new DateTime();      
                 
-                // $auditoria->sincronizar($datosAuditoria);
-                // $auditoria->guardar();
+                if ($fechaEntrada <= $fechaActual) {
+                    // lógica para habitaciones ocupadas y estado de reserva
+                    // Obtener los IDs de las habitaciones asociadas a la reservación desde los datos
+                    $habitacionesIds = $datos['habitaciones']; // Array de IDs de las habitaciones
+
+                    // Actualizar el estado de las habitaciones a "Ocupada" (ID = 2)
+                    foreach ($habitacionesIds as $habitacionId) {
+                        //debuguear($habitacionId);
+                        $habitacion = Habitacion::find($habitacionId);
+                        $habitacion->id_estado_habitacion = 2;
+                        $habitacion->guardar();
+                    }
+                }
                 
-                $recibo = new Recibo();
-                $pdfUrl = $recibo->generarComprobante();
+                // Registrar en auditoría
+                $usuarioId = $_SESSION['id'];
+                $auditoria = new Auditoria();
+                $fechaHora = date('Y-m-d H:i:s');
+                $datosAuditoria = [
+                    'id_usuario' => $usuarioId,
+                    'accion' => 'CREAR',
+                    'tabla_afectada' => 'Reservas',
+                    'id_registro_afectado' => $registro,
+                    'detalle' => "Creo una nueva reservacion",
+                    'fecha_hora' => $fechaHora 
+                ];
+                
+                $auditoria->sincronizar($datosAuditoria);
+                $auditoria->guardar();
+                
+                // $recibo = new Recibo();
+                // $pdfUrl = $recibo->generarComprobante();
 
                 echo json_encode(respuesta('success', 'Reserva Exitosa', 'La reservación se ha creado correctamente.'));
             }
