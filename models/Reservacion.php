@@ -183,7 +183,8 @@ class Reservacion extends ActiveRecord {
             JOIN Reservas_Habitaciones rh ON r.ID_reserva = rh.ID_reserva
             WHERE CURDATE() BETWEEN DATE(r.fecha_entrada) AND DATE(r.fecha_salida)
             AND NOW() < r.fecha_salida
-            AND r.ID_estado != 5;
+            AND r.ID_estado != 5  
+            AND r.ID_estado != 4;
         ";
         // Ejecutar la consulta y devolver el resultado
         $resultado = self::$db->query($query);
@@ -216,6 +217,7 @@ class Reservacion extends ActiveRecord {
                 CURDATE() BETWEEN DATE(r.fecha_entrada) AND DATE(r.fecha_salida)
                 AND NOW() < r.fecha_salida
                 AND r.ID_estado != 5  -- Excluir reservaciones terminadas
+                AND r.ID_estado !=4 -- Excluir reservaciones donde no ingreso
             GROUP BY 
                 r.ID_reserva;  -- Agrupamos por ID_reserva para tener un único registro por reserva
         ";
