@@ -54,7 +54,7 @@ if (window.location.pathname === '/admin/reporte-mensual') {
                 filename: nombreArchivoReservas,
                 text: '<i class="fas fa-file-pdf"></i> PDF',
                 className: 'btn btn-danger btn-sm',
-                orientation: 'portrait',
+                orientation: 'landscape',
                 pageSize: 'A4',
                 exportOptions: {
                     columns: ':visible',
