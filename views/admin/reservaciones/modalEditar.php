@@ -60,10 +60,10 @@
                     <div class="col-md-6">
                         <label class="form-label">Descuento:</label>
                         <div class="d-flex">
-                            <input type="radio" name="tipoDescuento" value="PORCENTAJE" id="descuentoPorcentajeEditar">
+                            <input type="radio" name="tipoDescuento" value="PORCENTAJE" id="descuentoPorcentajeEditar" checked>
                             <label for="descuentoPorcentaje" class="ms-2">%</label>
 
-                            <input type="radio" name="tipoDescuento" value="MONTO" id="descuentoMontoEditar" checked class="ms-3">
+                            <input type="radio" name="tipoDescuento" value="MONTO" id="descuentoMontoEditar" class="ms-3">
                             <label for="descuentoMonto" class="ms-2">MXN$</label>
                         </div>
                         <input type="number" id="descuentoEditar" class="form-control mt-2" value="0">
