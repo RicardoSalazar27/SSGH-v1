@@ -5,7 +5,25 @@ if (window.location.pathname === '/admin/reporte-diario') {
     let dataTableReservasInit = false;
     let dataTableServiciosInit = false;
 
-    const nombreHotel = 'Hotel Paraíso Tropical';
+    let nombreHotel;
+    let telefonoHotel;
+    let correoHotel;
+    let ubicacionHotel;
+
+    const urlHotel = '/api/hotel';  // URL de la API para obtener los datos del hotel
+
+    async function obtenerNombreHotel() {
+        try {
+            const response = await fetch(urlHotel);
+            const data = await response.json();
+            nombreHotel = data.nombre || 'Tu Nombre Hotel'; // Actualizamos el nombre del hotel
+            telefonoHotel = data.telefono || 'Tu Telefono';
+            correoHotel = data.correo || 'Tu Correo';
+            ubicacionHotel = data.ubicacion || 'Tu Ubicacion';
+        } catch (error) {
+            console.error('Error al obtener el nombre del hotel:', error);
+        }
+    }
 
     function obtenerFechaFormateada() {
         const fecha = new Date();
@@ -17,13 +35,6 @@ if (window.location.pathname === '/admin/reporte-diario') {
         const seconds = String(fecha.getSeconds()).padStart(2, '0');
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
-
-    const fechaFormateada = obtenerFechaFormateada();
-    const mensajeTopReporte = `Generado el: ${fechaFormateada}`;
-    const tituloReporteReservas = `Reporte de Reservaciones - ${nombreHotel}`;
-    const tituloReporteServicios = `Reporte de Ventas y Servicios - ${nombreHotel}`;
-    const nombreArchivoReservas = `reservaciones_${fechaFormateada.replace(/[\s:]/g, '_')}`;
-    const nombreArchivoServicios = `servicios_${fechaFormateada.replace(/[\s:]/g, '_')}`;
 
     let totalVentaServicios = 0;
     let totalReservaciones = 0;
@@ -44,99 +55,109 @@ if (window.location.pathname === '/admin/reporte-diario') {
         dom: '<"d-flex justify-content-between align-items-center mb-2"fB>rtip'
     };
 
-    const opcionesReservas = {
-        ...configBase,
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                title: tituloReporteReservas,
-                messageTop: mensajeTopReporte,
-                filename: nombreArchivoReservas,
-                text: '<i class="fas fa-file-excel"></i> Excel',
-                className: 'btn btn-success btn-sm'
-            },
-            {
-                extend: 'pdfHtml5',
-                title: tituloReporteReservas,
-                messageTop: mensajeTopReporte,
-                filename: nombreArchivoReservas,
-                text: '<i class="fas fa-file-pdf"></i> PDF',
-                className: 'btn btn-danger btn-sm',
-                orientation: 'landscape',
-                pageSize: 'A4',
-                exportOptions: {
-                    columns: ':visible',
-                    modifier: {
-                        page: 'all'
-                    }
-                },
-                customize: function (doc) {
-                    doc.defaultStyle.fontSize = 10;
-                    doc.styles.tableHeader.fontSize = 12;
-                }
-            }
-        ]
-    };
-
-    const opcionesServicios = {
-        ...configBase,
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                title: tituloReporteServicios,
-                messageTop: mensajeTopReporte,
-                filename: nombreArchivoServicios,
-                text: '<i class="fas fa-file-excel"></i> Excel',
-                className: 'btn btn-success btn-sm'
-            },
-            {
-                extend: 'pdfHtml5',
-                title: tituloReporteServicios,
-                messageTop: mensajeTopReporte,
-                filename: nombreArchivoServicios,
-                text: '<i class="fas fa-file-pdf"></i> PDF',
-                className: 'btn btn-danger btn-sm',
-                orientation: 'portrait',
-                pageSize: 'A4',
-                exportOptions: {
-                    columns: ':visible',
-                    modifier: {
-                        page: 'all'
-                    }
-                },
-                customize: function (doc) {
-                    doc.defaultStyle.fontSize = 10;
-                    doc.styles.tableHeader.fontSize = 12;
-                }
-            }
-        ]
-    };
-
     async function initReportesDiarios() {
-
+        await obtenerNombreHotel(); // <--- ESPERAR a que obtenga el nombre antes de continuar
+    
+        const fechaFormateada = obtenerFechaFormateada();
+        const mensajeTopReporte = `Generado el: ${fechaFormateada} 
+        Teléfono: ${telefonoHotel} | Correo: ${correoHotel} | Ubicación: ${ubicacionHotel}`;
+        const tituloReporteReservas = `Reporte de Reservaciones - ${nombreHotel}`;
+        const tituloReporteServicios = `Reporte de Ventas y Servicios - ${nombreHotel}`;
+        const nombreArchivoReservas = `reservaciones_${fechaFormateada.replace(/[\s:]/g, '_')}`;
+        const nombreArchivoServicios = `servicios_${fechaFormateada.replace(/[\s:]/g, '_')}`;
+    
+        const opcionesReservas = {
+            ...configBase,
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    title: tituloReporteReservas,
+                    messageTop: mensajeTopReporte,
+                    filename: nombreArchivoReservas,
+                    text: '<i class="fas fa-file-excel"></i> Excel',
+                    className: 'btn btn-success btn-sm'
+                },
+                {
+                    extend: 'pdfHtml5',
+                    title: tituloReporteReservas,
+                    messageTop: mensajeTopReporte,
+                    filename: nombreArchivoReservas,
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
+                    className: 'btn btn-danger btn-sm',
+                    orientation: 'landscape',
+                    pageSize: 'A4',
+                    exportOptions: {
+                        columns: ':visible',
+                        modifier: {
+                            page: 'all'
+                        }
+                    },
+                    customize: function (doc) {
+                        doc.defaultStyle.fontSize = 10;
+                        doc.styles.tableHeader.fontSize = 12;
+                    }
+                }
+            ]
+        };
+    
+        const opcionesServicios = {
+            ...configBase,
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    title: tituloReporteServicios,
+                    messageTop: mensajeTopReporte,
+                    filename: nombreArchivoServicios,
+                    text: '<i class="fas fa-file-excel"></i> Excel',
+                    className: 'btn btn-success btn-sm'
+                },
+                {
+                    extend: 'pdfHtml5',
+                    title: tituloReporteServicios,
+                    messageTop: mensajeTopReporte,
+                    filename: nombreArchivoServicios,
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
+                    className: 'btn btn-danger btn-sm',
+                    orientation: 'portrait',
+                    pageSize: 'A4',
+                    exportOptions: {
+                        columns: ':visible',
+                        modifier: {
+                            page: 'all'
+                        }
+                    },
+                    customize: function (doc) {
+                        doc.defaultStyle.fontSize = 10;
+                        doc.styles.tableHeader.fontSize = 12;
+                    }
+                }
+            ]
+        };
+    
         const usuarioId = document.getElementById('usuario').value || 'null';
         const fecha = document.getElementById('fecha').value;
         const url = `/api/reporte-diario/${usuarioId}/${fecha}`;
-
+    
         try {
             const response = await fetch(url);
             const { reservas, ventas } = await response.json();
-
+    
             if (dataTableReservasInit) dataTableReservas.destroy();
             if (dataTableServiciosInit) dataTableServicios.destroy();
-
+    
             llenarTablaReservas(reservas);
             llenarTablaServicios(ventas);
-
+    
             dataTableReservas = $('#tablaReservas').DataTable(opcionesReservas);
             dataTableServicios = $('#tablaServicios').DataTable(opcionesServicios);
-
+    
             dataTableReservasInit = true;
             dataTableServiciosInit = true;
         } catch (error) {
             console.error('Error al obtener reporte diario:', error);
         }
     }
+    
 
     function llenarTablaReservas(reservas) {
         const tbody = document.querySelector('#tablaReservas tbody');

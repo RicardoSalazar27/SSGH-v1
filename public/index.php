@@ -131,5 +131,6 @@ $router->get('/api/registro-actividades', [AuditoriaController::class, 'Registro
 
 $router->get('/api/reporte-diario/{usuario_id}/{fecha}', [ReporteController::class, 'obtenerReporteDiario']);
 $router->get('/api/reporte-mensual/{usuario_id}/{mes}/{anio}', [ReporteController::class, 'obtenerReporteMensual']);
+$router->get('/api/hotel', [informacionController::class, 'APIHotel']);
 
 $router->comprobarRutas();

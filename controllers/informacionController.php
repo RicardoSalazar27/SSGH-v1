@@ -91,6 +91,33 @@ class informacionController {
                 echo json_encode(respuesta('error', 'Error', 'Hubo un problema al actualizar el hotel'));
             }
         }
-    }        
+    }
+    
+    public static function APIHotel(){
+        is_auth();
+    
+        // Establecer los headers al inicio
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    
+        // Obtener todos los niveles
+        $hotel = Hotel::get(1);
+    
+        // Responder con los datos o con un mensaje si no hay registros
+        if (empty($hotel)) {
+            http_response_code(204); // 204 No Content cuando no hay datos
+            $respuesta = [
+                'tipo' => 'info',
+                'titulo' => 'Sin contenido',
+                'mensaje' => 'No hay hotel'
+            ];
+            echo json_encode($respuesta);
+        } else {
+            http_response_code(200); // 200 OK
+            echo json_encode($hotel);
+        }
+    }
     
 }
