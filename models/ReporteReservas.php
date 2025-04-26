@@ -107,15 +107,14 @@ class ReporteReservas extends ActiveRecord {
             LEFT JOIN Clientes c ON c.id = r.ID_cliente
             LEFT JOIN Ventas v ON v.reservacion_id = r.ID_reserva AND v.estado = 1
             WHERE
-                MONTH(r.fecha_salida) = '$mes'
-                AND YEAR(r.fecha_salida) = '$anio'
-                " . ($condicionUsuario ? " AND $condicionUsuario" : "") . "
+                MONTH(r.fecha_entrada) = '$mes'
+                AND YEAR(r.fecha_entrada) = '$anio'
+                $condicionUsuario
             GROUP BY
                 r.ID_reserva;
         ";
-
-        //debuguear($query);
-    
+        //EN MONTH PORNER fecha_salida si quiero que no tome las reservaciones que inician en un mes y acaban en otro
         return self::consultarSQL($query);
-    }    
+    }
+     
 }

@@ -42,7 +42,7 @@ class GananciaMensual extends ActiveRecord {
             GROUP BY anio, mes
             ORDER BY anio, mes
         ";
-        
+        //debuguear($query);
         return self::consultarSQL($query);
     }    
 }
