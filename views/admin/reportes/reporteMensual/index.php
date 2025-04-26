@@ -79,15 +79,15 @@
                         <div class="row text-center mb-3">
                             <div class="col-md-4">
                                 <h6>TOTAL VENTAS/SERVICIOS</h6>
-                                <p><strong>MXN$</strong></p>
+                                <p><strong id="totalVentasMensual">MXN$0.00</strong></p>
                             </div>
                             <div class="col-md-4">
                                 <h6>TOTAL RESERVACIÓN</h6>
-                                <p><strong>MXN$</strong></p>
+                                <p><strong id="totalReservasMensual">MXN$0.00</strong></p>
                             </div>
                             <div class="col-md-4">
                                 <h6>TOTAL</h6>
-                                <p><strong>MXN$</strong></p>
+                                <p><strong id="totalGeneralMensual">MXN$0.00</strong></p>
                             </div>
                         </div>
 
@@ -117,22 +117,21 @@
 
                     <!-- Tab de Servicios/Venta directa -->
                     <div class="tab-pane fade" id="tab-servicios" role="tabpanel">
-                        <!-- Resumen Totales -->
+                         <!-- Resumen Totales -->
                         <div class="row text-center mb-3">
                             <div class="col-md-4">
                                 <h6>TOTAL VENTA DIRECTA</h6>
-                                <p><strong>MXN$</strong></p>
+                                <p><strong id="totalVentasDirectaMensual">MXN$0.00</strong></p>
                             </div>
                             <div class="col-md-4">
                                 <h6>TOTAL VENTA/SERVICIOS RESERVACION</h6>
-                                <p><strong>MXN$</strong></p>
+                                <p><strong id="totalVentasReservacionMensual">MXN$0.00</strong></p>
                             </div>
                             <div class="col-md-4">
                                 <h6>TOTAL</h6>
-                                <p><strong>MXN$</strong></p>
+                                <p><strong id="totalVentasGeneralMensual">MXN$0.00</strong></p>
                             </div>
-                        </div>
-
+                        </div>        
                         <div class="table-responsive">
                             <table id="tablaServicios" class="table table-bordered table-hover">
                                 <thead class="thead-light text-center">

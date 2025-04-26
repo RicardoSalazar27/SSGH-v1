@@ -25,6 +25,15 @@ if (window.location.pathname === '/admin/reporte-mensual') {
     const nombreArchivoReservas = `reservaciones_${fechaFormateada.replace(/[\s:]/g, '_')}`;
     const nombreArchivoServicios = `servicios_${fechaFormateada.replace(/[\s:]/g, '_')}`;
 
+    // Variables para totales mensuales
+    let totalVentaServiciosMensual = 0;
+    let totalReservacionesMensual = 0;
+    let totalGeneralMensual = 0;
+
+    let totalVentaDirectaMensual = 0;
+    let totalVentaReservacionMensual = 0;
+    let totalVentaGeneralMensual = 0;
+
     const configBase = {
         responsive: true,
         paging: true,
@@ -153,7 +162,20 @@ if (window.location.pathname === '/admin/reporte-mensual') {
                 </tr>
             `;
             tbody.innerHTML += row;
+
+            const ventasServicios = parseFloat(reserva.Ventas_Servicios || 0);
+            const total = parseFloat(reserva.Total || 0);
+
+            totalVentaServiciosMensual += ventasServicios;
+            totalReservacionesMensual += total - ventasServicios;
         });
+
+        totalGeneralMensual = totalVentaServiciosMensual + totalReservacionesMensual;
+        // Si quieres actualizar algún resumen mensual en pantalla, aquí lo puedes hacer:
+    document.getElementById('totalVentasMensual').textContent = `MXN$${totalVentaServiciosMensual.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+    document.getElementById('totalReservasMensual').textContent = `MXN$${totalReservacionesMensual.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+    document.getElementById('totalGeneralMensual').textContent = `MXN$${totalGeneralMensual.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
+
     }
 
     function llenarTablaServicios(ventas) {
@@ -176,7 +198,22 @@ if (window.location.pathname === '/admin/reporte-mensual') {
                 </tr>
             `;
             tbody.innerHTML += row;
+
+            const total = parseFloat(item.Total || 0);
+
+            if (item.Tipo.toLowerCase() === 'huésped' || item.Tipo.toLowerCase() === 'huesped') {
+                totalVentaReservacionMensual += total;
+            } else if (item.Tipo.toLowerCase() === 'público' || item.Tipo.toLowerCase() === 'publico') {
+                totalVentaDirectaMensual += total;
+            }
         });
+
+        totalVentaGeneralMensual = totalVentaReservacionMensual + totalVentaDirectaMensual;
+
+    //Igualmente podrías actualizar un resumen mensual aquí si quieres
+    document.getElementById('totalVentasDirectaMensual').textContent = `MXN$${totalVentaDirectaMensual.toFixed(2)}`;
+    document.getElementById('totalVentasReservacionMensual').textContent = `MXN$${totalVentaReservacionMensual.toFixed(2)}`;
+    document.getElementById('totalVentasGeneralMensual').textContent = `MXN$${totalVentaGeneralMensual.toFixed(2)}`;
     }
 
     // Escuchar cambios
