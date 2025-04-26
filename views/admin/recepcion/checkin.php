@@ -149,12 +149,20 @@
                             <div class="d-flex justify-content-between">
                                 <label class="form-label me-2">Descuento:</label>
                                 <div>
-                                    <input type="radio" name="tipoDescuento" value="PORCENTAJE" id="descuentoPorcentaje" 
-                                    <?php echo isset($reservacion) && $reservacion->tipo_descuento === "PORCENTAJE" ? "checked" : ""; ?>>
+                                    <input type="radio" name="tipoDescuento" value="PORCENTAJE" id="descuentoPorcentaje"
+                                    <?php 
+                                        if (!isset($reservacion) || (isset($reservacion) && $reservacion->tipo_descuento === "PORCENTAJE")) {
+                                            echo "checked";
+                                        }
+                                    ?>>
                                     <label for="descuentoPorcentaje" class="ms-1 me-2">%</label>
                                     
                                     <input type="radio" name="tipoDescuento" value="MONTO" id="descuentoMonto"
-                                    <?php echo isset($reservacion) && $reservacion->tipo_descuento === "MONTO" ? "checked" : ""; ?>>
+                                    <?php 
+                                        if (isset($reservacion) && $reservacion->tipo_descuento === "MONTO") {
+                                            echo "checked";
+                                        }
+                                    ?>>
                                     <label for="descuentoMonto" class="ms-1 fw-bold">MXN$</label>
                                 </div>
                             </div>

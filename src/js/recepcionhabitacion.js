@@ -159,7 +159,9 @@ if (window.location.pathname === "/admin/recepcion/habitacion") {
         
         let totalConDescuento = totalOriginal;
         if (tipoDescuento === "PORCENTAJE") {
-            totalConDescuento -= totalOriginal * (descuento / 100);
+            // Aquí calculas el descuento como cantidad real
+            descuento = totalOriginal * (descuento / 100);
+            totalConDescuento -= descuento;
         } else if (tipoDescuento === "MONTO") {
             totalConDescuento -= descuento;
         }
