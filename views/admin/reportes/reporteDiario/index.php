@@ -79,6 +79,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>No. Reserva</th>
+                                        <th>Huesped</th><!-- borrar es pruba -->
                                         <th>Habitación(es)</th>
                                         <th>Total Neto</th>
                                         <th>Descuento</th>
@@ -119,7 +120,7 @@
                                 <thead class="thead-light text-center">
                                     <tr>
                                         <th>#</th>
-                                        <th>Pago No.</th>
+                                        <th>Venta No.</th>
                                         <th>Tipo</th>
                                         <th>Habitación(es)</th>
                                         <th>Artículo</th>

@@ -6,12 +6,13 @@ class ReporteReservas extends ActiveRecord {
 
     public static $tabla = 'Reservas';
     public static $columnasDB = [
-        'No.Reserva', 'Habitaciones', 'Descuento', 'Cobro_Extra',
+        'No.Reserva', 'Habitaciones', 'Huesped', 'Descuento', 'Cobro_Extra',
         'Adelanto', 'Penalidad', 'Ventas/Servicios', 'Precio_Total', 'Total', 'Tiempo Rebasado'
     ];
 
     public $No_Reserva;
     public $Habitaciones;
+    public $Huesped;
     public $Descuento;
     public $Cobro_Extra;
     public $Adelanto;
@@ -24,6 +25,7 @@ class ReporteReservas extends ActiveRecord {
     public function __construct($args = []) {
         $this->No_Reserva = $args['No_Reserva'] ?? null;
         $this->Habitaciones = $args['Habitaciones'] ?? '';
+        $this->Huesped = $args['Huesped'] ?? '';
         $this->Descuento = $args['Descuento'] ?? 0;
         $this->Cobro_Extra = $args['Cobro_Extra'] ?? 0;
         $this->Adelanto = $args['Adelanto'] ?? 0;
@@ -41,6 +43,7 @@ class ReporteReservas extends ActiveRecord {
             SELECT
                 r.ID_reserva AS No_Reserva,
                 GROUP_CONCAT(DISTINCT h.numero) AS Habitaciones,
+                CONCAT(c.nombre, ' ', c.apellidos) AS Huesped,
                 ANY_VALUE(r.descuento_aplicado) AS Descuento,
                 ANY_VALUE(r.cobro_extra) AS Cobro_Extra,
                 ANY_VALUE(r.adelanto) AS Adelanto,
@@ -61,14 +64,15 @@ class ReporteReservas extends ActiveRecord {
                 Reservas r
             LEFT JOIN Reservas_Habitaciones rh ON rh.ID_reserva = r.ID_reserva
             LEFT JOIN Habitaciones h ON h.id = rh.ID_habitacion
+            LEFT JOIN Clientes c ON c.id = r.ID_cliente
             LEFT JOIN Ventas v ON v.reservacion_id = r.ID_reserva AND v.estado = 1
             WHERE
                 (DATE(r.fecha_salida) = '$fecha' OR DATE(r.fecha_salida) = CURDATE())
-                $condicionUsuario
+                " . ($condicionUsuario ? " AND $condicionUsuario" : "") . "
             GROUP BY
                 r.ID_reserva;
         ";
-    
+
         return self::consultarSQL($query);
     }    
 
@@ -79,6 +83,7 @@ class ReporteReservas extends ActiveRecord {
             SELECT
                 r.ID_reserva AS No_Reserva,
                 GROUP_CONCAT(DISTINCT h.numero) AS Habitaciones,
+                CONCAT(c.nombre, ' ', c.apellidos) AS Huesped,
                 ANY_VALUE(r.descuento_aplicado) AS Descuento,
                 ANY_VALUE(r.cobro_extra) AS Cobro_Extra,
                 ANY_VALUE(r.adelanto) AS Adelanto,
@@ -99,14 +104,16 @@ class ReporteReservas extends ActiveRecord {
                 Reservas r
             LEFT JOIN Reservas_Habitaciones rh ON rh.ID_reserva = r.ID_reserva
             LEFT JOIN Habitaciones h ON h.id = rh.ID_habitacion
+            LEFT JOIN Clientes c ON c.id = r.ID_cliente
             LEFT JOIN Ventas v ON v.reservacion_id = r.ID_reserva AND v.estado = 1
             WHERE
                 MONTH(r.fecha_salida) = '$mes'
                 AND YEAR(r.fecha_salida) = '$anio'
-                $condicionUsuario
+                " . ($condicionUsuario ? " AND $condicionUsuario" : "") . "
             GROUP BY
-                r.ID_reserva
+                r.ID_reserva;
         ";
+
         //debuguear($query);
     
         return self::consultarSQL($query);

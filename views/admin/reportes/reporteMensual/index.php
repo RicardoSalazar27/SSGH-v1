@@ -97,6 +97,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>No. Reserva</th>
+                                        <th>Huesped</th>
                                         <th>Habitación(es)</th>
                                         <th>Total Neto</th>
                                         <th>Descuento</th>

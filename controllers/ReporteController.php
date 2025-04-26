@@ -89,7 +89,7 @@ class ReporteController{
     
             $ventas = ReporteVentas::obtenerVentasPorFechaYUsuario($usuario_id, $fecha);
             $reservas = ReporteReservas::obtenerReservasPorFechaYUsuario($usuario_id, $fecha);
-    
+            
             http_response_code(200);
             echo json_encode([
                 'ventas' => $ventas,

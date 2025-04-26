@@ -152,6 +152,7 @@ if (window.location.pathname === '/admin/reporte-diario') {
                 <tr>
                     <td>${index + 1}</td>
                     <td>${reserva.No_Reserva}</td>
+                    <td>${reserva.Huesped}</td>
                     <td>${reserva.Habitaciones}</td>
                     <td>MXN$${reserva.Precio_Total}</td>
                     <td>MXN$${reserva.Descuento}</td>
