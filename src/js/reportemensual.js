@@ -4,9 +4,27 @@ if (window.location.pathname === '/admin/reporte-mensual') {
     let dataTableServicios;
     let dataTableReservasInit = false;
     let dataTableServiciosInit = false;
-
-    const nombreHotel = 'Hotel Paraíso Tropical';
-
+    
+    let nombreHotel;
+    let telefonoHotel;
+    let correoHotel;
+    let ubicacionHotel;
+    
+    const urlHotel = '/api/hotel';  // URL para obtener datos del hotel
+    
+    async function obtenerDatosHotel() {
+        try {
+            const response = await fetch(urlHotel);
+            const data = await response.json();
+            nombreHotel = data.nombre || 'Tu Nombre Hotel';
+            telefonoHotel = data.telefono || 'Tu Teléfono';
+            correoHotel = data.correo || 'Tu Correo';
+            ubicacionHotel = data.ubicacion || 'Tu Ubicación';
+        } catch (error) {
+            console.error('Error al obtener datos del hotel:', error);
+        }
+    }
+    
     function obtenerFechaFormateada() {
         const fecha = new Date();
         const year = fecha.getFullYear();
@@ -17,14 +35,8 @@ if (window.location.pathname === '/admin/reporte-mensual') {
         const seconds = String(fecha.getSeconds()).padStart(2, '0');
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
-
-    const fechaFormateada = obtenerFechaFormateada();
-    const mensajeTopReporte = `Generado el: ${fechaFormateada}`;
-    const tituloReporteReservas = `Reporte de Reservaciones - ${nombreHotel}`;
-    const tituloReporteServicios = `Reporte de Ventas y Servicios - ${nombreHotel}`;
-    const nombreArchivoReservas = `reservaciones_${fechaFormateada.replace(/[\s:]/g, '_')}`;
-    const nombreArchivoServicios = `servicios_${fechaFormateada.replace(/[\s:]/g, '_')}`;
-
+    
+    
     // Variables para totales mensuales
     let totalVentaServiciosMensual = 0;
     let totalReservacionesMensual = 0;
@@ -45,101 +57,111 @@ if (window.location.pathname === '/admin/reporte-mensual') {
         dom: '<"d-flex justify-content-between align-items-center mb-2"fB>rtip'
     };
 
-    const opcionesReservas = {
-        ...configBase,
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                title: tituloReporteReservas,
-                messageTop: mensajeTopReporte,
-                filename: nombreArchivoReservas,
-                text: '<i class="fas fa-file-excel"></i> Excel',
-                className: 'btn btn-success btn-sm'
-            },
-            {
-                extend: 'pdfHtml5',
-                title: tituloReporteReservas,
-                messageTop: mensajeTopReporte,
-                filename: nombreArchivoReservas,
-                text: '<i class="fas fa-file-pdf"></i> PDF',
-                className: 'btn btn-danger btn-sm',
-                orientation: 'landscape',
-                pageSize: 'A4',
-                exportOptions: {
-                    columns: ':visible',
-                    modifier: {
-                        page: 'all'
-                    }
-                },
-                customize: function (doc) {
-                    doc.defaultStyle.fontSize = 10;
-                    doc.styles.tableHeader.fontSize = 12;
-                }
-            }
-        ]
-    };
-
-    const opcionesServicios = {
-        ...configBase,
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                title: tituloReporteServicios,
-                messageTop: mensajeTopReporte,
-                filename: nombreArchivoServicios,
-                text: '<i class="fas fa-file-excel"></i> Excel',
-                className: 'btn btn-success btn-sm'
-            },
-            {
-                extend: 'pdfHtml5',
-                title: tituloReporteServicios,
-                messageTop: mensajeTopReporte,
-                filename: nombreArchivoServicios,
-                text: '<i class="fas fa-file-pdf"></i> PDF',
-                className: 'btn btn-danger btn-sm',
-                orientation: 'portrait',
-                pageSize: 'A4',
-                exportOptions: {
-                    columns: ':visible',
-                    modifier: {
-                        page: 'all'
-                    }
-                },
-                customize: function (doc) {
-                    doc.defaultStyle.fontSize = 10;
-                    doc.styles.tableHeader.fontSize = 12;
-                }
-            }
-        ]
-    };
-
     async function initReporteMensual() {
+        await obtenerDatosHotel(); // Primero obtenemos los datos del hotel
+    
+        const fechaFormateada = obtenerFechaFormateada();
+        const mensajeTopReporte = `Generado el: ${fechaFormateada}
+        Teléfono: ${telefonoHotel} | Correo: ${correoHotel} | Ubicación: ${ubicacionHotel}`;
+        const tituloReporteReservas = `Reporte de Reservaciones - ${nombreHotel}`;
+        const tituloReporteServicios = `Reporte de Ventas y Servicios - ${nombreHotel}`;
+        const nombreArchivoReservas = `reservaciones_${fechaFormateada.replace(/[\s:]/g, '_')}`;
+        const nombreArchivoServicios = `servicios_${fechaFormateada.replace(/[\s:]/g, '_')}`;
+    
+        const opcionesReservas = {
+            ...configBase,
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    title: tituloReporteReservas,
+                    messageTop: mensajeTopReporte,
+                    filename: nombreArchivoReservas,
+                    text: '<i class="fas fa-file-excel"></i> Excel',
+                    className: 'btn btn-success btn-sm'
+                },
+                {
+                    extend: 'pdfHtml5',
+                    title: tituloReporteReservas,
+                    messageTop: mensajeTopReporte,
+                    filename: nombreArchivoReservas,
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
+                    className: 'btn btn-danger btn-sm',
+                    orientation: 'landscape',
+                    pageSize: 'A4',
+                    exportOptions: {
+                        columns: ':visible',
+                        modifier: {
+                            page: 'all'
+                        }
+                    },
+                    customize: function (doc) {
+                        doc.defaultStyle.fontSize = 10;
+                        doc.styles.tableHeader.fontSize = 12;
+                    }
+                }
+            ]
+        };
+    
+        const opcionesServicios = {
+            ...configBase,
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    title: tituloReporteServicios,
+                    messageTop: mensajeTopReporte,
+                    filename: nombreArchivoServicios,
+                    text: '<i class="fas fa-file-excel"></i> Excel',
+                    className: 'btn btn-success btn-sm'
+                },
+                {
+                    extend: 'pdfHtml5',
+                    title: tituloReporteServicios,
+                    messageTop: mensajeTopReporte,
+                    filename: nombreArchivoServicios,
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
+                    className: 'btn btn-danger btn-sm',
+                    orientation: 'portrait',
+                    pageSize: 'A4',
+                    exportOptions: {
+                        columns: ':visible',
+                        modifier: {
+                            page: 'all'
+                        }
+                    },
+                    customize: function (doc) {
+                        doc.defaultStyle.fontSize = 10;
+                        doc.styles.tableHeader.fontSize = 12;
+                    }
+                }
+            ]
+        };
+    
         const usuarioId = document.getElementById('usuario').value || 'null';
         const mes = document.getElementById('mes').value;
         const anio = document.getElementById('anio').value;
-
+    
         const url = `/api/reporte-mensual/${usuarioId}/${mes}/${anio}`;
-
+    
         try {
             const response = await fetch(url);
             const { reservas, ventas } = await response.json();
-
+    
             if (dataTableReservasInit) dataTableReservas.destroy();
             if (dataTableServiciosInit) dataTableServicios.destroy();
-
+    
             llenarTablaReservas(reservas);
             llenarTablaServicios(ventas);
-
+    
             dataTableReservas = $('#tablaReservas').DataTable(opcionesReservas);
             dataTableServicios = $('#tablaServicios').DataTable(opcionesServicios);
-
+    
             dataTableReservasInit = true;
             dataTableServiciosInit = true;
         } catch (error) {
             console.error('Error al obtener reporte mensual:', error);
         }
     }
-
+    
     function llenarTablaReservas(reservas) {
         const tbody = document.querySelector('#tablaReservas tbody');
         tbody.innerHTML = '';
