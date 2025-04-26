@@ -19,7 +19,7 @@
                 alt="User Image">
         </div>
         <div class="info">
-            <a href="#" class="d-block" style="text-decoration: none;"><?php echo $usuario->nombre . ' ' . $usuario->apellido; ?></a>
+            <a class="d-block" style="text-decoration: none;"><?php echo $usuario->nombre . ' ' . $usuario->apellido; ?></a>
         </div>
     </div>
 
@@ -27,7 +27,7 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-                <?php if($_SESSION['rol_id'] == "1" || $_SESSION['rol_id'] == "2") {?>
+                <?php if($_SESSION['rol_id'] == "1" || $_SESSION['rol_id'] == "2" || $_SESSION['rol_id'] == "3") {?>
                     <!-- Inicio -->
                     <li class="nav-item">
                         <a href="/admin/index" class="nav-link">
@@ -36,24 +36,24 @@
                         </a>
                     </li>
 
-                    <!-- Reserva -->
+                    <?php if($_SESSION['rol_id'] == "1" || $_SESSION['rol_id'] == "2"){?>
+                        <!-- Reserva -->
+                        <li class="nav-item">
+                            <a href="/admin/reservaciones" class="nav-link">
+                                <i class="nav-icon fas fa-calendar-alt"></i>
+                                <p>Reserva</p>
+                            </a>
+                        </li>
+                    <?php };?>
+
+                    <!-- Recepción -->
                     <li class="nav-item">
-                        <a href="/admin/reservaciones" class="nav-link">
-                            <i class="nav-icon fas fa-calendar-alt"></i>
-                            <p>Reserva</p>
+                        <a href="/admin/recepcion" class="nav-link">
+                            <i class="nav-icon fas fa-concierge-bell"></i>
+                            <p>Recepción</p>
                         </a>
                     </li>
-                <?php };?>
-
-                
-                <?php if($_SESSION['rol_id'] == "1" || $_SESSION['rol_id'] == "2" || $_SESSION['rol_id'] == "3"){?>
-                <!-- Recepción -->
-                <li class="nav-item">
-                    <a href="/admin/recepcion" class="nav-link">
-                        <i class="nav-icon fas fa-concierge-bell"></i>
-                        <p>Recepción</p>
-                    </a>
-                </li>
+                        
                 <?php };?>
 
                 <?php if ($_SESSION['rol_id'] == "1" || $_SESSION['rol_id'] == "2"){ ?>
