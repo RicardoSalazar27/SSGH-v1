@@ -140,6 +140,7 @@
                                         <th>#</th>
                                         <th>Pago No.</th>
                                         <th>Tipo</th>
+                                        <th>Reserva No.</th>
                                         <th>Habitación(es)</th>
                                         <th>Artículo</th>
                                         <th>Cantidad</th>

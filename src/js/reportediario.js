@@ -196,6 +196,7 @@ if (window.location.pathname === '/admin/reporte-diario') {
                     <td>${index + 1}</td>
                     <td>${item.Identificador}</td>
                     <td>${item.Tipo}</td>
+                    <td>${item.Reserva ?? '-'}</td>
                     <td>${item.Habitacion ?? '-'}</td>
                     <td>${item.Articulo}</td>
                     <td>${item.Cantidad}</td>

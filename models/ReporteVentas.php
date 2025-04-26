@@ -6,11 +6,12 @@ class ReporteVentas extends ActiveRecord {
 
     public static $tabla = 'Ventas';
     public static $columnasDB = [
-        'Identificador', 'Tipo', 'Habitacion', 'Articulo',
+        'Identificador', 'Reserva', 'Tipo', 'Habitacion', 'Articulo',
         'Precio_Unitario', 'Cantidad', 'Total', 'Hora', 'Responsable'
     ];
 
     public $Identificador;
+    public $Reserva;
     public $Tipo;
     public $Habitacion;
     public $Articulo;
@@ -22,6 +23,7 @@ class ReporteVentas extends ActiveRecord {
 
     public function __construct($args = []) {
         $this->Identificador = $args['Identificador'] ?? null;
+        $this->Reserva = $args['Reserva'] ?? null;
         $this->Tipo = $args['Tipo'] ?? '';
         $this->Habitacion = $args['Habitacion'] ?? '';
         $this->Articulo = $args['Articulo'] ?? '';
@@ -38,6 +40,7 @@ class ReporteVentas extends ActiveRecord {
         $query = "
             SELECT 
                 v.id AS Identificador,
+                v.reservacion_id AS Reserva,
                 IF(v.reservacion_id IS NULL, 'Público', 'Huésped') AS Tipo,
                 GROUP_CONCAT(DISTINCT h.numero) AS Habitacion,
                 v.descripcion AS Articulo,
@@ -71,6 +74,7 @@ class ReporteVentas extends ActiveRecord {
         $query = "
             SELECT 
                 v.id AS Identificador,
+                v.reservacion_id AS Reserva,
                 IF(v.reservacion_id IS NULL, 'Público', 'Huésped') AS Tipo,
                 GROUP_CONCAT(DISTINCT h.numero) AS Habitacion,
                 v.descripcion AS Articulo,
