@@ -65,52 +65,66 @@
                     <!-- Paso 3: Costos y Confirmación -->
                     <div class="step d-none" id="step3">
                         <h5 class="font-weight-bold text-center">Paso 3: COSTO</h5>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label class="form-label">Descuento:</label>
-                                <div class="d-flex">
-                                    <input type="radio" name="tipoDescuento" value="PORCENTAJE" id="descuentoPorcentaje" checked>
-                                    <label for="descuentoPorcentaje" class="ms-2">%</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="d-flex justify-content-between">
+                                        <label class="form-label me-2">Descuento:</label>
+                                        <div>
+                                            <input type="radio" name="tipoDescuento" value="PORCENTAJE" id="descuentoPorcentaje" checked>
+                                            <label for="descuentoPorcentaje" class="ms-1 me-2">%</label>
 
-                                    <input type="radio" name="tipoDescuento" value="MONTO" id="descuentoMonto" class="ms-3">
-                                    <label for="descuentoMonto" class="ms-2">MXN$</label>
+                                            <input type="radio" name="tipoDescuento" value="MONTO" id="descuentoMonto">
+                                            <label for="descuentoMonto" class="ms-1 fw-bold">MXN$</label>
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
+                                        <span class="input-group-text">% | MXN$</span>
+                                        <input type="number" id="descuento" class="form-control" value="0">
+                                    </div> 
                                 </div>
-                                <input type="number" id="descuento" class="form-control mt-2" value="0">
-                            </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label">Cobro extra:</label>
-                                <div class="input-group">
-                                    <input type="number" id="cobroExtra" class="form-control" value="0">
-                                    <button class="btn btn-outline-secondary">+</button>
+                                <div class="col-md-6">
+                                    <label class="form-label">Cobro extra:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">+MXN$</span>
+                                        <input type="number" id="cobroExtra" class="form-control" value="0">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Adelanto:</label>
-                                <input type="number" id="adelanto" class="form-control" value="0">
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Adelanto:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">MXN$</span>
+                                        <input type="number" id="adelanto" class="form-control" value="0">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Total a pagar:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">MXN$</span>
+                                        <input type="number" id="totalPagar" class="form-control" value="0" readonly>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Total a pagar:</label>
-                                <input type="number" id="totalPagar" class="form-control" value="0" readonly>
+
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Método de pago:</label>
+                                    <select id="metodoPago" class="form-control">
+                                        <option value="Efectivo">Efectivo</option>
+                                        <option value="Tarjeta">Tarjeta</option>
+                                        <option value="Transferencia">Transferencia</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Observaciones:</label>
+                                    <textarea id="observaciones" class="form-control" rows="2"></textarea>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="mb-3 mt-3">
-                            <label class="form-label">Método de pago:</label>
-                            <select id="metodoPago" class="form-control">
-                                <option value="Efectivo">Efectivo</option>
-                                <option value="Tarjeta">Tarjeta</option>
-                                <option value="Transferencia">Transferencia</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Observaciones:</label>
-                            <textarea id="observaciones" class="form-control" rows="2"></textarea>
-                        </div>
                     </div>
                 </div>
             </div>
