@@ -59,7 +59,7 @@
                 <?php if ($_SESSION['rol_id'] == "1" || $_SESSION['rol_id'] == "2"){ ?>
                     <!-- Punto de Venta -->
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a class="nav-link">
                             <i class="nav-icon fas fa-cash-register"></i>
                             <p>
                                 Punto de Venta
@@ -102,7 +102,7 @@
                 <?php if($_SESSION['rol_id'] == "1") {?>
                     <!-- Reportes -->
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a class="nav-link">
                             <i class="nav-icon fas fa-chart-line"></i>
                             <p>
                                 Reportes
@@ -143,7 +143,7 @@
 
                     <!-- Configuración -->
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a class="nav-link">
                             <i class="nav-icon fas fa-cogs"></i>
                             <p>
                                 Configuración
