@@ -17,7 +17,15 @@ class RecepcionController
     public static function index(Router $router)
     {
 
-        is_auth();
+        // Verificar si el usuario está autenticado
+        if (!is_auth()) {
+            // Si no está autenticado, redirigir al login o página de acceso no autorizado
+            header('Location: /login');  // O la ruta que uses para el login
+            exit;
+        }
+
+        // Verificar si el usuario tiene el rol necesario
+        tiene_rol([1,2,3]);
 
         $usuario = Usuario::where('email', $_SESSION['email']);
         $hotel = Hotel::get(1);
@@ -43,7 +51,16 @@ class RecepcionController
 
     public static function checkin(Router $router){
 
-        is_auth();
+        // Verificar si el usuario está autenticado
+        if (!is_auth()) {
+            // Si no está autenticado, redirigir al login o página de acceso no autorizado
+            header('Location: /login');  // O la ruta que uses para el login
+            exit;
+        }
+
+        // Verificar si el usuario tiene el rol necesario
+        tiene_rol([1,2]);
+        
         $usuario = Usuario::where('email', $_SESSION['email']);
         $hotel = Hotel::get(1);
 

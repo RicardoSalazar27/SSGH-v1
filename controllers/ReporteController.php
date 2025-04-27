@@ -13,7 +13,15 @@ class ReporteController{
 
     public static function indexReporteDiario(Router $router){
         
-        is_auth();
+        // Verificar si el usuario está autenticado
+        if (!is_auth()) {
+            // Si no está autenticado, redirigir al login o página de acceso no autorizado
+            header('Location: /login');  // O la ruta que uses para el login
+            exit;
+        }
+
+        // Verificar si el usuario tiene el rol necesario
+        tiene_rol([1]);
 
         $usuario = Usuario::where('email', $_SESSION['email']);
         $fecha_hoy = date("Y-m-d");
@@ -31,7 +39,15 @@ class ReporteController{
     }
 
     public static function indexReporteMensual(Router $router){
-        is_auth();
+        // Verificar si el usuario está autenticado
+        if (!is_auth()) {
+            // Si no está autenticado, redirigir al login o página de acceso no autorizado
+            header('Location: /login');  // O la ruta que uses para el login
+            exit;
+        }
+
+        // Verificar si el usuario tiene el rol necesario
+        tiene_rol([1]);
     
         $usuario = Usuario::where('email', $_SESSION['email']);
         $hotel = Hotel::get(1);
