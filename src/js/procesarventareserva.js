@@ -113,7 +113,7 @@ if (window.location.pathname === '/admin/puntodeventa/vender/reserva') {
                 </td>
                 <td>$${parseFloat(servicio.precio).toFixed(2)}</td>
                 <td>$${servicio.total.toFixed(2)}</td>
-                <td><img src="/build/img/${servicio.foto}.png" alt="Foto" width="50" height="50"></td>
+                <td><img src="/build/img/${servicio.foto ? servicio.foto + '.png' : 'producto-servicio.png'}" alt="Imagen del producto/servicio" width="65"></td>
                 <td><button class="btn btn-danger btn-sm" data-id="${servicio.codigo_barras}" id="eliminarProducto">Eliminar</button></td>
             `;
             tablaVenta.appendChild(fila);

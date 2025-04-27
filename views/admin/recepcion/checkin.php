@@ -6,9 +6,9 @@
       </div><!-- /.col -->
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="#">Home</a></li>
-          <li class="breadcrumb-item"><a href="#">Layout</a></li>
-          <li class="breadcrumb-item active">Top Navigation</li>
+          <li class="breadcrumb-item"><a href="/admin">Inicio</a></li>
+          <li class="breadcrumb-item"><a href="/admin/recepcion">Recepcion</a></li>
+          <li class="breadcrumb-item active">Procesar Habitacion</li>
         </ol>
       </div><!-- /.col -->
     </div><!-- /.row -->

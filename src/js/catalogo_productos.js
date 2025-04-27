@@ -69,7 +69,9 @@ if(window.location.pathname === '/admin/puntodeventa/catalogo'){
                     <td class="text-center">${producto.categoria_producto_id.nombre}</td>
                     <td class="text-center">${producto.codigo_barras}</td>
                     <td class="text-center">${producto.proveedor}</td>
-                    <td><img src="/build/img/${producto.foto}.png" alt="Descripción de la imagen" width="65"></td>
+                    <td>
+                        <img src="/build/img/${producto.foto ? producto.foto + '.png' : 'producto-servicio.png'}" alt="Imagen del producto/servicio" width="65">
+                    </td>
                     <td>
                         <!-- Botón de editar que abre el modal -->
                         <button 
@@ -115,7 +117,7 @@ if(window.location.pathname === '/admin/puntodeventa/catalogo'){
                 
                 // Mostrar la imagen si existe
                 const imgElement = document.getElementById('imgEditarP');
-                imgElement.src = producto.foto ? `/build/img/${producto.foto}.png` : '/build/img/default.png';                    
+                imgElement.src = producto.foto ? `/build/img/${producto.foto}.png` : '/build/img/producto-servicio.png';                    
     
                 // Guardar el ID en el botón de actualización
                 document.querySelector('.btnActualizarProducto').dataset.id = productoId;
