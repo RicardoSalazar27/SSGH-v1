@@ -10,6 +10,7 @@ use Controllers\CatalogoProductosController;
 use Controllers\CategoriasController;
 use Controllers\ClientesController;
 use Controllers\DashboardController;
+use Controllers\Erro500Controller;
 use Controllers\HabitacionController;
 use Controllers\informacionController;
 use Controllers\NivelesController;
@@ -34,6 +35,9 @@ $router->post('/registro', [AuthController::class, 'registro']);
 
 //Olvide Contraseña
 $router->get('/olvide', [AuthController::class, 'mensaje2']);
+
+//NO acceso
+$router->get('/acceso-denegado', [Erro500Controller::class, 'index']);
 
 // Formulario de olvide mi password
 // $router->get('/olvide', [AuthController::class, 'olvide']);
