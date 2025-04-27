@@ -43,13 +43,18 @@
                             <!-- Contenido de la pestaña 'Todos' -->
                             <div class="tab-pane fade show active" id="custom-tabs-one-todos" role="tabpanel" aria-labelledby="custom-tabs-one-todos-tab">
                                 <div class="row">
-                                    <?php foreach ($habitaciones as $habitacion){?>
+                                    <?php foreach ($habitaciones as $habitacion) {
+                                        // Cambiar color si estatus == 0
+                                        $color = ($habitacion->estatus == 0) ? 'black' : $habitacion->id_estado_habitacion->color;
+                                        $disabled = ($habitacion->estatus == 0) ? 'pointer-events: none; opacity: 0.6;' : '';
+                                    ?>
                                         <div class="col-xxl-3 col-xl-3 col-lg-4 col-md-4 col-12">
-                                            <div class="small-box bg-<?php echo $habitacion->id_estado_habitacion->color;?>" 
-                                                 data-id="<?php echo $habitacion->id; ?>" 
-                                                 data-nombre="<?php echo $habitacion->numero; ?>"
-                                                 data-categoria="<?php echo $habitacion->id_categoria->nombre;?>"
-                                                 data-estado="<?php echo $habitacion->id_estado_habitacion->nombre;?>">
+                                            <div class="small-box bg-<?php echo $color;?>" 
+                                                data-id="<?php echo $habitacion->id; ?>" 
+                                                data-nombre="<?php echo $habitacion->numero; ?>"
+                                                data-categoria="<?php echo $habitacion->id_categoria->nombre;?>"
+                                                data-estado="<?php echo $habitacion->id_estado_habitacion->nombre;?>"
+                                                style="<?php echo $disabled; ?>">
                                                 <div class="inner">
                                                     <h3><?php echo $habitacion->numero; ?></h3>
                                                     <h4><?php echo $habitacion->id_categoria->nombre;?></h4>
@@ -58,12 +63,16 @@
                                                 <div class="icon">
                                                     <i class="fas fa-<?php echo $habitacion->id_estado_habitacion->icono;?>"></i>
                                                 </div>
-                                                <a href="/admin/recepcion/habitacion?id=<?php echo $habitacion->id; ?>" class="small-box-footer" data-id="<?php echo $habitacion->id;?>" data-estado="<?php echo $habitacion->id_estado_habitacion->id;?>">
+                                                <a href="<?php echo ($habitacion->estatus == 0) ? '#' : '/admin/recepcion/habitacion?id=' . $habitacion->id; ?>" 
+                                                class="small-box-footer" 
+                                                data-id="<?php echo $habitacion->id;?>"
+                                                data-estado="<?php echo $habitacion->id_estado_habitacion->id;?>"
+                                                style="<?php echo ($habitacion->estatus == 0) ? 'pointer-events: none;' : ''; ?>">
                                                     <?php echo $habitacion->id_estado_habitacion->descripcion; ?> <i class="fas fa-arrow-circle-right"></i>
                                                 </a>
                                             </div>
                                         </div>
-                                    <?php }; ?>
+                                    <?php } ?>
                                 </div>
                             </div>
                             <!-- Contenido dinámico por nivel -->
@@ -71,13 +80,18 @@
                                 <div class="tab-pane fade" id="custom-tabs-one-<?php echo $nivel->numero; ?>" role="tabpanel" aria-labelledby="custom-tabs-one-<?php echo $nivel->numero; ?>-tab">
                                     <div class="row">
                                         <?php foreach ($habitaciones as $habitacion):
-                                        if($habitacion->id_nivel == $nivel->id):?>
+                                            if($habitacion->id_nivel == $nivel->id):
+                                                // Cambiar color si estatus == 0
+                                                $color = ($habitacion->estatus == 0) ? 'black' : $habitacion->id_estado_habitacion->color;
+                                                $disabled = ($habitacion->estatus == 0) ? 'pointer-events: none; opacity: 0.6;' : '';
+                                        ?>
                                             <div class="col-xxl-3 col-xl-3 col-lg-4 col-md-4 col-12">
-                                                <div class="small-box bg-<?php echo $habitacion->id_estado_habitacion->color;?>" 
+                                                <div class="small-box bg-<?php echo $color;?>" 
                                                     data-id="<?php echo $habitacion->id; ?>" 
                                                     data-nombre="<?php echo $habitacion->numero; ?>"
                                                     data-categoria="<?php echo $habitacion->id_categoria->nombre;?>"
-                                                    data-estado="<?php echo $habitacion->id_estado_habitacion->nombre;?>">
+                                                    data-estado="<?php echo $habitacion->id_estado_habitacion->nombre;?>"
+                                                    style="<?php echo $disabled; ?>">
                                                     <div class="inner">
                                                         <h3><?php echo $habitacion->numero; ?></h3>
                                                         <h4><?php echo $habitacion->id_categoria->nombre;?></h4>
@@ -86,7 +100,11 @@
                                                     <div class="icon">
                                                         <i class="fas fa-<?php echo $habitacion->id_estado_habitacion->icono;?>"></i>
                                                     </div>
-                                                    <a href="/admin/recepcion/habitacion?id=<?php echo $habitacion->id; ?>" class="small-box-footer" data-id="<?php echo $habitacion->id;?>" data-estado="<?php echo $habitacion->id_estado_habitacion->id;?>">
+                                                    <a href="<?php echo ($habitacion->estatus == 0) ? '#' : '/admin/recepcion/habitacion?id=' . $habitacion->id; ?>" 
+                                                        class="small-box-footer" 
+                                                        data-id="<?php echo $habitacion->id;?>"
+                                                        data-estado="<?php echo $habitacion->id_estado_habitacion->id;?>"
+                                                        style="<?php echo ($habitacion->estatus == 0) ? 'pointer-events: none;' : ''; ?>">
                                                         <?php echo $habitacion->id_estado_habitacion->descripcion; ?> <i class="fas fa-arrow-circle-right"></i>
                                                     </a>
                                                 </div>
