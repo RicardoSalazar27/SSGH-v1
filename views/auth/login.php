@@ -1,10 +1,13 @@
 <div class="login-box">
-  <!-- /.login-logo -->
+  <!-- Logo de tu empresa -->
+  <div class="text-center mb-2">
+    <img src="/build/img/SASEDIGITAL.png" alt="Logo Empresa" class="img-fluid" style="height: 120px;">
+  </div>
+
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <!-- Logo de la empresa -->
-      <img src="/build/img/<?php echo $hotel->img;?>.png" alt="Logo" class="img-fluid" style="height: 120px;">
-      <!-- Nombre de la empresa debajo del logo (en un bloque) -->
+      <!-- Logo del Hotel -->
+      <img src="/build/img/<?php echo $hotel->img;?>.png" alt="Logo Hotel" class="img-fluid" style="height: 120px;">
       <div class="mt-2">
         <a href="/login" class="h2"><?php echo $hotel->nombre;?></a>
       </div>
@@ -42,11 +45,9 @@
           </div>
         </div>
         <div class="row">
-          <!-- /.col -->
           <div class="col-12">
             <button id="btnIniciarSesion" type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
           </div>
-          <!-- /.col -->
         </div>
       </form>
       <p class="d-flex justify-content-between mt-1">
@@ -54,8 +55,11 @@
         <a href="/registro" class="text-center">Crear Cuenta</a>  
       </p>
     </div>
-    <!-- /.card-body -->
   </div>
-  <!-- /.card -->
+
+  <!-- Texto de copyright -->
+  <div class="text-center mt-4">
+    <small class="text-muted">&copy; <?php echo date('Y'); ?> SASEDIGITAL. Todos los derechos reservados.</small><br>
+    <a class="text-muted"><small>Política de Privacidad</small></a>
+  </div>
 </div>
-<!-- /.login-box -->
