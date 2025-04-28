@@ -28,18 +28,20 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table id="datatable_niveles" class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Nombre</th>
-                                    <th>Numero</th>
-                                    <th>Estatus</th>
-                                    <th class="no-export">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody_niveles"></tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table id="datatable_niveles" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Nombre</th>
+                                        <th>Numero</th>
+                                        <th>Estatus</th>
+                                        <th class="no-export">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody_niveles"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

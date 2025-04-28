@@ -28,22 +28,24 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table id="datatable_productos" class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Nombre</th>
-                                    <th>Precio</th>
-                                    <th>Stock</th>
-                                    <th>Categoria</th>
-                                    <th>Codigo</th>
-                                    <th>Proovedor</th>
-                                    <th>Imagen</th>
-                                    <th class="no-export">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody_productos"></tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table id="datatable_productos" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Nombre</th>
+                                        <th>Precio</th>
+                                        <th>Stock</th>
+                                        <th>Categoria</th>
+                                        <th>Codigo</th>
+                                        <th>Proovedor</th>
+                                        <th>Imagen</th>
+                                        <th class="no-export">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody_productos"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

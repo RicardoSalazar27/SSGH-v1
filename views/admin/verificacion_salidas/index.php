@@ -24,10 +24,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
-                            <h1 class="h4 mb-0">Reservaciones</h1>
-                            <a href="/admin/puntodeventa/venta/directa">
-                                <button class="btn btn-primary">¿Venta al público?</button>
-                            </a>
+                            <h1 class="h4 mb-0"><?php echo $titulo;?></h1>
                         </div>
                     </div>
                     <div class="card-body">

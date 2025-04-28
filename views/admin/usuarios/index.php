@@ -29,6 +29,7 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        <div class="table-responsive">
                         <table id="datatable_users" class="table table-striped">
                             <thead>
                                 <tr>
@@ -47,6 +48,7 @@
                             </thead>
                             <tbody id="tableBody_users"></tbody>
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>

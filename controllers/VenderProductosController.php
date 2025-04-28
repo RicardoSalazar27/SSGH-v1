@@ -110,15 +110,22 @@ class VenderProductosController {
         try {
             // Búsqueda con coincidencias parciales (LIKE)
             $productos = Producto::like('codigo_barras', $codigo_barras);
-    
+
+            // Filtrar productos con stock > 0
+            $productos = array_filter($productos, function($producto) {
+                return (int)$producto->stock > 0;
+            });
+
+            // Si no quedaron productos válidos, responder 404
             if (empty($productos)) {
                 http_response_code(404);
                 echo json_encode(['message' => 'No se encontraron productos']);
                 return;
             }
-    
+
             http_response_code(200); // 200 OK
             echo json_encode($productos);
+
         } catch (Exception $e) {
             http_response_code(500);
             echo json_encode([

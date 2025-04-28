@@ -29,21 +29,23 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table id="datatable_habitaciones" class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Nivel</th>
-                                    <th>Categoría</th>
-                                    <th>Precio</th>
-                                    <th>Detalles</th>
-                                    <th>Observaciones</th>
-                                    <th>Estatus</th>
-                                    <th class="no-export">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody_habitaciones"></tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table id="datatable_habitaciones" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Nivel</th>
+                                        <th>Categoría</th>
+                                        <th>Precio</th>
+                                        <th>Detalles</th>
+                                        <th>Observaciones</th>
+                                        <th>Estatus</th>
+                                        <th class="no-export">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody_habitaciones"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

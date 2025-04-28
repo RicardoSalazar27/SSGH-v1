@@ -11,7 +11,6 @@ if(window.location.pathname === '/admin/configuracion/habitaciones'){
     // Configuración DataTable
     const dataTableOption = {
         destroy: true,
-        pageLength: 5,
         language: {
             url: 'https://cdn.datatables.net/plug-ins/2.1.8/i18n/es-MX.json',
         },

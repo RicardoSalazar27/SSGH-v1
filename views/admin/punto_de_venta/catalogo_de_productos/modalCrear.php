@@ -13,7 +13,7 @@
             <!-- Formulario igual que el de edición -->
             <div class="form-group text-center">
                 <img id="img" alt="imagen-producto" class="img-fluid mb-2" style="height: 100px;">
-                <input type="file" class="form-control-file" id="fotoPN" name="fotoPN">
+                <input type="file" class="form-control-file" id="fotoPN" name="fotoPN" accept=".png,image/png">
             </div>
             <div class="form-group">
                 <label for="nombre">Nombre</label>

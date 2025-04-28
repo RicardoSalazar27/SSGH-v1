@@ -32,34 +32,30 @@
                     <div class="card-body">
                         <!-- AQUI agregamos el wrapper para tabla responsiva -->
                         <div class="table-responsive">
-                            <table id="datatable_ventaReservaciones" class="table table-striped text-center">
-                                <thead class="">
-                                    <tr>
-                                        <th>Reserva No.</th>
-                                        <th>Habitación(es)</th>
-                                        <th>Huésped</th>
-                                        <th>Telefono</th>
-                                        <th>Fecha de Salida</th>
-                                        <th class="no-export">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tableBody_ventaReservaciones">
+                            <div class="table-responsive">
+                            <tbody id="tableBody_ventaReservaciones">
+                                <?php if ($habitaciones) { ?>
                                     <?php foreach ($reservaciones as $reserva): ?>
                                         <tr>
-                                            <td><?php echo $reserva->ID_reserva;?></td>
-                                            <td><?php echo $reserva->habitaciones;?></td>
-                                            <td><?php echo $reserva->cliente_nombre . ' ' . $reserva->cliente_apellidos;?></td>
-                                            <td><?php echo $reserva->telefono;?></td>
-                                            <td><?php echo $reserva->fecha_salida;?></td>
+                                            <td><?php echo $reserva->ID_reserva; ?></td>
+                                            <td><?php echo $reserva->habitaciones; ?></td>
+                                            <td><?php echo $reserva->cliente_nombre . ' ' . $reserva->cliente_apellidos; ?></td>
+                                            <td><?php echo $reserva->telefono; ?></td>
+                                            <td><?php echo $reserva->fecha_salida; ?></td>
                                             <td>
-                                                <a href="/admin/puntodeventa/vender/reserva?id=<?php echo $reserva->ID_reserva;?>" class="btn btn-success btn-sm">
+                                                <a href="/admin/puntodeventa/vender/reserva?id=<?php echo $reserva->ID_reserva; ?>" class="btn btn-success btn-sm">
                                                     Vender
                                                 </a>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                                <?php } else { ?>
+                                    <tr>
+                                        <td colspan="6" class="text-center">No hay reservaciones disponibles</td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                            </div>
                         </div> <!-- /.table-responsive -->
                     </div> <!-- /.card-body -->
                 </div>

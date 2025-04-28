@@ -5,6 +5,6 @@
       Soluciones tecnologicas para tu negocio o emprendimiento.
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2025-2026 <a href="https://adminlte.io">SASESYSTEMS</a>.</strong> Todos los derechos reservados.
+    <strong>Copyright &copy; 2025-2026 <a class="primary">SASESYSTEMS</a>.</strong> Todos los derechos reservados.
   </footer>
 </div>

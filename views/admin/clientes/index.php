@@ -29,21 +29,23 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table id="datatable_clientes" class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Nombre</th>
-                                <th>Apellidos</th>
-                                <th>Telefono</th>
-                                <th>Correo</th>
-                                <th>Direccion</th>
-                                <th>DNI</th>
-                                <th class="no-export">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableBody_clientes"></tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table id="datatable_clientes" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Nombre</th>
+                                    <th>Apellidos</th>
+                                    <th>Telefono</th>
+                                    <th>Correo</th>
+                                    <th>Direccion</th>
+                                    <th>DNI</th>
+                                    <th class="no-export">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody_clientes"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

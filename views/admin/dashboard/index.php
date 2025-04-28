@@ -2,13 +2,15 @@
 <section class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0"><?php echo $titulo;?></h1>
-      </div><!-- /.col -->
+      <did class="col-sm-6">
+        <div class="d-flex align-items-center">
+          <i class="nav-icon fas fa-home mr-2"></i>
+          <h1 class="h4 mb-0"><?php echo $titulo; ?></h1>
+        </div>
+      </did>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="#">Home</a></li>
-          <li class="breadcrumb-item active">Starter Page</li>
+          <li class="breadcrumb-item active">Inicio</li>
         </ol>
       </div><!-- /.col -->
     </div><!-- /.row -->
