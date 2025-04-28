@@ -73,7 +73,7 @@ if (window.location.pathname === '/admin/reservaciones') {
 
         // Cargar reservas desde el API
         function loadReservations() {
-            fetch('http://localhost:3000/api/reservaciones')
+            fetch('/api/reservaciones')
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(reservacion => {

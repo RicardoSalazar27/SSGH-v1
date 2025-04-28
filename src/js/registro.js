@@ -34,7 +34,7 @@ if (window.location.pathname === '/registro') {
                 // Crear FormData para enviar los datos
                 const datos = new FormData();
                 Object.entries(nuevoUsuario).forEach(([key, value]) => datos.append(key, value));
-                const url = 'http://localhost:3000/registro';
+                const url = '/registro';
                 const respuesta = await fetch(url, { // Corregido: Usar un objeto en lugar de un array
                     method: 'POST',
                     body: datos

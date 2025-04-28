@@ -19,7 +19,7 @@ if (window.location.pathname === '/login') {
                 // Crear FormData para enviar los datos
                 const datos = new FormData();
                 Object.entries(usuario).forEach(([key, value]) => datos.append(key, value));
-                const url = 'http://localhost:3000/login';
+                const url = '/login';
                 const respuesta = await fetch(url, { // Corregido: Usar un objeto en lugar de un array
                     method: 'POST',
                     body: datos
