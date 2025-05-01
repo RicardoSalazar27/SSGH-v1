@@ -30,37 +30,6 @@ class Router
         $this->deleteRoutes[$url] = $fn;
     }
 
-    // public function comprobarRutas() {
-    //         $url_actual = $_SERVER['PATH_INFO'] ?? '/';
-    //         $method = $_SERVER['REQUEST_METHOD'];
-
-    //         switch ($method) {
-    //             case 'GET':
-    //                 $fn = $this->getRoutes[$url_actual] ?? null;
-    //                 break;
-    //             case 'POST':
-    //                 $fn = $this->postRoutes[$url_actual] ?? null;
-    //                 break;
-    //             case 'PUT':
-    //                 $fn = $this->putRoutes[$url_actual] ?? null;
-    //                 break;
-    //             case 'PATCH':
-    //                 $fn = $this->patchRoutes[$url_actual] ?? null;
-    //                 break;
-    //             case 'DELETE':
-    //                 $fn = $this->deleteRoutes[$url_actual] ?? null;
-    //                 break;
-    //             default:
-    //                 $fn = null;
-    //         }
-
-    //         if ($fn) {
-    //             call_user_func($fn, $this);
-    //         } else {
-    //             echo "Página No Encontrada o Ruta no válida";
-    //         }
-    // }
-
     public function comprobarRutas() {
         //$url_actual = $_SERVER['PATH_INFO'] ?? '/';
         //PARA PRODUCCIÓN
@@ -82,7 +51,6 @@ class Router
         }
     
         // 🔹 2. Buscar coincidencia en rutas dinámicas
-        // Si no se encuentra una ruta exacta, busca dinámicamente.
         foreach ($routes as $route => $callback) {
             $pattern = preg_replace('/\{([^\/]+)\}/', '([^/]+)', $route); // Convierte {id} en regex
             if (preg_match("#^$pattern$#", $url_actual, $matches)) {
