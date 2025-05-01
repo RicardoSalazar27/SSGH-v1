@@ -1,7 +1,7 @@
 <div class="container d-flex justify-content-center align-items-center vh-100">
   <div class="text-center">
     <!-- Logo del hotel -->
-    <img src="/build/img/<?php echo $hotel->img; ?>.png" alt="Logo del Hotel" class="img-fluid mb-3" style="max-height: 150px;">
+    <img src="/build/img/<?php echo !empty($hotel->img) ? $hotel->img : 'tulogo'; ?>.png" alt="Logo del Hotel" class="img-fluid mb-3" style="max-height: 150px;">
     
     <!-- Nombre del hotel -->
     <h2 class="mb-4"><?php echo $hotel->nombre; ?></h2>

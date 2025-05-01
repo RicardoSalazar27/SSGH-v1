@@ -7,7 +7,7 @@
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
       <!-- Logo del Hotel -->
-      <img src="/build/img/<?php echo $hotel->img;?>.png" alt="Logo Hotel" class="img-fluid" style="height: 120px;">
+      <img src="/build/img/<?php echo !empty($hotel->img) ? $hotel->img : 'tulogo'; ?>.png" alt="Logo Hotel" class="img-fluid" style="height: 120px;">
       <div class="mt-2">
         <a href="/login" class="h2"><?php echo $hotel->nombre;?></a>
       </div>

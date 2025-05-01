@@ -52,7 +52,8 @@ class VerificacionSalidasController {
         $idReserva = $_GET['id'];
         $usuario = Usuario::where('email', $_SESSION['email']);
         $hotel = Hotel::get(1);
-        $reservaConHabitacionClienteHospedaje = Checkout::DatosHabitacionClienteHospedaje($idReserva);
+        $checkouts = Checkout::DatosHabitacionClienteHospedaje($idReserva);
+        $reservaConHabitacionClienteHospedaje = array_shift($checkouts);
         $ventasReserva = Checkout::ServicioAlCuarto($idReserva);
         $dineroventas = 0;
 

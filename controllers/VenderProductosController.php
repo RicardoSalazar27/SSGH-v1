@@ -60,7 +60,8 @@ class VenderProductosController {
         }
         
         //obtenemos como objeto la reservacion con mas detalles, en base a la reserva
-        $reservacion = array_shift(Reservacion::obtenerReservaConHabitaciones($idReserva));
+        $reservaciones = Reservacion::obtenerReservaConHabitaciones($idReserva);
+        $reservacion = array_shift($reservaciones);
         
         //si no existe la reservacion
         if(!$reservacion){

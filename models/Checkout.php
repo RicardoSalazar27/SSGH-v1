@@ -126,7 +126,7 @@ class Checkout extends ActiveRecord {
             GROUP BY r.ID_reserva;
         ";
 
-        return array_shift(self::consultarSQL($query));
+        return self::consultarSQL($query);
     }
 
     public static function ServicioAlCuarto($id_reserva){

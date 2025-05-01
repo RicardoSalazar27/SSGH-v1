@@ -30,34 +30,35 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <!-- AQUI agregamos el wrapper para tabla responsiva -->
-                        <div class="table-responsive">
-                            <div class="table-responsive">
-                            <tbody id="tableBody_ventaReservaciones">
-                                <?php if ($habitaciones) { ?>
-                                    <?php foreach ($reservaciones as $reserva): ?>
-                                        <tr>
-                                            <td><?php echo $reserva->ID_reserva; ?></td>
-                                            <td><?php echo $reserva->habitaciones; ?></td>
-                                            <td><?php echo $reserva->cliente_nombre . ' ' . $reserva->cliente_apellidos; ?></td>
-                                            <td><?php echo $reserva->telefono; ?></td>
-                                            <td><?php echo $reserva->fecha_salida; ?></td>
-                                            <td>
-                                                <a href="/admin/puntodeventa/vender/reserva?id=<?php echo $reserva->ID_reserva; ?>" class="btn btn-success btn-sm">
-                                                    Vender
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php } else { ?>
-                                    <tr>
-                                        <td colspan="6" class="text-center">No hay reservaciones disponibles</td>
-                                    </tr>
-                                <?php } ?>
-                            </tbody>
-                            </div>
-                        </div> <!-- /.table-responsive -->
-                    </div> <!-- /.card-body -->
+    <!-- AQUI agregamos el wrapper para tabla responsiva -->
+    <div class="table-responsive">
+        <table class="table">
+            <tbody id="tableBody_ventaReservaciones">
+                <?php if (!empty($reservaciones)) { ?>
+                    <?php foreach ($reservaciones as $reserva): ?>
+                        <tr>
+                            <td><?php echo $reserva->ID_reserva; ?></td>
+                            <td><?php echo $reserva->habitaciones; ?></td>
+                            <td><?php echo $reserva->cliente_nombre . ' ' . $reserva->cliente_apellidos; ?></td>
+                            <td><?php echo $reserva->telefono; ?></td>
+                            <td><?php echo $reserva->fecha_salida; ?></td>
+                            <td>
+                                <a href="/admin/puntodeventa/vender/reserva?id=<?php echo $reserva->ID_reserva; ?>" class="btn btn-success btn-sm">
+                                    Vender
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php } else { ?>
+                    <tr>
+                        <td colspan="6" class="text-center">No hay reservaciones disponibles</td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
                 </div>
             </div>
         </div>

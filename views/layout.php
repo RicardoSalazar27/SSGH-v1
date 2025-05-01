@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SGH | <?php echo $hotel->nombre;?></title>
-  <link rel="icon" href="/build/img/<?php echo $hotel->img; ?>.png" type="image/png">
+  <link rel="icon" href="/build/img/<?php echo !empty($hotel->img) ? $hotel->img : 'tulogo'; ?>.png" type="image/png">
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
