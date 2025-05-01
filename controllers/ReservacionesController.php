@@ -183,7 +183,9 @@ class ReservacionesController {
         header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
         // Obtener la resrvacion por ID
-        $reservacion = array_shift(Reservacion::obtenerReservaConHabitaciones($id)); 
+        //$reservacion = array_shift(Reservacion::obtenerReservaConHabitaciones($id)); 
+        $reservas = Reservacion::obtenerReservaConHabitaciones($id);
+        $reservacion = array_shift($reservas);
 
         // Responder con los datos o con un mensaje si no hay registros
         if (empty($reservacion)) {
