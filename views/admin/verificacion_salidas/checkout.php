@@ -111,28 +111,30 @@
         <div class="card mt-3">
             <div class="card-header bg-success"><strong>Costo del alojamiento</strong></div>
             <div class="card-body p-0">
-                <table class="table table-bordered m-0 text-center">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>Costo Calculado</th>
-                            <th>Descuento</th>
-                            <th>Corbro Extra</th>
-                            <th>Dinero adelantado</th>
-                            <th>Mora/Penalidad</th>
-                            <th>Por pagar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->precio_total;?></td>
-                            <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->descuento_aplicado;?></td>
-                            <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->cobro_extra;?></td>
-                            <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->adelanto;?></td>
-                            <td><input id="inputPenalidad" type="text" class="form-control form-control-sm" placeholder="—"></td>
-                            <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->precio_pendiente;?></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-bordered m-0 text-center">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Costo Calculado</th>
+                                <th>Descuento</th>
+                                <th>Corbro Extra</th>
+                                <th>Dinero adelantado</th>
+                                <th>Mora/Penalidad</th>
+                                <th>Por pagar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->precio_total;?></td>
+                                <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->descuento_aplicado;?></td>
+                                <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->cobro_extra;?></td>
+                                <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->adelanto;?></td>
+                                <td><input id="inputPenalidad" type="text" class="form-control form-control-sm" placeholder="—"></td>
+                                <td>MXN$ <?php echo $reservaConHabitacionClienteHospedaje->precio_pendiente;?></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -140,46 +142,48 @@
         <div class="card mt-3">
             <div class="card-header bg-warning"><strong>Servicio al cuarto</strong></div>
             <div class="card-body p-0">
-                <table class="table table-bordered m-0 text-center">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>Producto/Servicio</th>
-                            <th>Precio unitario</th>
-                            <th>Cantidad</th>
-                            <th>Estado</th>
-                            <th>Subtotal</th>
-                            <!-- <th>Acciones</th> -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($ventasReserva)) : ?>
-                            <?php foreach ($ventasReserva as $venta) : ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($venta->producto_nombre) ?></td>
-                                    <td>MXN$<?= number_format($venta->producto_precio, 2) ?></td>
-                                    <td><?= (int)$venta->producto_cantidad ?></td>
-                                    <td class="<?= $venta->producto_estado == 0 ? 'text-danger font-weight-bold' : 'text-success font-weight-bold' ?>">
-                                        <?= $venta->producto_estado == 0 ? 'FALTA PAGAR' : 'PAGADO' ?>
-                                    </td>
-                                    <td>MXN$<?= number_format($venta->producto_monto, 2) ?></td>
-                                    <!-- <td>
-                                        <form method="POST" action="/ruta/eliminar-producto">
-                                            <input type="hidden" name="id_reserva" value="<?= $idReserva ?>">
-                                            <input type="hidden" name="nombre_producto" value="<?= htmlspecialchars($venta->producto_nombre) ?>">
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </td> -->
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else : ?>
+                <div class="table-responsive">
+                    <table class="table table-bordered m-0 text-center">
+                        <thead class="thead-light">
                             <tr>
-                                <td colspan="6" class="text-center">No hay servicios al cuarto registrados.</td>
+                                <th>Producto/Servicio</th>
+                                <th>Precio unitario</th>
+                                <th>Cantidad</th>
+                                <th>Estado</th>
+                                <th>Subtotal</th>
+                                <!-- <th>Acciones</th> -->
                             </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($ventasReserva)) : ?>
+                                <?php foreach ($ventasReserva as $venta) : ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($venta->producto_nombre) ?></td>
+                                        <td>MXN$<?= number_format($venta->producto_precio, 2) ?></td>
+                                        <td><?= (int)$venta->producto_cantidad ?></td>
+                                        <td class="<?= $venta->producto_estado == 0 ? 'text-danger font-weight-bold' : 'text-success font-weight-bold' ?>">
+                                            <?= $venta->producto_estado == 0 ? 'FALTA PAGAR' : 'PAGADO' ?>
+                                        </td>
+                                        <td>MXN$<?= number_format($venta->producto_monto, 2) ?></td>
+                                        <!-- <td>
+                                            <form method="POST" action="/ruta/eliminar-producto">
+                                                <input type="hidden" name="id_reserva" value="<?= $idReserva ?>">
+                                                <input type="hidden" name="nombre_producto" value="<?= htmlspecialchars($venta->producto_nombre) ?>">
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td> -->
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <tr>
+                                    <td colspan="6" class="text-center">No hay servicios al cuarto registrados.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <!-- Total a pagar + Método de pago -->
