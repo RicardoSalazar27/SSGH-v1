@@ -86,17 +86,23 @@ class RecepcionController
         $nextday = date('Y-m-d', strtotime('+1 day'));
 
         // Si la habitación está reservada, obtener la primera reservación
-        $reservacion = array_shift(Reservacion::obtenerReservaPorHabitacionYFecha($idHabitacion));
+        $reservaciones = Reservacion::obtenerReservaPorHabitacionYFecha($idHabitacion);
+        $reservacion = array_shift($reservaciones);
         //debuguear($reservacion);
         if ($reservacion) { // Verificar que se obtuvo una reservación válida
             $reservacion->fecha_entrada = (new DateTime($reservacion->fecha_entrada))->format('Y-m-d');
             $reservacion->fecha_salida = (new DateTime($reservacion->fecha_salida))->format('Y-m-d');
         }
+        $ultimasReservaciones = Reservacion::proximaReserva($idHabitacion);
+        $ultimaReservacion = array_shift($ultimasReservaciones);
 
-        $ultimaReservacion = Reservacion::proximaReserva($idHabitacion);
-        $fechaMax = new DateTime($ultimaReservacion->proxima_reserva);
-        $fechaMax->modify('-1 day'); // Restar un día
-        $fechaMax = $fechaMax->format('Y-m-d'); // Formato para input date
+        if ($ultimaReservacion && !empty($ultimaReservacion->proxima_reserva)) {
+            $fechaMax = new DateTime($ultimaReservacion->proxima_reserva);
+            $fechaMax->modify('-1 day'); // Restar un día
+            $fechaMax = $fechaMax->format('Y-m-d'); // Formato para input date
+        } else {
+            $fechaMax = null; // o una fecha por defecto si lo necesitas
+        }
 
         // Render a la vista 
         $router->render('admin/recepcion/checkin', [

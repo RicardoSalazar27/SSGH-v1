@@ -234,6 +234,6 @@ class Reservacion extends ActiveRecord {
             AND r.fecha_entrada > NOW();
         ";
         //debuguear($query);
-        return array_shift(self::consultarSQL($query));
+        return self::consultarSQL($query);
     }
 }
