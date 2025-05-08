@@ -155,10 +155,10 @@ class Checkout extends ActiveRecord {
                 v.estado AS producto_estado
             FROM Ventas v
             JOIN Productos p ON v.producto_id = p.id
-            WHERE v.reservacion_id = 124
+            WHERE v.reservacion_id = $id_reserva
               AND v.producto_id IS NOT NULL            
         ";
-
+        
         return self::consultarSQL($query);
     }
 }
