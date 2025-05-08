@@ -129,6 +129,22 @@ class Checkout extends ActiveRecord {
         return self::consultarSQL($query);
     }
 
+    // public static function ServicioAlCuarto($id_reserva){
+    //     $query = "
+    //         SELECT 
+    //             p.nombre AS producto_nombre,
+    //             p.precio AS producto_precio,
+    //             (pg.monto / p.precio) AS producto_cantidad,
+    //             pg.monto AS producto_monto,
+    //             pg.estado AS producto_estado
+    //         FROM Pagos pg
+    //         JOIN Productos p ON pg.producto_id = p.id
+    //         WHERE pg.reservacion_id = $id_reserva
+    //           AND pg.producto_id IS NOT NULL        
+    //     ";
+
+    //     return self::consultarSQL($query);
+    // }
     public static function ServicioAlCuarto($id_reserva){
         $query = "
             SELECT 
