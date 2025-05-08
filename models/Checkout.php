@@ -150,13 +150,13 @@ class Checkout extends ActiveRecord {
             SELECT 
                 p.nombre AS producto_nombre,
                 p.precio AS producto_precio,
-                (pg.monto / p.precio) AS producto_cantidad,
-                pg.monto AS producto_monto,
-                pg.estado AS producto_estado
-            FROM Pagos pg
-            JOIN Productos p ON pg.producto_id = p.id
-            WHERE pg.reservacion_id = $id_reserva
-              AND pg.producto_id IS NOT NULL        
+                (v.monto / p.precio) AS producto_cantidad,
+                v.monto AS producto_monto,
+                v.estado AS producto_estado
+            FROM Ventas v
+            JOIN Productos p ON v.producto_id = p.id
+            WHERE v.reservacion_id = 124
+              AND v.producto_id IS NOT NULL            
         ";
 
         return self::consultarSQL($query);
