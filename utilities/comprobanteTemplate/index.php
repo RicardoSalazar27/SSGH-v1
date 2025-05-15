@@ -1,23 +1,30 @@
 <?php
 
 function getPlantilla($reserva, $habitaciones, $cliente , $hotel) {
+
+$nombreLogo = $hotel->img . '.png';
+$rutaLogoAbsoluta = __DIR__ . '/../../public/build/img/' . $nombreLogo;
+$rutaLogo = 'file://' . $rutaLogoAbsoluta;
+
+$logoFinal = file_exists($rutaLogoAbsoluta) ? $rutaLogo : 'file://' . __DIR__ . '/../../public/build/img/tulogo.png';
+
   $contenido = '
   <body>
       <div class="receipt">
           <header>
-              <div class="logo">
-                  <img src="/public/build/img/<?php echo file_exists("/public/build/img/" . $hotel->img) ? $hotel->img : "tulogo.png"; ?>" alt="Logo del Hotel" id="hotel-logo">
-              </div>
-              <div class="hotel-info">
-                  <h1 id="hotel-name">'.$hotel->nombre.'</h1>
-                  <p class="datetime" id="fecha-hora">'.date('d-m-Y H:i:s').'</p>
-              </div>
+            <div class="logo">
+                <img src="'.$logoFinal.'" alt="Logo del Hotel" style="height: 100px; object-fit: contain;">
+            </div>
+            <div class="hotel-info" style="margin-left: 1rem; text-align: right;">
+                <h1>'.$hotel->nombre.'</h1>
+                <p>Fecha: '.date('d-m-Y H:i:s').'</p>
+            </div>
           </header>
 
           <section class="huesped-info">
-              <p><strong>Huésped:</strong> '.$cliente->nombre.' '.$cliente->apellidos.'</p>
-              <p><strong>Correo:</strong> '.$cliente->correo.'</p>
-              <p><strong>Telefono:</strong> '.$cliente->telefono.'</p>
+              <span><strong>Huésped:</strong> '.$cliente->nombre.' '.$cliente->apellidos.'</span>&nbsp;&nbsp;
+              <span><strong>Correo:</strong> '.$cliente->correo.'</span>&nbsp;&nbsp;
+              <span><strong>Telefono:</strong> '.$cliente->telefono.'</span>
           </section>
 
           <table class="detalle-habitacion details-table">
@@ -33,9 +40,7 @@ function getPlantilla($reserva, $habitaciones, $cliente , $hotel) {
                   </tr>
               </thead>
               <tbody>';
-
-  // Ahora recorrerás las habitaciones de la reserva
-  //debuguear($habitaciones);
+              
   foreach ($habitaciones as $habitacion) {
       $contenido .= '
           <tr>
@@ -63,8 +68,7 @@ function getPlantilla($reserva, $habitaciones, $cliente , $hotel) {
           <section class="indicaciones">
                     <h3>Indicaciones Importantes</h3>
                     <ul>
-                      <li>Horario de check-in: A partir de las 14:00 hrs.</li>
-                      <li>Horario de check-out: Hasta las 12:00 hrs.</li>
+                      <li>Horario de check-in: A partir de las 14:00 hrs y Horario de check-out: Hasta las 12:00 hrs..</li>
                       <li>No se permiten mascotas en las habitaciones.</li>
                       <li>Por favor conserve este recibo durante su estancia.</li>
                       <li>El pago restante debe realizarse al momento de la salida.</li>

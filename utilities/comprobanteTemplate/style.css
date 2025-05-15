@@ -24,23 +24,30 @@ body {
   }
   
   .logo img {
-    height: 120px;
+    height: 90px;
     object-fit: contain;
-  }  
-
-  .hotel-name {
+  }
+  
+  .hotel-info {
+    margin-left: 1rem;
+    text-align: right;
+  }
+  
+  .hotel-info h1 {
     font-size: 1.8rem;
     font-weight: bold;
-    text-align: right;
-    flex-grow: 1;
-    margin-left: 1rem;
+    margin: 0;
   }
   
-  .guest-info {
+  .hotel-info p {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+  
+  .huesped-info{
     margin-bottom: 1rem;
-    font-size: 1rem;
   }
-  
+
   .date-time {
     text-align: right;
     font-size: 0.9rem;
@@ -69,7 +76,7 @@ body {
     text-align: center;
   }
     
-  .summary p {
+  .resumen p {
     margin: 0.3rem 0;
     font-size: 1rem;
   }

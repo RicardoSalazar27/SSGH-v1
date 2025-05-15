@@ -15,6 +15,7 @@ use Controllers\HabitacionController;
 use Controllers\informacionController;
 use Controllers\NivelesController;
 use Controllers\RecepcionController;
+use Controllers\RecibosController;
 use Controllers\ReporteController;
 use Controllers\ReservacionesController;
 use Controllers\UsuariosController;
@@ -73,6 +74,7 @@ $router->get('/admin/recepcion/habitacion', [RecepcionController::class, 'checki
 $router->get('/admin/registro-actividades', [AuditoriaController::class, 'index']);
 $router->get('/admin/reporte-diario', [ReporteController::class, 'indexReporteDiario']);
 $router->get('/admin/reporte-mensual', [ReporteController::class, 'indexReporteMensual']);
+$router->get('/admin/recibos', [RecibosController::class, 'index']);
 
 // API'S
 $router->get('/api/usuarios', [UsuariosController::class, 'listar']);
@@ -136,5 +138,8 @@ $router->get('/api/registro-actividades', [AuditoriaController::class, 'Registro
 $router->get('/api/reporte-diario/{usuario_id}/{fecha}', [ReporteController::class, 'obtenerReporteDiario']);
 $router->get('/api/reporte-mensual/{usuario_id}/{mes}/{anio}', [ReporteController::class, 'obtenerReporteMensual']);
 $router->get('/api/hotel', [informacionController::class, 'APIHotel']);
+
+
+$router->get('/admin/recibos/pdf', [RecibosController::class, 'generarPDF']);
 
 $router->comprobarRutas();

@@ -44,6 +44,14 @@
                                 <p>Reserva</p>
                             </a>
                         </li>
+
+                         <!-- Recibos -->
+                         <li class="nav-item">
+                            <a href="/admin/recibos" class="nav-link">
+                                <i class="nav-icon fas fa-file-import"></i>
+                                <p>Recibos</p>
+                            </a>
+                        </li>
                     <?php };?>
 
                     <!-- Recepción -->
