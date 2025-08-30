@@ -22,7 +22,7 @@ class RecibosController {
         }
 
         // Verificar si el usuario tiene el rol necesario
-        tiene_rol([1]);
+        tiene_rol([1,2]);
 
         $usuario = Usuario::where('email', $_SESSION['email']);
         $hotel = Hotel::get(1);

@@ -8,7 +8,7 @@ class Recibo extends ActiveRecord {
     public static $columnasDB = [
         'ID_reserva', 'cliente', 'telefono', 'habitaciones',
         'fecha_entrada', 'fecha_salida',
-        'precio_total', 'cobro_extra', 'adelanto',
+        'precio_total', 'cobro_extra', 'adelanto','descuento_aplicado',
         'nombre', 'apellidos', 'correo',
         'numero', 'nivel', 'categoria','precio'
     ];
@@ -22,6 +22,7 @@ class Recibo extends ActiveRecord {
 
     public $precio_total;
     public $cobro_extra;
+    public $descuento_aplicado;
     public $adelanto;
 
     public $nombre;
@@ -43,6 +44,7 @@ class Recibo extends ActiveRecord {
 
         $this->precio_total = $args['precio_total'] ?? 0;
         $this->cobro_extra = $args['cobro_extra'] ?? 0;
+        $this->cobro_extra = $args['descuento_aplicado'] ?? 0;
         $this->adelanto = $args['adelanto'] ?? 0;
 
         $this->nombre = $args['nombre'] ?? '';
@@ -77,7 +79,8 @@ class Recibo extends ActiveRecord {
                 ID_reserva,
                 precio_total,
                 cobro_extra,
-                adelanto
+                adelanto,
+                descuento_aplicado
             FROM
                 Reservas
             WHERE

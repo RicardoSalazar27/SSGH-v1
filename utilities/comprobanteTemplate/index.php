@@ -60,8 +60,8 @@ $logoFinal = file_exists($rutaLogoAbsoluta) ? $rutaLogo : 'file://' . __DIR__ . 
           <section class="resumen">
               <p><strong>Costo Neto:</strong> MXN$'.$reserva->precio_total.'</p>
               <p><strong>Costo Extra:</strong> MXN$'.$reserva->cobro_extra.'</p>
-              <p><strong>Descuento:</strong> MXN$'.$reserva->cobro_extra.'</p>
-              <p><strong>Costo Total:</strong> MXN$'.($reserva->precio_total + $reserva->cobro_extra).'</p>
+              <p><strong>Descuento:</strong> MXN$'.$reserva->descuento_aplicado.'</p>
+              <p><strong>Costo Total:</strong> MXN$'.($reserva->precio_total + $reserva->cobro_extra - $reserva->descuento_aplicado).'</p>
               <p><strong>Dinero Adelantado:</strong> MXN$'.$reserva->adelanto.'</p>
               </section>  
 
