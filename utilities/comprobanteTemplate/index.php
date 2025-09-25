@@ -72,7 +72,7 @@ $logoFinal = file_exists($rutaLogoAbsoluta) ? $rutaLogo : 'file://' . __DIR__ . 
                       <li>Horario de check-in: A partir de las 14:00 hrs y Horario de check-out: Hasta las 12:00 hrs..</li>
                       <li>No se permiten mascotas en las habitaciones.</li>
                       <li>Por favor conserve este recibo durante su estancia.</li>
-                      <li>El pago restante debe realizarse al momento de la salida.</li>
+                      <li>El pago restante debe realizarse al momento de la entrada.</li>
                       <li>Prohibido fumar dentro de las habitaciones.</li>
                     </ul>
            </section>
